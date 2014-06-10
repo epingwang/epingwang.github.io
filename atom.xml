@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-06-10T18:24:45+08:00</updated>
+  <updated>2014-06-10T18:31:54+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -26,7 +26,8 @@
 
 <p>使用UIKit 创建 Universial、设备无关的App</p>
 
-<p>&lt;!-more-></p>
+<!--more-->
+
 
 <h2>Summary</h2>
 
@@ -58,7 +59,8 @@
 
 <p>Core idea iOS8 &ndash;> Adaptivity</p>
 
-<p>&lt;!-more-></p>
+<!--more-->
+
 
 <h2>Adaptive Layout</h2>
 
