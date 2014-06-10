@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-06-10T17:21:50+08:00</updated>
+  <updated>2014-06-10T18:19:44+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -12,6 +12,36 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Session 216 Building Adaptive Apps With UIKit]]></title>
+    <link href="http://epingwang.github.io/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/"/>
+    <updated>2014-06-10T17:32:04+08:00</updated>
+    <id>http://epingwang.github.io/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit</id>
+    <content type="html"><![CDATA[<h1>Building Adaptive Apps with UIKit 笔记</h1>
+
+<p>Session 216</p>
+
+<p>Jacob Xiao</p>
+
+<p>使用UIKit 创建 Universial、设备无关的App</p>
+
+<h2>Summary</h2>
+
+<ul>
+<li>Adaptive Concepts</li>
+<li>View Controllers</li>
+<li>Interface Builder</li>
+</ul>
+
+
+<h3>Size Classes</h3>
+
+<p>之前区分设备方向，使用 <code>UIInterfaceOrientation</code>(iPhone) 和 <code>UIUserInterfaceIdiom</code>(iPad)</p>
+
+<p>现在用 <code>Size Classes</code> 取代</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Session 202 What's New in Cocoa Touch 笔记]]></title>
