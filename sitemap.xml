@@ -2,18 +2,27 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://epingwang.github.io/blog/2014/06/10/hello-world/</loc>
+<<<<<<< HEAD
         <lastmod>2014-06-10T02:50:02+08:00</lastmod>
+=======
+        <lastmod>2014-06-10T14:59:17+08:00</lastmod>
+>>>>>>> 96332a69eccf9fc1d7beb04f9cbab06d2619e968
     </url>
     <url>
         <loc>
             http://epingwang.github.io/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji/
         </loc>
+<<<<<<< HEAD
         <lastmod>2014-06-11T14:11:42+08:00</lastmod>
+=======
+        <lastmod>2014-06-11T11:28:32+08:00</lastmod>
+>>>>>>> 96332a69eccf9fc1d7beb04f9cbab06d2619e968
     </url>
     <url>
         <loc>
             http://epingwang.github.io/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/
         </loc>
+<<<<<<< HEAD
         <lastmod>2014-06-11T14:11:59+08:00</lastmod>
     </url>
     <url>
@@ -27,5 +36,20 @@
     <url>
         <loc>http://epingwang.github.io/robots.txt</loc>
         <lastmod>2014-06-10T02:50:02+08:00</lastmod>
+=======
+        <lastmod>2014-06-11T13:43:37+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://epingwang.github.io/blog/archives/</loc>
+        <lastmod>2014-06-11T13:43:37+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://epingwang.github.io/</loc>
+        <lastmod>2014-06-11T13:43:37+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://epingwang.github.io/robots.txt</loc>
+        <lastmod>2014-06-10T14:52:42+08:00</lastmod>
+>>>>>>> 96332a69eccf9fc1d7beb04f9cbab06d2619e968
     </url>
 </urlset>

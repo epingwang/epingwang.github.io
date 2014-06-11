@@ -4,7 +4,11 @@
   <title><![CDATA[Category: iOS | EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
+<<<<<<< HEAD
   <updated>2014-06-11T14:22:48+08:00</updated>
+=======
+  <updated>2014-06-11T13:43:48+08:00</updated>
+>>>>>>> 96332a69eccf9fc1d7beb04f9cbab06d2619e968
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -22,7 +26,11 @@
 
 <p>Jacob Xiao</p>
 
+<<<<<<< HEAD
 <p>使用UIKit 创建 Universial App</p>
+=======
+<p>使用UIKit 创建 Universial、设备无关的App</p>
+>>>>>>> 96332a69eccf9fc1d7beb04f9cbab06d2619e968
 
 <!--more-->
 
