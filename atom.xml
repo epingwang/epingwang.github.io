@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-06-11T15:47:26+08:00</updated>
+  <updated>2014-06-11T18:17:40+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -12,6 +12,129 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Session 214 View Controller Advancements for iOS8 笔记]]></title>
+    <link href="http://epingwang.github.io/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji/"/>
+    <updated>2014-06-11T15:52:27+08:00</updated>
+    <id>http://epingwang.github.io/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji</id>
+    <content type="html"><![CDATA[<p>Session 214</p>
+
+<p>Bruce D. Nilo</p>
+
+<h2>OverView</h2>
+
+<ul>
+<li>A brief discussion about UIKit&rsquo;s new Adaptive APIs</li>
+<li>New UISplitViewController features</li>
+<li>Some new ways to condense and hide bars</li>
+<li>Presentations and popovers</li>
+<li>New API that uses transition coordinators</li>
+<li>Coordinate spaces</li>
+</ul>
+
+
+<!--more-->
+
+
+<h2>Support for Adaptive User Interfaces</h2>
+
+<p>Universal App中，相同的页面会展示为不同的Layout</p>
+
+<p>在iOS8之前，Layout取决于</p>
+
+<ul>
+<li>设备类型      Device type</li>
+<li>设备方向      Interface Orientation</li>
+<li>Window大小  Size</li>
+</ul>
+
+
+<p>iOS8之后:</p>
+
+<ul>
+<li>Traits and trait collections</li>
+<li>Size</li>
+</ul>
+
+
+<h3>什么是 &ldquo;trait collection&rdquo;?</h3>
+
+<p>Trait collection 是一个trait的集合</p>
+
+<p>例如: 在一个竖屏的 iPhone5s 中</p>
+
+<table>
+<thead>
+<tr>
+<th>Trait </th>
+<th> Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>horizontalSizeClass </td>
+<td> Compact</td>
+</tr>
+<tr>
+<td>verticalSizeClass </td>
+<td> Regular</td>
+</tr>
+<tr>
+<td>userInterfaceIdiom </td>
+<td> Phone</td>
+</tr>
+<tr>
+<td>displayScale </td>
+<td> 2.0</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>什么是 &ldquo;size class&rdquo;?</h3>
+
+<ul>
+<li>Size class 是简单定义<code>可用空间</code>的一个 <code>trait</code></li>
+<li>可以定义在Horizontal方向和Vertical方向是Compact or Regular</li>
+</ul>
+
+
+<h3>Trait Environments</h3>
+
+<p>在iOS8中, <code>UIView</code>和<code>UIViewController</code>均 conforms <code>&lt;UITraitEnvironment&gt;</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@protocol</span> <span class="nc">UITraitEnvironment</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">UITraitCollection</span> <span class="o">*</span><span class="n">traitCollection</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">traitCollectionDidChange:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nv">previousTraitCollection</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>并不是每个View都有自己的TraitCollection，当获取<code>Leaf View</code>的<code>traitCollection</code>时，会沿着View的hierarchy找到最近的traitCollection</p>
+
+<h2>Split View Controller</h2>
+
+<p>UISplitViewControllers can now be used on the phone</p>
+
+<p>新增了这个方法:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">UISplitViewController</span> : <span class="nc">UIViewController</span>
+</span><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">getter</span><span class="o">=</span><span class="n">isCollapsed</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">collapsed</span>  <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">8</span><span class="n">_0</span><span class="p">);</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Expanded split view controller</h3>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Session 216 Building Adaptive Apps With UIKit]]></title>
