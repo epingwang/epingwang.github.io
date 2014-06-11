@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-06-11T15:06:21+08:00</updated>
+  <updated>2014-06-11T15:20:10+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -219,20 +219,20 @@
 <p>UIViewController Conforms to <code>UITraitEnviroment</code>
 当屏幕尺寸变化（设备方向改变）时，会调用</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>-(void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
-</span><span class='line'>{
-</span><span class='line'>  // 使用Layout设置CollectionView
-</span><span class='line'>    UITraitCollection *currentTraits = self.traitCollection;
-</span><span class='line'>    UICollectionViewLayout *newLayout = currentTraits.horizontalSizeClass == UIUserInterfaceSizeClassCompact ? self.squaresLayout : self.rectanglesLayout;
-</span><span class='line'>    [self.collectionView setCollectionViewLayout:newLayout animated:YES];
-</span><span class='line'>}
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">traitCollectionDidChange:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nv">previousTraitCollection</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="c1">// 使用Layout设置CollectionView</span>
+</span><span class='line'>    <span class="n">UITraitCollection</span> <span class="o">*</span><span class="n">currentTraits</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">traitCollection</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">UICollectionViewLayout</span> <span class="o">*</span><span class="n">newLayout</span> <span class="o">=</span> <span class="n">currentTraits</span><span class="p">.</span><span class="n">horizontalSizeClass</span> <span class="o">==</span> <span class="n">UIUserInterfaceSizeClassCompact</span> <span class="o">?</span> <span class="n">self</span><span class="p">.</span><span class="n">squaresLayout</span> <span class="o">:</span> <span class="n">self</span><span class="p">.</span><span class="n">rectanglesLayout</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">collectionView</span> <span class="nl">setCollectionViewLayout:</span><span class="n">newLayout</span> <span class="nl">animated:</span><span class="n">YES</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -256,7 +256,7 @@
 
 <h4>Rotation Deprecations</h4>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -269,25 +269,27 @@
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration;
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">willRotateToInterfaceOrientation:</span><span class="p">(</span><span class="n">UIInterfaceOrientation</span><span class="p">)</span><span class="nv">toInterfaceOrientation</span> <span class="nf">duration:</span><span class="p">(</span><span class="n">NSTimeInterval</span><span class="p">)</span><span class="nv">duration</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'>-(void)willAnimateFirstHalfOfRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration;
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">willAnimateFirstHalfOfRotationToInterfaceOrientation:</span><span class="p">(</span><span class="n">UIInterfaceOrientation</span><span class="p">)</span><span class="nv">toInterfaceOrientation</span> <span class="nf">duration:</span><span class="p">(</span><span class="n">NSTimeInterval</span><span class="p">)</span><span class="nv">duration</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'>-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation;
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didRotateFromInterfaceOrientation:</span><span class="p">(</span><span class="n">UIInterfaceOrientation</span><span class="p">)</span><span class="nv">fromInterfaceOrientation</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'>-(BOOL)shouldAutomaticallyForwardRotationMethods;
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">shouldAutomaticallyForwardRotationMethods</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'>-(UIInterfaceOrientation)interfaceOrientation;
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="n">UIInterfaceOrientation</span><span class="p">)</span><span class="nf">interfaceOrientation</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'>-(UIView *)rotatingFooterView;
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nf">rotatingFooterView</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'>-(UIView *)rotatingHeaderView;</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nf">rotatingHeaderView</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>取而代之的新方法:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id &lt;UIViewControllerTransitionCoordinator&gt;)coordinator NS_AVAILABLE_IOS(8_0);</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">viewWillTransitionToSize:</span><span class="p">(</span><span class="n">CGSize</span><span class="p">)</span><span class="nv">size</span> <span class="nf">withTransitionCoordinator:</span><span class="p">(</span><span class="kt">id</span> <span class="o">&lt;</span><span class="n">UIViewControllerTransitionCoordinator</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">coordinator</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">8</span><span class="n">_0</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h3>Adaptive View Controller Hierarchies</h3>
@@ -362,12 +364,13 @@
 
 <p>直接返回正确的图片</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>+ (UIImage *)imageNamed:(NSString *)name
-</span><span class='line'>               inBundle:(NSBundle *)bundle
-</span><span class='line'>compatibleWithTraitCollection:(UITraitCollection *)traitCollection</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nf">imageNamed:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span>
+</span><span class='line'>               <span class="nf">inBundle:</span><span class="p">(</span><span class="n">NSBundle</span> <span class="o">*</span><span class="p">)</span><span class="nv">bundle</span>
+</span><span class='line'><span class="nf">compatibleWithTraitCollection:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nv">traitCollection</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h2>Condensing Bars</h2>
@@ -382,7 +385,7 @@
 
 <p>cell 可以自己计算它的尺寸</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -400,24 +403,25 @@
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-</span><span class='line'>{
-</span><span class='line'>    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-</span><span class='line'>    if (self) {
-</span><span class='line'>        [self.contentView addConstraints:[NSLayoutConstraint
-</span><span class='line'>                                          constraintsWithVisualFormat:@"V:|-myTextView-|"
-</span><span class='line'>                                          options:0
-</span><span class='line'>                                          metrics:nil
-</span><span class='line'>                                            views:NSDictionaryOfVariableBindings(_myTextView)]];
-</span><span class='line'>        
-</span><span class='line'>        [self.contentView addConstraints:[NSLayoutConstraint
-</span><span class='line'>                                          constraintsWithVisualFormat:@"H:|-myTextView-|"
-</span><span class='line'>                                          options:0
-</span><span class='line'>                                          metrics:nil
-</span><span class='line'>                                            views:NSDictionaryOfVariableBindings(_myTextView)]];
-</span><span class='line'>    }
-</span><span class='line'>    return self;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithStyle:</span><span class="p">(</span><span class="n">UITableViewCellStyle</span><span class="p">)</span><span class="nv">style</span> <span class="nf">reuseIdentifier:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">reuseIdentifier</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithStyle:</span><span class="n">style</span> <span class="nl">reuseIdentifier:</span><span class="n">reuseIdentifier</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">contentView</span> <span class="nl">addConstraints:</span><span class="p">[</span><span class="n">NSLayoutConstraint</span>
+</span><span class='line'>                                          <span class="nl">constraintsWithVisualFormat:</span><span class="s">@&quot;V:|-myTextView-|&quot;</span>
+</span><span class='line'>                                          <span class="nl">options:</span><span class="mi">0</span>
+</span><span class='line'>                                          <span class="nl">metrics:</span><span class="nb">nil</span>
+</span><span class='line'>                                            <span class="nl">views:</span><span class="n">NSDictionaryOfVariableBindings</span><span class="p">(</span><span class="n">_myTextView</span><span class="p">)]];</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">contentView</span> <span class="nl">addConstraints:</span><span class="p">[</span><span class="n">NSLayoutConstraint</span>
+</span><span class='line'>                                          <span class="nl">constraintsWithVisualFormat:</span><span class="s">@&quot;H:|-myTextView-|&quot;</span>
+</span><span class='line'>                                          <span class="nl">options:</span><span class="mi">0</span>
+</span><span class='line'>                                          <span class="nl">metrics:</span><span class="nb">nil</span>
+</span><span class='line'>                                            <span class="nl">views:</span><span class="n">NSDictionaryOfVariableBindings</span><span class="p">(</span><span class="n">_myTextView</span><span class="p">)]];</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>See More: <a href="">What&rsquo;s new in Table and Collection Views</a></p>

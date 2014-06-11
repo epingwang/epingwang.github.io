@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-06-11T15:06:21+08:00</updated>
+  <updated>2014-06-11T15:20:10+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -205,7 +205,7 @@ UITraitCollection *newCollection = [UITraitCollection traitCollectionWithHorizon
 <p>UIViewController Conforms to <code>UITraitEnviroment</code>
 当屏幕尺寸变化（设备方向改变）时，会调用</p>
 
-<p>```
+<p>``` objc
 &ndash;(void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
 {</p>
 
@@ -215,9 +215,8 @@ UICollectionViewLayout *newLayout = currentTraits.horizontalSizeClass == UIUserI
 [self.collectionView setCollectionViewLayout:newLayout animated:YES];
 </code></pre>
 
-<p>}</p>
-
-<p>```</p>
+<p>}
+```</p>
 
 <h3>Adaptive Margins</h3>
 
@@ -239,7 +238,7 @@ UICollectionViewLayout *newLayout = currentTraits.horizontalSizeClass == UIUserI
 
 <h4>Rotation Deprecations</h4>
 
-<p>```
+<p>``` objc
 &ndash;(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration;</p>
 
 <p>&ndash;(void)willAnimateFirstHalfOfRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration;</p>
@@ -257,7 +256,7 @@ UICollectionViewLayout *newLayout = currentTraits.horizontalSizeClass == UIUserI
 
 <p>取而代之的新方法:</p>
 
-<p><code>
+<p><code>objc
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id &lt;UIViewControllerTransitionCoordinator&gt;)coordinator NS_AVAILABLE_IOS(8_0);
 </code></p>
 
@@ -353,7 +352,7 @@ UICollectionViewLayout *newLayout = currentTraits.horizontalSizeClass == UIUserI
 
 <p>cell 可以自己计算它的尺寸</p>
 
-<p>```
+<p>``` objc
 &ndash; (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {</p>
 
