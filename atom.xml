@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-06-11T14:46:29+08:00</updated>
+  <updated>2014-06-11T15:00:50+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -66,10 +66,21 @@
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>@property (nonatomic, readonly) UIUserInterfaceSizeClass horizontalSizeClass;
-</span><span class='line'>@property (nonatomic, readonly) UIUserInterfaceSizeClass verticalSizeClass;
-</span><span class='line'>@property (nonatomic, readonly) CGFloat displayScale;
-</span><span class='line'>@property (nonatomic, readonly) UIUserInterfaceIdiom userInterfaceIdiom;</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;</span><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">UIUserInterfaceSizeClass</span> <span class="n">horizontalSizeClass</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;</span><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">UIUserInterfaceSizeClass</span> <span class="n">verticalSizeClass</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;</span><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">displayScale</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;</span><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">UIUserInterfaceIdiom</span> <span class="n">userInterfaceIdiom</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h4>Trait Environments</h4>
@@ -88,7 +99,15 @@
 <p>当<code>TraitCollection</code>发生改变时，触发</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>-(void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection;</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">traitCollectionDidChange:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="n">previousTraitCollection</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>重写这个方法来响应方向变化事件</p>
@@ -104,15 +123,33 @@
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>UITraitCollection *collection = self.traitCollection;
-</span><span class='line'>UITraitCollection *newCollection = [UITraitCollection traitCollectionWithHorizontalSizeClass:UIUserInterfaceSizeClassCompact];
-</span><span class='line'>[collection containsTraitsInCollection:newCollection];</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;</span> <span class="n">UITraitCollection</span> <span class="o">*</span><span class="n">collection</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">traitCollection</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;</span>    <span class="n">UITraitCollection</span> <span class="o">*</span><span class="n">newCollection</span> <span class="o">=</span> <span class="p">[</span><span class="n">UITraitCollection</span> <span class="nl">traitCollectionWithHorizontalSizeClass:</span><span class="n">UIUserInterfaceSizeClassCompact</span><span class="p">];</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;</span>    <span class="p">[</span><span class="n">collection</span> <span class="nl">containsTraitsInCollection:</span><span class="n">newCollection</span><span class="p">];</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>可以合并<code>UITraitCollection</code></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>+ (UITraitCollection *)traitCollectionWithTraitsFromCollections:(NSArray *)traitCollections;</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;+</span> <span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nl">traitCollectionWithTraitsFromCollections:</span><span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="n">traitCollections</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>其中 <code>Compact</code> + <code>Regular</code> = <code>Regular</code></p>
@@ -120,7 +157,15 @@
 <h3>Appearance Proxy</h3>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>+(instancetype)appearanceForTraitCollection:(UITraitCollection *)trait</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;+</span><span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nl">appearanceForTraitCollection:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="n">trait</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <ul>
@@ -141,7 +186,15 @@
 <p>Setup开始时:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>-(void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id&lt;UIViewControllerTransitionCoordinator&gt;)coordinator</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">willTransitionToTraitCollection:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="n">newCollection</span> <span class="nl">withTransitionCoordinator:</span><span class="p">(</span><span class="kt">id</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">UIViewControllerTransitionCoordinator</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;)</span><span class="n">coordinator</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>在这个方法可以自定义动画，并执行completion block，其顺序在下面方法之后。</p>
@@ -149,13 +202,29 @@
 <p>Setup结束时:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>-(void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">traitCollectionDidChange:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="n">previousTraitCollection</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h4>Showing View Controllers</h4>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[self.navigationController pushViewController:...]</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;</span><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">navigationController</span> <span class="nl">pushViewController:</span><span class="p">...];</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>这个机制被废弃</p>
@@ -165,9 +234,19 @@
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>- (void)showViewController:(UIViewController *)vc sender:(id)sender;
-</span><span class='line'>
-</span><span class='line'>- (void)showDetailViewController:(UIViewController *)vc sender:(id)sender;</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">showViewController:</span><span class="p">(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="n">vc</span> <span class="nl">sender:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">showDetailViewController:</span><span class="p">(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="n">vc</span> <span class="nl">sender:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="err">&#39;</span><span class="n">line</span><span class="err">&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>这两个方法总是保证，无论当前ViewController被包含在<code>NavigationController</code>, <code>SplitViewController</code>, 还是没有被包含在任何ViewController中，都会有正确的表现。</p>
