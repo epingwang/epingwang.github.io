@@ -4,7 +4,7 @@
   <title><![CDATA[Category: WWDC | EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/blog/categories/wwdc/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-06-11T15:35:25+08:00</updated>
+  <updated>2014-06-11T15:47:26+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -232,7 +232,7 @@ UICollectionViewLayout *newLayout = currentTraits.horizontalSizeClass == UIUserI
 
 <p>可以确定四个边界（不用计算Navigation、ToolBar的高度）</p>
 
-<p>See More: <a href="">Building Adaptive Apps with UIKit</a></p>
+<p>See More: <a href="http://epingwang.github.io/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/">Building Adaptive Apps with UIKit</a></p>
 
 <h3>Adaptive View Controllers</h3>
 
