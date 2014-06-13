@@ -4,7 +4,7 @@
   <title><![CDATA[Category: WWDC | EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/blog/categories/wwdc/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-06-13T11:19:10+08:00</updated>
+  <updated>2014-06-13T13:37:04+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -129,6 +129,10 @@
 </code></p>
 
 <h3>Expanded split view controller</h3>
+
+<p>在iPhone上的效果:</p>
+
+<p><img class="center" src="/images/2014/06/SplitViewController.jpg"></p>
 ]]></content>
   </entry>
   
