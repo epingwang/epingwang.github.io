@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-06-17T14:02:54+08:00</updated>
+  <updated>2014-06-17T14:14:17+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -46,6 +46,9 @@
 
 <h3>VFL语法</h3>
 
+<!--more-->
+
+
 <h4>创建一个VFL约束:</h4>
 
 <p><code>objc
@@ -73,6 +76,14 @@
 @end
 </code></p>
 
+<h4>NSLayoutFormatOptions</h4>
+
+<p>在写VFL时，遇到一个问题，我很难描述一个View需要居中的约束。</p>
+
+<p>通过计算左右边界与SuperView边界的距离是可以实现的，但很明显背离了VFL的初衷。</p>
+
+<p>查阅文档后发现这些选项就在<code>opts</code>这个参数中，不但可以设置居中，也可以设计约束的参考位置，以及对其方式，可以用位运算选择多个方式。</p>
+
 <h4>一行VFL语句:</h4>
 
 <p><code>
@@ -94,10 +105,18 @@ V: 纵向约束
 H: (默认)横向约束
 </code></p></li>
 <li>superview: <code>|</code></li>
-<li>view: <code>[&lt;viewname&gt;(&lt;predicateListWithParens)?]</code></li>
-<li>connection: <code>-padding-</code>，其中padding可以使matrics字典中的某一项，也可以是一个数值，如<code>-20-</code></li>
-<li>predicateListWithParens: <code>(&lt;predicate&gt;(,&lt;predicate&gt;)*)</code>，一组predicate，用逗号隔开</li>
-<li>predicate: <code>(&lt;relation&gt;)?(&lt;objectOfPredicate&gt;)(@&lt;priority&gt;)?</code>，例如(>=vPad@100)，意义为宽/高大于vPad（metrics字典中一项），优先级为100</li>
+<li><p>view:</p>
+
+<p>  <code>[&lt;viewname&gt;(&lt;predicateListWithParens)?]</code></p></li>
+<li><p>connection:</p>
+
+<p>  <code>-padding-</code>，其中padding可以使matrics字典中的某一项，也可以是一个数值，如<code>-20-</code></p></li>
+<li><p>predicateListWithParens:</p>
+
+<p>  <code>(&lt;predicate&gt;(,&lt;predicate&gt;)*)</code>，一组predicate，用逗号隔开</p></li>
+<li><p>predicate:</p>
+
+<p>  <code>(&lt;relation&gt;)?(&lt;objectOfPredicate&gt;)(@&lt;priority&gt;)?</code>，例如(>=vPad@100)，意义为宽/高大于vPad（metrics字典中一项），优先级为100</p></li>
 </ul>
 
 
@@ -107,12 +126,12 @@ H: (默认)横向约束
 <li>一行VFL中，所有被约束的View一定是添加约束View的SubView</li>
 <li><p>被约束的View要设置</p>
 
-<p>  <code>objc
+<p>  <code>
   [someView setTranslatesAutoresizingMaskIntoConstraints:NO];]
  </code></p></li>
 <li><p>使用VFL之后，系统不再调用这个方法</p>
 
-<p>  <code>objc
+<p>  <code>
   -(void) setFrame:(CGRect)frame
  </code></p></li>
 </ul>
