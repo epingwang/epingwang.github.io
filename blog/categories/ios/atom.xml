@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-06-13T13:37:04+08:00</updated>
+  <updated>2014-06-17T14:02:54+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -12,6 +12,113 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[小试Auto Layout——VFL篇]]></title>
+    <link href="http://epingwang.github.io/blog/2014/06/13/xiao-shi-auto-layout-vflpian/"/>
+    <updated>2014-06-13T18:47:42+08:00</updated>
+    <id>http://epingwang.github.io/blog/2014/06/13/xiao-shi-auto-layout-vflpian</id>
+    <content type="html"><![CDATA[<h3>为什么要AutoLayout</h3>
+
+<p>从iOS6开始，移动端开始支持AutoLayout。与传统的Layout方法相比，AutoLayout不再使用Origin+Size的方式描述View的位置和大小，而是使用<code>Constraints</code>（约束）来描述。</p>
+
+<p>AutoLayout的优点:</p>
+
+<ul>
+<li>iOS设备越来越多，iPhone4/5/6、iPad、甚至以后的AppleTV、iWatch，其分辨率都是不一样的，要做分辨率适配，旧的方法已经不再适合，AutoLayout提供了一个适配不同分辨率的方式。</li>
+<li>在iOS8中，View的尺寸可以通过设备旋转、Universal适配、SplitView展开/折叠等途径不断改变，就要求subview的位置和尺寸适应parent view。</li>
+<li>将View的布局计算交给View自己，而不需要在ViewController中控制，更加符合MVC。</li>
+</ul>
+
+
+<h3>为什么要用VFL</h3>
+
+<p>VFL，即Visual Format Language，是用code编码进行AutoLayout的方式。</p>
+
+<p>VFL的优点:</p>
+
+<ul>
+<li>编写简单，工作量少，代码可读性强，方便维护。</li>
+<li>由于处理的是字符串，所以符合OC的动态特性。</li>
+<li>程序员忍受得了去IB拖积木吗？</li>
+</ul>
+
+
+<h3>VFL语法</h3>
+
+<h4>创建一个VFL约束:</h4>
+
+<p><code>objc
+@interface NSLayoutConstraint
++ (NSArray *)constraintsWithVisualFormat:(NSString *)format options:(NSLayoutFormatOptions)opts metrics:(NSDictionary *)metrics views:(NSDictionary *)views;
+@end
+</code></p>
+
+<p>其中:</p>
+
+<ul>
+<li>@param format: VFL语句</li>
+<li>@param opts: 约束方式，见后续</li>
+<li>@param metrics: 约束中固定值的字典，Value必须是NSNumber</li>
+<li>@param views: 约束语句中用到的view的字典</li>
+<li>@return 返回一个NSArray，其中Object为<code>NSLayoutConstraint</code>类型</li>
+</ul>
+
+
+<p>其返回值用这个方法接收:</p>
+
+<p><code>objc
+@interface UIView (UIConstraintBasedLayoutInstallingConstraints)
+- (void)addConstraints:(NSArray *)constraints NS_AVAILABLE_IOS(6_0);
+@end
+</code></p>
+
+<h4>一行VFL语句:</h4>
+
+<p><code>
+(&lt;orientation&gt;:)?
+(&lt;superview&gt;&lt;connection&gt;)?
+&lt;view&gt;(&lt;connection&gt;&lt;view&gt;)*
+(&lt;connection&gt;&lt;superview&gt;)?
+</code>
+例如:
+<code>objc
+@"V:|-vSpace-[_touchImageView(==avatarHeight)]-vPad-[_nameTextField(==textFieldHeight)]"
+</code></p>
+
+<ul>
+<li><p>orientation:</p>
+
+<p>  <code>
+V: 纵向约束
+H: (默认)横向约束
+</code></p></li>
+<li>superview: <code>|</code></li>
+<li>view: <code>[&lt;viewname&gt;(&lt;predicateListWithParens)?]</code></li>
+<li>connection: <code>-padding-</code>，其中padding可以使matrics字典中的某一项，也可以是一个数值，如<code>-20-</code></li>
+<li>predicateListWithParens: <code>(&lt;predicate&gt;(,&lt;predicate&gt;)*)</code>，一组predicate，用逗号隔开</li>
+<li>predicate: <code>(&lt;relation&gt;)?(&lt;objectOfPredicate&gt;)(@&lt;priority&gt;)?</code>，例如(>=vPad@100)，意义为宽/高大于vPad（metrics字典中一项），优先级为100</li>
+</ul>
+
+
+<h4>注意事项:</h4>
+
+<ul>
+<li>一行VFL中，所有被约束的View一定是添加约束View的SubView</li>
+<li><p>被约束的View要设置</p>
+
+<p>  <code>objc
+  [someView setTranslatesAutoresizingMaskIntoConstraints:NO];]
+ </code></p></li>
+<li><p>使用VFL之后，系统不再调用这个方法</p>
+
+<p>  <code>objc
+  -(void) setFrame:(CGRect)frame
+ </code></p></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Session 214 View Controller Advancements for iOS8 笔记]]></title>
