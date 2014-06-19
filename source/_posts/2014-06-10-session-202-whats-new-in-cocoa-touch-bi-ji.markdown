@@ -8,14 +8,14 @@ categories: [iOS, WWDC]
 ---
 
 
-# What's New in Cocoa Touch 笔记
-
 Session 202
 
 Luke Hiesterman
 
 
 Core idea iOS8 -> Adaptivity
+
+<!--more-->
 
 ## Adaptive Layout
 
@@ -36,7 +36,7 @@ Layout 不再关心设备的方向以及设备的类型，而只关心屏幕画�
 UIViewController Conforms to `UITraitEnviroment`
 当屏幕尺寸变化（设备方向改变）时，会调用
 
-```
+``` objc
 -(void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
 {
 	// 使用Layout设置CollectionView
@@ -44,7 +44,6 @@ UIViewController Conforms to `UITraitEnviroment`
     UICollectionViewLayout *newLayout = currentTraits.horizontalSizeClass == UIUserInterfaceSizeClassCompact ? self.squaresLayout : self.rectanglesLayout;
     [self.collectionView setCollectionViewLayout:newLayout animated:YES];
 }
-
 ```
 
 ### Adaptive Margins
@@ -58,14 +57,14 @@ UIViewController 的属性:
 
 可以确定四个边界（不用计算Navigation、ToolBar的高度）
 
-See More: [Building Adaptive Apps with UIKit]()
+See More: [Building Adaptive Apps with UIKit](http://epingwang.github.io/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/)
 
 
 ### Adaptive View Controllers
 
 #### Rotation Deprecations
 
-```
+``` objc
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration;
 
 -(void)willAnimateFirstHalfOfRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration;
@@ -83,7 +82,7 @@ See More: [Building Adaptive Apps with UIKit]()
 
 取而代之的新方法:
 
-```
+``` objc
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator NS_AVAILABLE_IOS(8_0);
 ```
 
@@ -165,7 +164,7 @@ See More: [Creating Custom iOS User Interfaces]()
 
 cell 可以自己计算它的尺寸
 
-```
+``` objc
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
