@@ -4,7 +4,7 @@
   <title><![CDATA[Category: WWDC | EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/blog/categories/wwdc/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-06-19T15:46:40+08:00</updated>
+  <updated>2014-06-19T17:52:21+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -128,11 +128,50 @@
 @end
 </code></p>
 
-<h3>Expanded split view controller</h3>
-
-<p>在iPhone上的效果:</p>
+<h4>Expanded split view controller</h4>
 
 <p><img class="center" src="/images/2014/06/SplitViewController.jpg"></p>
+
+<h4>Collapsed split view controller</h4>
+
+<p><img class="center" src="/images/2014/06/SplitViewControllerCollapsed.jpg"></p>
+
+<h3>在ViewController中添加SplitViewcontroller，并启用Collapse</h3>
+
+<p><code>objc
+svc.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
+</code></p>
+
+<h3>控制分栏的宽度</h3>
+
+<p>通过以下几个属性</p>
+
+<p><code>objc
+@property(nonatomic, assign) CGFloat preferredPrimaryColumnWidthFraction NS_AVAILABLE_IOS(8_0);
+@property(nonatomic, assign) CGFloat minimumPrimaryColumnWidth NS_AVAILABLE_IOS(8_0);
+@property(nonatomic, assign) CGFloat maximumPrimaryColumnWidth NS_AVAILABLE_IOS(8_0);
+@property(nonatomic,readonly) CGFloat primaryColumnWidth NS_AVAILABLE_IOS(8_0);
+</code></p>
+
+<h2>Condesing Bars</h2>
+
+<p>现在隐藏NavigationBar和ToolBar变得相当简单，只需要以下几个属性</p>
+
+<p>自动隐藏:</p>
+
+<p><code>objc
+@property (nonatomic, readwrite, assign) BOOL condensesBarsOnSwipe;
+@property (nonatomic, readwrite, assign) BOOL condensesBarsWhenKeyboardAppears;
+@property (nonatomic, readwrite, assign) BOOL hidesBarsWhenVerticallyCompact;
+@property (nonatomic, readwrite, assign) BOOL hidesBarsOnTap;
+@property (nonatomic, readonly, assign) UITapGestureRecognizer *barHideGestureRecognizer;
+</code></p>
+
+<p>手动控制:</p>
+
+<p><code>objc
+@property (nonatomic, readwrite, assign, getter = isNavigationBarCondensed) BOOL navigationBarCondensed;
+</code></p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-06-19T15:46:40+08:00</updated>
+  <updated>2014-06-19T17:52:21+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -271,11 +271,63 @@ H: (默认)横向约束
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h3>Expanded split view controller</h3>
-
-<p>在iPhone上的效果:</p>
+<h4>Expanded split view controller</h4>
 
 <p><img class="center" src="http://epingwang.github.io/images/2014/06/SplitViewController.jpg"></p>
+
+<h4>Collapsed split view controller</h4>
+
+<p><img class="center" src="http://epingwang.github.io/images/2014/06/SplitViewControllerCollapsed.jpg"></p>
+
+<h3>在ViewController中添加SplitViewcontroller，并启用Collapse</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">svc</span><span class="p">.</span><span class="n">preferredDisplayMode</span> <span class="o">=</span> <span class="n">UISplitViewControllerDisplayModeAllVisible</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>控制分栏的宽度</h3>
+
+<p>通过以下几个属性</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">preferredPrimaryColumnWidthFraction</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">8</span><span class="n">_0</span><span class="p">);</span>
+</span><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">minimumPrimaryColumnWidth</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">8</span><span class="n">_0</span><span class="p">);</span>
+</span><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">maximumPrimaryColumnWidth</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">8</span><span class="n">_0</span><span class="p">);</span>
+</span><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span><span class="n">readonly</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">primaryColumnWidth</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">8</span><span class="n">_0</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Condesing Bars</h2>
+
+<p>现在隐藏NavigationBar和ToolBar变得相当简单，只需要以下几个属性</p>
+
+<p>自动隐藏:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">condensesBarsOnSwipe</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">condensesBarsWhenKeyboardAppears</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">hidesBarsWhenVerticallyCompact</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">hidesBarsOnTap</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">UITapGestureRecognizer</span> <span class="o">*</span><span class="n">barHideGestureRecognizer</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>手动控制:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">,</span> <span class="n">getter</span> <span class="o">=</span> <span class="n">isNavigationBarCondensed</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">navigationBarCondensed</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
 ]]></content>
   </entry>
   
