@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-06-19T17:52:21+08:00</updated>
+  <updated>2014-07-10T14:14:47+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -12,6 +12,38 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[UITextField的默认Placeholder颜色]]></title>
+    <link href="http://epingwang.github.io/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/"/>
+    <updated>2014-07-10T14:11:44+08:00</updated>
+    <id>http://epingwang.github.io/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se</id>
+    <content type="html"><![CDATA[<h3>色值为</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>R:0
+</span><span class='line'>G:0
+</span><span class='line'>B:0.0980392
+</span><span class='line'>A:0.22</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>查看方式</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSRange</span> <span class="n">range</span> <span class="o">=</span> <span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="n">NSDictionary</span> <span class="o">*</span><span class="n">dict</span> <span class="o">=</span> <span class="p">[</span><span class="n">someTextField</span><span class="p">.</span><span class="n">attributedPlaceholder</span> <span class="nl">attributesAtIndex:</span><span class="mi">0</span> <span class="nl">effectiveRange:</span><span class="o">&amp;</span><span class="n">range</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">dict</span> <span class="nl">objectForKey:</span><span class="n">NSForegroundColorAttributeName</span><span class="p">]);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[小试Auto Layout——VFL篇]]></title>
