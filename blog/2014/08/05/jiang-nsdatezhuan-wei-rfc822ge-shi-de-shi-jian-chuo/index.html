@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Hello World - EpingWang's Blog</title>
+  <title>将NSDate转为RFC822格式的时间戳 - EpingWang's Blog</title>
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="1
-Hello world ">
+  <meta name="description" content="HTTP/1.1 Protocol中要求的时间戳格式有以下三个: Sun, 06 Nov 1994 08:49:37 GMT ; RFC 822, updated by RFC 1123 Sunday, 06-Nov-94 08:49:37 GMT ; RFC 850, obsoleted by &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -25,7 +24,7 @@ Hello world ">
   
 
   
-  <link rel="canonical" href="http://epingwang.github.io/blog/2014/06/10/hello-world">
+  <link rel="canonical" href="http://epingwang.github.io/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="EpingWang's Blog" type="application/atom+xml">
@@ -78,7 +77,7 @@ Hello world ">
   
   <header>
     
-      <h1 class="entry-title">Hello World</h1>
+      <h1 class="entry-title">将NSDate转为RFC822格式的时间戳</h1>
     
     
       <p class="meta">
@@ -94,7 +93,7 @@ Hello world ">
   
 
 
-<time datetime="2014-06-10T14:58:19+08:00" pubdate data-updated="true">Jun 10<span>th</span>, 2014</time>
+<time datetime="2014-08-05T16:55:43+08:00" pubdate data-updated="true">Aug 5<span>th</span>, 2014</time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://epingwang.github.io">Comments</a>
@@ -104,8 +103,30 @@ Hello world ">
   </header>
 
 
-<div class="entry-content"><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Hello world</span></code></pre></td></tr></table></div></figure>
+<div class="entry-content"><p>HTTP/1.1 Protocol中要求的时间戳格式有以下三个:</p>
+
+<pre><code>  Sun, 06 Nov 1994 08:49:37 GMT  ; RFC 822, updated by RFC 1123
+  Sunday, 06-Nov-94 08:49:37 GMT ; RFC 850, obsoleted by RFC 1036
+  Sun Nov  6 08:49:37 1994       ; ANSI C's asctime() format
+</code></pre>
+
+<p>其中应用最广泛的是的RFC822格式</p>
+
+<p>转换方法如下:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSDateFormatter</span> <span class="o">*</span><span class="n">df</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSDateFormatter</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">df</span><span class="p">.</span><span class="n">locale</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSLocale</span> <span class="nl">localeWithLocaleIdentifier:</span><span class="s">@&quot;en-us&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">df</span><span class="p">.</span><span class="n">timeZone</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSTimeZone</span> <span class="nl">timeZoneWithAbbreviation:</span><span class="s">@&quot;GMT&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">df</span><span class="p">.</span><span class="n">dateFormat</span> <span class="o">=</span> <span class="s">@&quot;EEE&#39;,&#39; dd MMM yyyy HH&#39;:&#39;mm&#39;:&#39;ss &#39;GMT&#39;&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">dateString</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span> <span class="nl">stringFromDate:</span><span class="p">[</span><span class="n">NSDate</span> <span class="n">date</span><span class="p">]];</span>
+</span></code></pre></td></tr></table></div></figure>
 
 </div>
 
@@ -129,14 +150,8 @@ Hello world ">
   
 
 
-<time datetime="2014-06-10T14:58:19+08:00" pubdate data-updated="true">Jun 10<span>th</span>, 2014</time>
+<time datetime="2014-08-05T16:55:43+08:00" pubdate data-updated="true">Aug 5<span>th</span>, 2014</time>
       
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/ios/'>iOS</a>
-  
-</span>
 
 
       <html xmlns:wb=“http://open.weibo.com/wb”>
@@ -185,8 +200,8 @@ Hello world ">
     
     <p class="meta">
       
+        <a class="basic-alignment left" href="/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/" title="Previous Post: UITextField的默认Placeholder颜色">&laquo; UITextField的默认Placeholder颜色</a>
       
-        <a class="basic-alignment right" href="/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji/" title="Next Post: Session 202 What's New in Cocoa Touch 笔记">Session 202 What's New in Cocoa Touch 笔记 &raquo;</a>
       
     </p>
   </footer>
@@ -274,8 +289,8 @@ Hello world ">
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://epingwang.github.io/blog/2014/06/10/hello-world/';
-        var disqus_url = 'http://epingwang.github.io/blog/2014/06/10/hello-world/';
+        var disqus_identifier = 'http://epingwang.github.io/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo/';
+        var disqus_url = 'http://epingwang.github.io/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo/';
         var disqus_script = 'embed.js';
       
     (function () {

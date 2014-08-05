@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-07-10T14:14:47+08:00</updated>
+  <updated>2014-08-05T16:59:00+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -12,6 +12,39 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[将NSDate转为RFC822格式的时间戳]]></title>
+    <link href="http://epingwang.github.io/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo/"/>
+    <updated>2014-08-05T16:55:43+08:00</updated>
+    <id>http://epingwang.github.io/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo</id>
+    <content type="html"><![CDATA[<p>HTTP/1.1 Protocol中要求的时间戳格式有以下三个:</p>
+
+<pre><code>  Sun, 06 Nov 1994 08:49:37 GMT  ; RFC 822, updated by RFC 1123
+  Sunday, 06-Nov-94 08:49:37 GMT ; RFC 850, obsoleted by RFC 1036
+  Sun Nov  6 08:49:37 1994       ; ANSI C's asctime() format
+</code></pre>
+
+<p>其中应用最广泛的是的RFC822格式</p>
+
+<p>转换方法如下:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSDateFormatter</span> <span class="o">*</span><span class="n">df</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSDateFormatter</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">df</span><span class="p">.</span><span class="n">locale</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSLocale</span> <span class="nl">localeWithLocaleIdentifier:</span><span class="s">@&quot;en-us&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">df</span><span class="p">.</span><span class="n">timeZone</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSTimeZone</span> <span class="nl">timeZoneWithAbbreviation:</span><span class="s">@&quot;GMT&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">df</span><span class="p">.</span><span class="n">dateFormat</span> <span class="o">=</span> <span class="s">@&quot;EEE&#39;,&#39; dd MMM yyyy HH&#39;:&#39;mm&#39;:&#39;ss &#39;GMT&#39;&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">dateString</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span> <span class="nl">stringFromDate:</span><span class="p">[</span><span class="n">NSDate</span> <span class="n">date</span><span class="p">]];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[UITextField的默认Placeholder颜色]]></title>
