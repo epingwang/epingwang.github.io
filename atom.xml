@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-08-05T16:59:00+08:00</updated>
+  <updated>2014-08-05T17:00:08+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -36,11 +36,11 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSDateFormatter</span> <span class="o">*</span><span class="n">df</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSDateFormatter</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
-</span><span class='line'>    <span class="n">df</span><span class="p">.</span><span class="n">locale</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSLocale</span> <span class="nl">localeWithLocaleIdentifier:</span><span class="s">@&quot;en-us&quot;</span><span class="p">];</span>
-</span><span class='line'>    <span class="n">df</span><span class="p">.</span><span class="n">timeZone</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSTimeZone</span> <span class="nl">timeZoneWithAbbreviation:</span><span class="s">@&quot;GMT&quot;</span><span class="p">];</span>
-</span><span class='line'>    <span class="n">df</span><span class="p">.</span><span class="n">dateFormat</span> <span class="o">=</span> <span class="s">@&quot;EEE&#39;,&#39; dd MMM yyyy HH&#39;:&#39;mm&#39;:&#39;ss &#39;GMT&#39;&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">df</span><span class="p">.</span><span class="n">locale</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSLocale</span> <span class="nl">localeWithLocaleIdentifier:</span><span class="s">@&quot;en-us&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="n">df</span><span class="p">.</span><span class="n">timeZone</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSTimeZone</span> <span class="nl">timeZoneWithAbbreviation:</span><span class="s">@&quot;GMT&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="n">df</span><span class="p">.</span><span class="n">dateFormat</span> <span class="o">=</span> <span class="s">@&quot;EEE&#39;,&#39; dd MMM yyyy HH&#39;:&#39;mm&#39;:&#39;ss &#39;GMT&#39;&quot;</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">dateString</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span> <span class="nl">stringFromDate:</span><span class="p">[</span><span class="n">NSDate</span> <span class="n">date</span><span class="p">]];</span>
+</span><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">dateString</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span> <span class="nl">stringFromDate:</span><span class="p">[</span><span class="n">NSDate</span> <span class="n">date</span><span class="p">]];</span>
 </span></code></pre></td></tr></table></div></figure>
 
 ]]></content>
