@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-08-05T17:00:08+08:00</updated>
+  <updated>2014-08-19T18:21:19+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -12,6 +12,54 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[iOS7网络请求]]></title>
+    <link href="http://epingwang.github.io/blog/2014/08/19/ios7wang-luo-qing-qiu/"/>
+    <updated>2014-08-19T18:20:37+08:00</updated>
+    <id>http://epingwang.github.io/blog/2014/08/19/ios7wang-luo-qing-qiu</id>
+    <content type="html"><![CDATA[<h3>NSURLSession</h3>
+
+<p>NSURLSession，提供后台链接，当APP关闭时也可以下载/上传</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">// 创建</span>
+</span><span class='line'><span class="n">NSURLSessionConfiguration</span> <span class="o">*</span><span class="n">conf</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLSessionConfiguration</span> <span class="nl">backgroundSessionConfiguration:</span><span class="s">@&quot;identifier&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSURLSession</span> <span class="o">*</span><span class="n">session</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLSession</span> <span class="nl">sessionWithConfiguration:</span><span class="n">conf</span> <span class="nl">delegate:</span><span class="n">self</span> <span class="nl">delegateQueue:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 使用</span>
+</span><span class='line'><span class="n">NSURLRequest</span> <span class="o">*</span><span class="n">request</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLRequest</span> <span class="nl">requestWithURL:</span><span class="p">[</span><span class="n">NSURL</span> <span class="nl">URLWithString:</span><span class="s">@&quot;Some URL&quot;</span><span class="p">]];</span>
+</span><span class='line'>    <span class="n">NSURLSessionDownloadTask</span> <span class="o">*</span><span class="n">task</span> <span class="o">=</span> <span class="p">[</span><span class="n">session</span> <span class="nl">downloadTaskWithRequest:</span><span class="n">request</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">task</span> <span class="n">resume</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>当Session下载/上传完成后，如果APP不在前台，iOS会自动启动APP，并且调用这个方法:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">handleEventsForBackgroundURLSession:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">identifier</span> <span class="nf">completionHandler:</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)())</span><span class="nv">completionHandler</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>session的代理会收到回调</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">URLSession:</span><span class="p">(</span><span class="n">NSURLSession</span> <span class="o">*</span><span class="p">)</span><span class="nv">session</span> <span class="nf">downloadTask:</span><span class="p">(</span><span class="n">NSURLSessionDownloadTask</span> <span class="o">*</span><span class="p">)</span><span class="nv">downloadTask</span> <span class="nf">didFinishDownloadingToURL:</span><span class="p">(</span><span class="n">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="nv">downloadURL</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">其中</span><span class="n">downloadURL</span><span class="err">中的</span><span class="n">Data</span><span class="err">就是下载完成的</span><span class="n">Data</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[将NSDate转为RFC822格式的时间戳]]></title>

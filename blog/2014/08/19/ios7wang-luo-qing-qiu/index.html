@@ -5,11 +5,20 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>小试Auto Layout——VFL篇 - EpingWang's Blog</title>
+  <title>iOS7网络请求 - EpingWang's Blog</title>
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="为什么要AutoLayout 从iOS6开始，移动端开始支持AutoLayout。与传统的Layout方法相比，AutoLayout不再使用Origin+Size的方式描述View的位置和大小，而是使用Constraints（约束）来描述。 AutoLayout的优点: iOS设备越来越多， &hellip;">
+  <meta name="description" content="NSURLSession NSURLSession，提供后台链接，当APP关闭时也可以下载/上传 1
+2
+3
+4
+5
+6
+7
+8
+// 创建
+NSURLSessionConfiguration *conf = [NSURLSessionConfiguration &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -24,7 +33,7 @@
   
 
   
-  <link rel="canonical" href="http://epingwang.github.io/blog/2014/06/13/xiao-shi-auto-layout-vflpian">
+  <link rel="canonical" href="http://epingwang.github.io/blog/2014/08/19/ios7wang-luo-qing-qiu">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="EpingWang's Blog" type="application/atom+xml">
@@ -77,7 +86,7 @@
   
   <header>
     
-      <h1 class="entry-title">小试Auto Layout——VFL篇</h1>
+      <h1 class="entry-title">iOS7网络请求</h1>
     
     
       <p class="meta">
@@ -93,7 +102,7 @@
   
 
 
-<time datetime="2014-06-13T18:47:42+08:00" pubdate data-updated="true">Jun 13<span>th</span>, 2014</time>
+<time datetime="2014-08-19T18:20:37+08:00" pubdate data-updated="true">Aug 19<span>th</span>, 2014</time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://epingwang.github.io">Comments</a>
@@ -103,136 +112,45 @@
   </header>
 
 
-<div class="entry-content"><h3>为什么要AutoLayout</h3>
+<div class="entry-content"><h3>NSURLSession</h3>
 
-<p>从iOS6开始，移动端开始支持AutoLayout。与传统的Layout方法相比，AutoLayout不再使用Origin+Size的方式描述View的位置和大小，而是使用<code>Constraints</code>（约束）来描述。</p>
-
-<p>AutoLayout的优点:</p>
-
-<ul>
-<li>iOS设备越来越多，iPhone4/5/6、iPad、甚至以后的AppleTV、iWatch，其分辨率都是不一样的，要做分辨率适配，旧的方法已经不再适合，AutoLayout提供了一个适配不同分辨率的方式。</li>
-<li>在iOS8中，View的尺寸可以通过设备旋转、Universal适配、SplitView展开/折叠等途径不断改变，就要求subview的位置和尺寸适应parent view。</li>
-<li>将View的布局计算交给View自己，而不需要在ViewController中控制，更加符合MVC。</li>
-</ul>
-
-
-<h3>为什么要用VFL</h3>
-
-<p>VFL，即Visual Format Language，是用code编码进行AutoLayout的方式。</p>
-
-<p>VFL的优点:</p>
-
-<ul>
-<li>编写简单，工作量少，代码可读性强，方便维护。</li>
-<li>由于处理的是字符串，所以符合OC的动态特性。</li>
-<li>程序员忍受得了去IB拖积木吗？</li>
-</ul>
-
-
-<h3>VFL语法</h3>
-
-<!--more-->
-
-
-<h4>创建一个VFL约束:</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">NSLayoutConstraint</span>
-</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nf">constraintsWithVisualFormat:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">format</span> <span class="nf">options:</span><span class="p">(</span><span class="n">NSLayoutFormatOptions</span><span class="p">)</span><span class="nv">opts</span> <span class="nf">metrics:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">metrics</span> <span class="nf">views:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">views</span><span class="p">;</span>
-</span><span class='line'><span class="k">@end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>其中:</p>
-
-<ul>
-<li>@param format: VFL语句</li>
-<li>@param opts: 约束方式，见后续</li>
-<li>@param metrics: 约束中固定值的字典，Value必须是NSNumber</li>
-<li>@param views: 约束语句中用到的view的字典</li>
-<li>@return 返回一个NSArray，其中Object为<code>NSLayoutConstraint</code>类型</li>
-</ul>
-
-
-<p>其返回值用这个方法接收:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">UIView</span> <span class="nl">(UIConstraintBasedLayoutInstallingConstraints)</span>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addConstraints:</span><span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">constraints</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">6</span><span class="n">_0</span><span class="p">);</span>
-</span><span class='line'><span class="k">@end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>NSLayoutFormatOptions</h4>
-
-<p>在写VFL时，遇到一个问题，我很难描述一个View需要居中的约束。</p>
-
-<p>通过计算左右边界与SuperView边界的距离是可以实现的，但很明显背离了VFL的初衷。</p>
-
-<p>查阅文档后发现这些选项就在<code>opts</code>这个参数中，不但可以设置居中，也可以设计约束的参考位置，以及对其方式，可以用位运算选择多个方式。</p>
-
-<h4>一行VFL语句:</h4>
+<p>NSURLSession，提供后台链接，当APP关闭时也可以下载/上传</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">(</span><span class="o">&lt;</span><span class="n">orientation</span><span class="o">&gt;:</span><span class="p">)</span><span class="o">?</span>
-</span><span class='line'><span class="p">(</span><span class="o">&lt;</span><span class="n">superview</span><span class="o">&gt;&lt;</span><span class="n">connection</span><span class="o">&gt;</span><span class="p">)</span><span class="o">?</span>
-</span><span class='line'><span class="o">&lt;</span><span class="n">view</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&lt;</span><span class="n">connection</span><span class="o">&gt;&lt;</span><span class="n">view</span><span class="o">&gt;</span><span class="p">)</span><span class="o">*</span>
-</span><span class='line'><span class="p">(</span><span class="o">&lt;</span><span class="n">connection</span><span class="o">&gt;&lt;</span><span class="n">superview</span><span class="o">&gt;</span><span class="p">)</span><span class="o">?</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">// 创建</span>
+</span><span class='line'><span class="n">NSURLSessionConfiguration</span> <span class="o">*</span><span class="n">conf</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLSessionConfiguration</span> <span class="nl">backgroundSessionConfiguration:</span><span class="s">@&quot;identifier&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSURLSession</span> <span class="o">*</span><span class="n">session</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLSession</span> <span class="nl">sessionWithConfiguration:</span><span class="n">conf</span> <span class="nl">delegate:</span><span class="n">self</span> <span class="nl">delegateQueue:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 使用</span>
+</span><span class='line'><span class="n">NSURLRequest</span> <span class="o">*</span><span class="n">request</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLRequest</span> <span class="nl">requestWithURL:</span><span class="p">[</span><span class="n">NSURL</span> <span class="nl">URLWithString:</span><span class="s">@&quot;Some URL&quot;</span><span class="p">]];</span>
+</span><span class='line'>    <span class="n">NSURLSessionDownloadTask</span> <span class="o">*</span><span class="n">task</span> <span class="o">=</span> <span class="p">[</span><span class="n">session</span> <span class="nl">downloadTaskWithRequest:</span><span class="n">request</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">task</span> <span class="n">resume</span><span class="p">];</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>例如:</p>
+<p>当Session下载/上传完成后，如果APP不在前台，iOS会自动启动APP，并且调用这个方法:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="s">@&quot;V:|-vSpace-[_touchImageView(==avatarHeight)]-vPad-[_nameTextField(==textFieldHeight)]&quot;</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">handleEventsForBackgroundURLSession:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">identifier</span> <span class="nf">completionHandler:</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)())</span><span class="nv">completionHandler</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<ul>
-<li><p>orientation:</p>
+<p>session的代理会收到回调</p>
 
-<p>  <code>
-V: 纵向约束
-H: (默认)横向约束
-</code></p></li>
-<li>superview: <code>|</code></li>
-<li><p>view:</p>
-
-<p>  <code>[&lt;viewname&gt;(&lt;predicateListWithParens)?]</code></p></li>
-<li><p>connection:</p>
-
-<p>  <code>-padding-</code>，其中padding可以使matrics字典中的某一项，也可以是一个数值，如<code>-20-</code></p></li>
-<li><p>predicateListWithParens:</p>
-
-<p>  <code>(&lt;predicate&gt;(,&lt;predicate&gt;)*)</code>，一组predicate，用逗号隔开</p></li>
-<li><p>predicate:</p>
-
-<p>  <code>(&lt;relation&gt;)?(&lt;objectOfPredicate&gt;)(@&lt;priority&gt;)?</code>，例如(>=vPad@100)，意义为宽/高大于vPad（metrics字典中一项），优先级为100</p></li>
-</ul>
-
-
-<h4>注意事项:</h4>
-
-<ul>
-<li>一行VFL中，所有被约束的View一定是添加约束View的SubView</li>
-<li><p>被约束的View要设置</p>
-
-<p>  <code>
-  [someView setTranslatesAutoresizingMaskIntoConstraints:NO];]
- </code></p></li>
-<li><p>使用VFL之后，系统不再调用这个方法</p>
-
-<p>  <code>
-  -(void) setFrame:(CGRect)frame
- </code></p></li>
-</ul>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">URLSession:</span><span class="p">(</span><span class="n">NSURLSession</span> <span class="o">*</span><span class="p">)</span><span class="nv">session</span> <span class="nf">downloadTask:</span><span class="p">(</span><span class="n">NSURLSessionDownloadTask</span> <span class="o">*</span><span class="p">)</span><span class="nv">downloadTask</span> <span class="nf">didFinishDownloadingToURL:</span><span class="p">(</span><span class="n">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="nv">downloadURL</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">其中</span><span class="n">downloadURL</span><span class="err">中的</span><span class="n">Data</span><span class="err">就是下载完成的</span><span class="n">Data</span>
+</span></code></pre></td></tr></table></div></figure>
 
 </div>
 
@@ -256,14 +174,8 @@ H: (默认)横向约束
   
 
 
-<time datetime="2014-06-13T18:47:42+08:00" pubdate data-updated="true">Jun 13<span>th</span>, 2014</time>
+<time datetime="2014-08-19T18:20:37+08:00" pubdate data-updated="true">Aug 19<span>th</span>, 2014</time>
       
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/autolayout/'>AutoLayout</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>, <a class='category' href='/blog/categories/xin-de/'>心得</a>
-  
-</span>
 
 
       <html xmlns:wb=“http://open.weibo.com/wb”>
@@ -312,10 +224,8 @@ H: (默认)横向约束
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji/" title="Previous Post: Session 214 View Controller Advancements for iOS8 笔记">&laquo; Session 214 View Controller Advancements for iOS8 笔记</a>
+        <a class="basic-alignment left" href="/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo/" title="Previous Post: 将NSDate转为RFC822格式的时间戳">&laquo; 将NSDate转为RFC822格式的时间戳</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/" title="Next Post: UITextField的默认Placeholder颜色">UITextField的默认Placeholder颜色 &raquo;</a>
       
     </p>
   </footer>
@@ -403,8 +313,8 @@ H: (默认)横向约束
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://epingwang.github.io/blog/2014/06/13/xiao-shi-auto-layout-vflpian/';
-        var disqus_url = 'http://epingwang.github.io/blog/2014/06/13/xiao-shi-auto-layout-vflpian/';
+        var disqus_identifier = 'http://epingwang.github.io/blog/2014/08/19/ios7wang-luo-qing-qiu/';
+        var disqus_url = 'http://epingwang.github.io/blog/2014/08/19/ios7wang-luo-qing-qiu/';
         var disqus_script = 'embed.js';
       
     (function () {
