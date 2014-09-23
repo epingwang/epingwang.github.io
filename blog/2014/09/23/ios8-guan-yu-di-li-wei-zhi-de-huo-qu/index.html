@@ -5,11 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>将NSDate转为RFC822格式的时间戳 - EpingWang's Blog</title>
+  <title>iOS8 关于地理位置的获取 - EpingWang's Blog</title>
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="HTTP/1.1 Protocol中要求的时间戳格式有以下三个: Sun, 06 Nov 1994 08:49:37 GMT ; RFC 822, updated by RFC 1123 Sunday, 06-Nov-94 08:49:37 GMT ; RFC 850, obsoleted by &hellip;">
+  <meta name="description" content="在iOS8之前 当我们调用 1
+2
+CLLocationManager *locationManager = [[CLLocationManager alloc] init];
+[locationManager startUpdatingLocation]; 这个方法时，会自动弹出警告， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -24,7 +27,7 @@
   
 
   
-  <link rel="canonical" href="http://epingwang.github.io/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo">
+  <link rel="canonical" href="http://epingwang.github.io/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="EpingWang's Blog" type="application/atom+xml">
@@ -77,7 +80,7 @@
   
   <header>
     
-      <h1 class="entry-title">将NSDate转为RFC822格式的时间戳</h1>
+      <h1 class="entry-title">iOS8 关于地理位置的获取</h1>
     
     
       <p class="meta">
@@ -93,7 +96,7 @@
   
 
 
-<time datetime="2014-08-05T16:55:43+08:00" pubdate data-updated="true">Aug 5<span>th</span>, 2014</time>
+<time datetime="2014-09-23T17:32:39+08:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2014</time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://epingwang.github.io">Comments</a>
@@ -103,30 +106,41 @@
   </header>
 
 
-<div class="entry-content"><p>HTTP/1.1 Protocol中要求的时间戳格式有以下三个:</p>
+<div class="entry-content"><h3>在iOS8之前</h3>
 
-<pre><code>  Sun, 06 Nov 1994 08:49:37 GMT  ; RFC 822, updated by RFC 1123
-  Sunday, 06-Nov-94 08:49:37 GMT ; RFC 850, obsoleted by RFC 1036
-  Sun Nov  6 08:49:37 1994       ; ANSI C's asctime() format
-</code></pre>
-
-<p>其中应用最广泛的是的RFC822格式</p>
-
-<p>转换方法如下:</p>
+<p>当我们调用</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSDateFormatter</span> <span class="o">*</span><span class="n">df</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSDateFormatter</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
-</span><span class='line'><span class="n">df</span><span class="p">.</span><span class="n">locale</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSLocale</span> <span class="nl">localeWithLocaleIdentifier:</span><span class="s">@&quot;en-us&quot;</span><span class="p">];</span>
-</span><span class='line'><span class="n">df</span><span class="p">.</span><span class="n">timeZone</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSTimeZone</span> <span class="nl">timeZoneWithAbbreviation:</span><span class="s">@&quot;GMT&quot;</span><span class="p">];</span>
-</span><span class='line'><span class="n">df</span><span class="p">.</span><span class="n">dateFormat</span> <span class="o">=</span> <span class="s">@&quot;EEE&#39;,&#39; dd MMM yyyy HH&#39;:&#39;mm&#39;:&#39;ss &#39;GMT&#39;&quot;</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">dateString</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span> <span class="nl">stringFromDate:</span><span class="p">[</span><span class="n">NSDate</span> <span class="n">date</span><span class="p">]];</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">CLLocationManager</span> <span class="o">*</span><span class="n">locationManager</span> <span class="o">=</span> <span class="p">[[</span><span class="n">CLLocationManager</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">locationManager</span> <span class="n">startUpdatingLocation</span><span class="p">];</span>
 </span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个方法时，会自动弹出警告，请求用户通过地理位置权限</p>
+
+<h3>iOS8中</h3>
+
+<p>Apple文档中的解释</p>
+
+<p><strong>&ndash; (void)requestWhenInUseAuthorization 中: </strong></p>
+
+<blockquote><p>You must call this method or the requestAlwaysAuthorization method prior to using location services. If the user grants “when-in-use” authorization to your app, your app can start most (but not all) location services while it is in the foreground. (Apps cannot use any services that automatically relaunch the app, such as region monitoring or the significant location change service.) When started in the foreground, services continue to run in the background if your app has enabled background location updates in the Capabilities tab of your Xcode project. Attempts to start location services while your app is running in the background will fail. The system displays a location-services indicator in the status bar when your app moves to the background with active location services.</p></blockquote>
+
+<!--more-->
+
+
+<p><strong>简单解释:</strong></p>
+
+<p>当请求地理位置之前，必须先显式调用<code>-(void)requestWhenInUseAuthorization</code>或者<code>- (void)requestAlwaysAuthorization</code>方法，当用户通过请求时，前者可以在程序前台运行时获取地理位置，后者则可以在程序后台运行时继续获取位置，并可唤醒程序</p>
+
+<h4>其他的事项</h4>
+
+<ul>
+<li><p>请求时和在设置中显示的文本:</p>
+
+<p>  在<code>Info.plist</code>中修改，Key为<code>NSLocationWhenInUseUsageDescription</code>或<code>NSLocationAlwaysUsageDescription</code></p></li>
+</ul>
 
 </div>
 
@@ -150,7 +164,7 @@
   
 
 
-<time datetime="2014-08-05T16:55:43+08:00" pubdate data-updated="true">Aug 5<span>th</span>, 2014</time>
+<time datetime="2014-09-23T17:32:39+08:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2014</time>
       
 
 
@@ -200,10 +214,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/" title="Previous Post: UITextField的默认Placeholder颜色">&laquo; UITextField的默认Placeholder颜色</a>
+        <a class="basic-alignment left" href="/blog/2014/08/19/ios7wang-luo-qing-qiu/" title="Previous Post: iOS7网络请求">&laquo; iOS7网络请求</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/08/19/ios7wang-luo-qing-qiu/" title="Next Post: iOS7网络请求">iOS7网络请求 &raquo;</a>
       
     </p>
   </footer>
@@ -291,8 +303,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://epingwang.github.io/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo/';
-        var disqus_url = 'http://epingwang.github.io/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo/';
+        var disqus_identifier = 'http://epingwang.github.io/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu/';
+        var disqus_url = 'http://epingwang.github.io/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu/';
         var disqus_script = 'embed.js';
       
     (function () {
