@@ -110,88 +110,12 @@
 
 <p>最近苹果审核更严厉了，我们产品新版（陪你看电影App）提交也接连被苹果Reject，平均更新审核周期也在12天左右。前两天3.3.0新版终于尼玛审核通过了，前后花了一个多月时间也是醉了，中间的各种苦逼心酸和无奈不提也罢，总结下经验教训吧。当然，审核不通过可以有太多的原因，大家可以参考苹果最新公布的审核指南，我在这里只聊聊我们这次新版提交审核遇到的一些问题。</p>
 
-<h3>关于“第三方登录”</h3>
-
-<blockquote><p>10.6 Apple and our customers place a high value on simple, refined, creative, well thought through interfaces. They take more work but are worth it. Apple sets a high bar. If your user interface is complex or less than very good, it may be rejected.</p>
-
-<p>(Apple和我们的用户都对界面报以很高期望，希望他设计的超级简洁，精致，充满创造力，深思熟虑。做到这些确实会消耗很多精力，但是值得。Apple在这方面要求非常高。如果你的用户界面过于复杂，甚至仅仅是不够好，都可能被拒。)</p></blockquote>
-
-<p>很多产品都流行使用第三方平台账户做单点登录，比如微博、QQ和微信登录，可以拉低用户注册成本，甚至可以拉取第三方平台的好友关系链。</p>
-
-<p>实际的体验场景是当用户当前设备安装了第三方客户端时，可以直接调用第三方客户端进行验证登录，但是，如果用户当前设备没有安装第三方客户端，则通常是会弹出H5的授权验证页面，但因为这个页面有被钓鱼的风险，新版QQ登录SDK是不提供这种方式进行验证授权的，就有了如下图所示的结果。</p>
-
-<p><img class="center" src="images/2014/09/qq_login.jpeg"></p>
-
-<p>虽然苹果Reject的理由是他们认为这个界面的体验违背了上述的10.6条款，但实际上苹果应该也是<strong>不允许在应用内有阻碍用户继续操作的行为包括提示引导用户去下载第三方App的行为</strong>。</p>
-
-<h4>解决方式：</h4>
-
-<p>用户在打开应用时如果检测到当前设备已安装手Q则显示QQ登录按钮，反之，则隐藏QQ登录按钮。还有一种做法是当用户打开应用时如果没检测到手Q则提示“未安装XX客户端，请选择其它登录方式或安装XX客户端后再进行登录”（这种方式我没有验证过）。</p>
-
-<h3>关于“Advertising Identifier (IDFA)”</h3>
-
-<blockquote><p>PLA 3.3.12  We found your app uses the iOS Advertising Identifier but does not include ad functionality. This does not comply with the terms of the iOS Developer Program License Agreement, as required by the App Store Review Guidelines</p>
-
-<p>（我们发现你的应用使用了IDFA，但并没有提供广告功能，这不符合苹果App Store审核规范关于iOS开发者协议的条款）。</p></blockquote>
-
-<p>Advertising Identifier就是所谓的IDFA，是每台iOS设备的唯一标识符，IDFA的使用必须有明确的广告用途才被允许，苹果在前两年宣布淘汰UDID后，IDFA成为提供精确广告的唯一方法。很多开发者包括第三方数据统计分析平台都会在统计激活安装量时使用到IDFA，比如积分墙厂商在跟CP结算数据时也都倾向使用IDFA。
-苹果审核一般会检测以下三个调用判断你是否使用IDFA：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class: ASIdentifierManager
-</span><span class='line'>selector: advertisingIdentifier
-</span><span class='line'>framework: AdSupport.framework</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>如果你希望在应用内展示广告，但又想使用IDFA，请尝试以下：</strong></p>
-
-<p>在应用内插一个可在后台自主关闭的展示Banner展示，比如使用有米或友盟的广告SDK（虽然有米的这个Banner广告也未使用到IDFA），通过审核后如果不要这个广告再把Banner条关闭掉。一定要注意的是尽量把这个广告放在比较容易被发现的位置，如果放在深层目录的话最好在提交的时候说明如何locate Ads。有做积分墙朋友建议使用苹果的iAD广告框架，插上素材，用户点击后跳转到淘宝、天猫等电商页面，其实这也有个风险，因为Banner右下角会显示来自iAD的广告，而审核人员知道iAD是没有使用IDFA的，这可能会成为reject的理由（事实上，这也是我们被Reject的理由）。</p>
-
-<p>还有一种方案是不做任何代码修改，在提交的时候勾选第三项“将在这款应用内采取的措施归因于之前发布的广告”（我没有验证过）。</p>
-
-<p><img class="center" src="/images/2014/09/idfa.jpeg"></p>
-
-<h3>关于“应用内活动”</h3>
-
-<blockquote><p>20.2 Official rules for sweepstakes and contests, must be presented in the App and make it clear that Apple is not a sponsor or involved in the activity in any manner.</p>
-
-<p>（ 应用中必须展示赌博和竞赛的官方条款，并声明Apple不是资助者，并且在任何情况下与此事无关。）</p></blockquote>
-
-<p>也许你应用内活动真的跟苹果公司无半毛钱关系，也保不准一定能通过审核，很简单，在活动页声明“本活动与苹果公司无关”即可，但还是建议不要在审核期间上线类似送壕机的活动。</p>
-
-<p><img class="center" src="/images/2014/09/in_app_activity.png"></p>
-
-<h3>关于“应用推荐”</h3>
-
-<p>关于“应用推荐”不用多说了，跟很多苹果助手类产品一样，苹果很早就表示拒绝这类软件和功能的上架（仅接受推自家产品），不过依然有很多CP为了换量的需求而上这个功能，虽然有些能侥幸通过审核，但还是不建议在审核期展示出来。</p>
-
-<p><img class="center" src="/images/2014/09/app_advertise.png"></p>
-
-<h3>关于“支持ARM64bit”</h3>
-
-<p>尽管自从iPhone5s开始处理器已支持64bit，且苹果在官网上要求开发者开发的应用必须兼容32位和64位处理器，但显然不管是平台还是开发者大多还没有重视这块。9月10日下午一直到第二天凌晨，大量开发者反映因为ARM64问题导致无法提交Build，出错信息如下。</p>
-
-<p><img class="center" src="/images/2014/09/arm64_error.jpeg"></p>
-
-<p>截至目前除了微信及友盟有提供64位SDK版本外，其它主流第三方平台SDK都还木有更新。虽然，第二天早上这个问题已不再出现，但是兼容64位已是大势所趋，建议开发者可以着手考虑调整64位架构了。</p>
-
-<p><img class="center" src="/images/2014/09/apple_forum.jpeg"></p>
-
-<h3>关于“加急审核”</h3>
-
-<p>不是每个人的加急审核申请都能被通过，一般来说如果你的当前线上产品有很致命的严重影响用户使用的Bug申请加急审核都能被通过，当然也有因为市场活动原因申请加急审核申请被通过的。</p>
-
-<p>一旦你的加急审核申请通过了，你的App会在一个工作日内被处理，如果这期间因为可能出现的其它问题导致再次被reject，你只需要重新提交修改后的build或补充说明（metadata reject）就行，你的App将会一直处于加急审核队列，直到审核通过。</p>
-
-<p>苹果加急审核邮箱：<a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#111;&#x3a;&#x41;&#112;&#112;&#x52;&#101;&#118;&#x69;&#101;&#x77;&#64;&#97;&#112;&#x70;&#x70;&#108;&#x65;&#x2e;&#x63;&#x6f;&#x6d;">&#65;&#x70;&#x70;&#x52;&#x65;&#x76;&#105;&#101;&#119;&#64;&#97;&#x70;&#112;&#112;&#x6c;&#x65;&#46;&#99;&#x6f;&#x6d;</a></p>
-
-<p>网页提交地址：<a href="https://developer.apple.com/appstore/contact/?topic=expedite">https://developer.apple.com/appstore/contact/?topic=expedite</a></p>
-
-<p>最后，允许我自私的给自家产品打个广告吧，陪你看电影——好电影，要分享！ 一键下载链接：<a href="http://www.3ovie.com">http://www.3ovie.com</a> 或在App Store和各大Android商店搜索“陪你看电影”。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/09/24/appstoreshen-he-jing-yan-fen-xiang/">Read on &rarr;</a>
+    </footer>
   
 
 
