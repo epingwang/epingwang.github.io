@@ -1,0 +1,334 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>iOS8 关于地理位置的获取 - EpingWang's Blog</title>
+  <meta name="author" content="Eping Wang">
+
+  
+  <meta name="description" content="在iOS8之前 当我们调用 1
+2
+CLLocationManager *locationManager = [[CLLocationManager alloc] init];
+[locationManager startUpdatingLocation]; 这个方法时，会自动弹出警告， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+      
+  <!-- Verification -->
+  <meta name="baidu-site-verification" content="h0CbEUGEMK" />
+  <meta name="msvalidate.01" content="8AD60CB9FBDEC14BCDBD80BC2525D396" />
+      
+  
+
+  
+  <link rel="canonical" href="http://epingwang.github.io/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="EpingWang's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+ -->
+<link href="/stylesheets/google-fonts-local.css" rel="stylesheet" type="text/css">
+
+  
+  
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">EpingWang's Blog</a></h1>
+  
+    <h2>漆黑舞台，怎能掩盖，我们的流光溢彩</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:epingwang.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">iOS8 关于地理位置的获取</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-09-23T17:32:39+08:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2014</time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://epingwang.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>在iOS8之前</h3>
+
+<p>当我们调用</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">CLLocationManager</span> <span class="o">*</span><span class="n">locationManager</span> <span class="o">=</span> <span class="p">[[</span><span class="n">CLLocationManager</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">locationManager</span> <span class="n">startUpdatingLocation</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个方法时，会自动弹出警告，请求用户通过地理位置权限</p>
+
+<h3>iOS8中</h3>
+
+<p>Apple文档中的解释</p>
+
+<p><strong>&ndash; (void)requestWhenInUseAuthorization 中: </strong></p>
+
+<blockquote><p>You must call this method or the requestAlwaysAuthorization method prior to using location services. If the user grants “when-in-use” authorization to your app, your app can start most (but not all) location services while it is in the foreground. (Apps cannot use any services that automatically relaunch the app, such as region monitoring or the significant location change service.) When started in the foreground, services continue to run in the background if your app has enabled background location updates in the Capabilities tab of your Xcode project. Attempts to start location services while your app is running in the background will fail. The system displays a location-services indicator in the status bar when your app moves to the background with active location services.</p></blockquote>
+
+<!--more-->
+
+
+<p><strong>简单解释:</strong></p>
+
+<p>当请求地理位置之前，必须先显式调用<code>-(void)requestWhenInUseAuthorization</code>或者<code>- (void)requestAlwaysAuthorization</code>方法，当用户通过请求时，前者可以在程序前台运行时获取地理位置，后者则可以在程序后台运行时继续获取位置，并可唤醒程序</p>
+
+<h4>其他的事项</h4>
+
+<ul>
+<li><p>请求时和在设置中显示的文本:</p>
+
+<p>  在<code>Info.plist</code>中修改，Key为<code>NSLocationWhenInUseUsageDescription</code>或<code>NSLocationAlwaysUsageDescription</code></p></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Eping Wang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-09-23T17:32:39+08:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2014</time>
+      
+
+
+      <html xmlns:wb=“http://open.weibo.com/wb”>
+    <head>
+        <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+    </head>
+    
+<div class="sharing">
+    
+    <!--
+     <script type="text/javascript" charset="utf-8">
+     (function(){
+     var _w = 72 , _h = 16;
+     var param = {
+     url:location.href,
+     type:'3',
+     count:'1', /**是否显示分享数，1显示(可选)*/
+     appkey:'', /**您申请的应用appkey,显示分享来源(可选)*/
+     title:'',/**分享的文字内容(可选，默认为所在页面的title)*/
+     pic:'', /**分享图片的路径(可选)*/
+     ralateUid:"2386878033", /**关联用户的UID，分享微博会@该用户(可选)*/
+    	language:'zh_cn', /**设置语言，zh_cn|zh_tw(可选)*/
+     rnd:new Date().valueOf()
+     }
+     var temp = [];
+     for( var p in param ){
+     temp.push(p + '=' + encodeURIComponent( param[p] || '' ) )
+     }
+     document.write('<iframe allowTransparency="true" frameborder="0" scrolling="no" src="http://hits.sinajs.cn/A1/weiboshare.html?' + temp.join('&') + '" width="'+ _w+'" height="'+_h+'"></iframe>')
+     })()
+     </script>
+     -->
+    
+    <wb:share-button addition="text" type="button" picture_search="false" language="zh_cn" ralateUid="2386878033"></wb:share-button>
+    <br>
+    
+    
+    
+    
+    
+</div>
+
+    </p>
+    
+    
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/08/19/ios7wang-luo-qing-qiu/" title="Previous Post: iOS7网络请求">&laquo; iOS7网络请求</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'epingwang'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+    </script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <html xmlns:wb=“http://open.weibo.com/wb”>
+<head>
+    <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+
+<section>
+    <wb:follow-button uid="2386878033" type="red_3" width="100%" height="24" ></wb:follow-button>
+</section>
+
+
+</html><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu/">iOS8 关于地理位置的获取</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/08/19/ios7wang-luo-qing-qiu/">iOS7网络请求</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo/">将NSDate转为RFC822格式的时间戳</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/">UITextField的默认Placeholder颜色</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/13/xiao-shi-auto-layout-vflpian/">小试Auto Layout——VFL篇</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Eping Wang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'epingwang';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://epingwang.github.io/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu/';
+        var disqus_url = 'http://epingwang.github.io/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F4046dc33078e2928498cce69fb0d82fe' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+
+
+
+</body>
+</html>

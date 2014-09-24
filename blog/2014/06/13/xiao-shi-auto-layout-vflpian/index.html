@@ -1,0 +1,434 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>小试Auto Layout——VFL篇 - EpingWang's Blog</title>
+  <meta name="author" content="Eping Wang">
+
+  
+  <meta name="description" content="为什么要AutoLayout 从iOS6开始，移动端开始支持AutoLayout。与传统的Layout方法相比，AutoLayout不再使用Origin+Size的方式描述View的位置和大小，而是使用Constraints（约束）来描述。 AutoLayout的优点: iOS设备越来越多， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+      
+  <!-- Verification -->
+  <meta name="baidu-site-verification" content="h0CbEUGEMK" />
+  <meta name="msvalidate.01" content="8AD60CB9FBDEC14BCDBD80BC2525D396" />
+      
+  
+
+  
+  <link rel="canonical" href="http://epingwang.github.io/blog/2014/06/13/xiao-shi-auto-layout-vflpian">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="EpingWang's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+ -->
+<link href="/stylesheets/google-fonts-local.css" rel="stylesheet" type="text/css">
+
+  
+  
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">EpingWang's Blog</a></h1>
+  
+    <h2>漆黑舞台，怎能掩盖，我们的流光溢彩</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:epingwang.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">小试Auto Layout——VFL篇</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-13T18:47:42+08:00" pubdate data-updated="true">Jun 13<span>th</span>, 2014</time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://epingwang.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>为什么要AutoLayout</h3>
+
+<p>从iOS6开始，移动端开始支持AutoLayout。与传统的Layout方法相比，AutoLayout不再使用Origin+Size的方式描述View的位置和大小，而是使用<code>Constraints</code>（约束）来描述。</p>
+
+<p>AutoLayout的优点:</p>
+
+<ul>
+<li>iOS设备越来越多，iPhone4/5/6、iPad、甚至以后的AppleTV、iWatch，其分辨率都是不一样的，要做分辨率适配，旧的方法已经不再适合，AutoLayout提供了一个适配不同分辨率的方式。</li>
+<li>在iOS8中，View的尺寸可以通过设备旋转、Universal适配、SplitView展开/折叠等途径不断改变，就要求subview的位置和尺寸适应parent view。</li>
+<li>将View的布局计算交给View自己，而不需要在ViewController中控制，更加符合MVC。</li>
+</ul>
+
+
+<h3>为什么要用VFL</h3>
+
+<p>VFL，即Visual Format Language，是用code编码进行AutoLayout的方式。</p>
+
+<p>VFL的优点:</p>
+
+<ul>
+<li>编写简单，工作量少，代码可读性强，方便维护。</li>
+<li>由于处理的是字符串，所以符合OC的动态特性。</li>
+<li>程序员忍受得了去IB拖积木吗？</li>
+</ul>
+
+
+<h3>VFL语法</h3>
+
+<!--more-->
+
+
+<h4>创建一个VFL约束:</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">NSLayoutConstraint</span>
+</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nf">constraintsWithVisualFormat:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">format</span> <span class="nf">options:</span><span class="p">(</span><span class="n">NSLayoutFormatOptions</span><span class="p">)</span><span class="nv">opts</span> <span class="nf">metrics:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">metrics</span> <span class="nf">views:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">views</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其中:</p>
+
+<ul>
+<li>@param format: VFL语句</li>
+<li>@param opts: 约束方式，见后续</li>
+<li>@param metrics: 约束中固定值的字典，Value必须是NSNumber</li>
+<li>@param views: 约束语句中用到的view的字典</li>
+<li>@return 返回一个NSArray，其中Object为<code>NSLayoutConstraint</code>类型</li>
+</ul>
+
+
+<p>其返回值用这个方法接收:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">UIView</span> <span class="nl">(UIConstraintBasedLayoutInstallingConstraints)</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addConstraints:</span><span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">constraints</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">6</span><span class="n">_0</span><span class="p">);</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>NSLayoutFormatOptions</h4>
+
+<p>在写VFL时，遇到一个问题，我很难描述一个View需要居中的约束。</p>
+
+<p>通过计算左右边界与SuperView边界的距离是可以实现的，但很明显背离了VFL的初衷。</p>
+
+<p>查阅文档后发现这些选项就在<code>opts</code>这个参数中，不但可以设置居中，也可以设计约束的参考位置，以及对其方式，可以用位运算选择多个方式。</p>
+
+<h4>一行VFL语句:</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">(</span><span class="o">&lt;</span><span class="n">orientation</span><span class="o">&gt;:</span><span class="p">)</span><span class="o">?</span>
+</span><span class='line'><span class="p">(</span><span class="o">&lt;</span><span class="n">superview</span><span class="o">&gt;&lt;</span><span class="n">connection</span><span class="o">&gt;</span><span class="p">)</span><span class="o">?</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">view</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&lt;</span><span class="n">connection</span><span class="o">&gt;&lt;</span><span class="n">view</span><span class="o">&gt;</span><span class="p">)</span><span class="o">*</span>
+</span><span class='line'><span class="p">(</span><span class="o">&lt;</span><span class="n">connection</span><span class="o">&gt;&lt;</span><span class="n">superview</span><span class="o">&gt;</span><span class="p">)</span><span class="o">?</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>例如:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="s">@&quot;V:|-vSpace-[_touchImageView(==avatarHeight)]-vPad-[_nameTextField(==textFieldHeight)]&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><p>orientation:</p>
+
+<p>  <code>
+V: 纵向约束
+H: (默认)横向约束
+</code></p></li>
+<li>superview: <code>|</code></li>
+<li><p>view:</p>
+
+<p>  <code>[&lt;viewname&gt;(&lt;predicateListWithParens)?]</code></p></li>
+<li><p>connection:</p>
+
+<p>  <code>-padding-</code>，其中padding可以使matrics字典中的某一项，也可以是一个数值，如<code>-20-</code></p></li>
+<li><p>predicateListWithParens:</p>
+
+<p>  <code>(&lt;predicate&gt;(,&lt;predicate&gt;)*)</code>，一组predicate，用逗号隔开</p></li>
+<li><p>predicate:</p>
+
+<p>  <code>(&lt;relation&gt;)?(&lt;objectOfPredicate&gt;)(@&lt;priority&gt;)?</code>，例如(>=vPad@100)，意义为宽/高大于vPad（metrics字典中一项），优先级为100</p></li>
+</ul>
+
+
+<h4>注意事项:</h4>
+
+<ul>
+<li>一行VFL中，所有被约束的View一定是添加约束View的SubView</li>
+<li><p>被约束的View要设置</p>
+
+<p>  <code>
+  [someView setTranslatesAutoresizingMaskIntoConstraints:NO];]
+ </code></p></li>
+<li><p>使用VFL之后，系统不再调用这个方法</p>
+
+<p>  <code>
+  -(void) setFrame:(CGRect)frame
+ </code></p></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Eping Wang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-13T18:47:42+08:00" pubdate data-updated="true">Jun 13<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/autolayout/'>AutoLayout</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>, <a class='category' href='/blog/categories/xin-de/'>心得</a>
+  
+</span>
+
+
+      <html xmlns:wb=“http://open.weibo.com/wb”>
+    <head>
+        <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+    </head>
+    
+<div class="sharing">
+    
+    <!--
+     <script type="text/javascript" charset="utf-8">
+     (function(){
+     var _w = 72 , _h = 16;
+     var param = {
+     url:location.href,
+     type:'3',
+     count:'1', /**是否显示分享数，1显示(可选)*/
+     appkey:'', /**您申请的应用appkey,显示分享来源(可选)*/
+     title:'',/**分享的文字内容(可选，默认为所在页面的title)*/
+     pic:'', /**分享图片的路径(可选)*/
+     ralateUid:"2386878033", /**关联用户的UID，分享微博会@该用户(可选)*/
+    	language:'zh_cn', /**设置语言，zh_cn|zh_tw(可选)*/
+     rnd:new Date().valueOf()
+     }
+     var temp = [];
+     for( var p in param ){
+     temp.push(p + '=' + encodeURIComponent( param[p] || '' ) )
+     }
+     document.write('<iframe allowTransparency="true" frameborder="0" scrolling="no" src="http://hits.sinajs.cn/A1/weiboshare.html?' + temp.join('&') + '" width="'+ _w+'" height="'+_h+'"></iframe>')
+     })()
+     </script>
+     -->
+    
+    <wb:share-button addition="text" type="button" picture_search="false" language="zh_cn" ralateUid="2386878033"></wb:share-button>
+    <br>
+    
+    
+    
+    
+    
+</div>
+
+    </p>
+    
+    
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji/" title="Previous Post: Session 214 View Controller Advancements for iOS8 笔记">&laquo; Session 214 View Controller Advancements for iOS8 笔记</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/" title="Next Post: UITextField的默认Placeholder颜色">UITextField的默认Placeholder颜色 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'epingwang'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+    </script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <html xmlns:wb=“http://open.weibo.com/wb”>
+<head>
+    <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+
+<section>
+    <wb:follow-button uid="2386878033" type="red_3" width="100%" height="24" ></wb:follow-button>
+</section>
+
+
+</html><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu/">iOS8 关于地理位置的获取</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/08/19/ios7wang-luo-qing-qiu/">iOS7网络请求</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo/">将NSDate转为RFC822格式的时间戳</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/">UITextField的默认Placeholder颜色</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/13/xiao-shi-auto-layout-vflpian/">小试Auto Layout——VFL篇</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Eping Wang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'epingwang';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://epingwang.github.io/blog/2014/06/13/xiao-shi-auto-layout-vflpian/';
+        var disqus_url = 'http://epingwang.github.io/blog/2014/06/13/xiao-shi-auto-layout-vflpian/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F4046dc33078e2928498cce69fb0d82fe' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+
+
+
+</body>
+</html>
