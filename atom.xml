@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-12-05T18:34:26+08:00</updated>
+  <updated>2014-12-05T18:40:16+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -78,7 +78,7 @@
 <span class='line-number'>47</span>
 <span class='line-number'>48</span>
 <span class='line-number'>49</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@implementation</span> <span class="nc">WYPTextView</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@implementation</span> <span class="nc">SomeTextView</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">init</span>
 </span><span class='line'><span class="p">{</span>
@@ -133,7 +133,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[ScrollsT 使用小结]]></title>
+    <title type="html"><![CDATA[ScrollsToTop 使用小结]]></title>
     <link href="http://epingwang.github.io/blog/2014/10/23/scrollst-shi-yong-xiao-jie/"/>
     <updated>2014-10-23T17:17:19+08:00</updated>
     <id>http://epingwang.github.io/blog/2014/10/23/scrollst-shi-yong-xiao-jie</id>
@@ -283,7 +283,7 @@
 
 <p>一旦你的加急审核申请通过了，你的App会在一个工作日内被处理，如果这期间因为可能出现的其它问题导致再次被reject，你只需要重新提交修改后的build或补充说明（metadata reject）就行，你的App将会一直处于加急审核队列，直到审核通过。</p>
 
-<p>苹果加急审核邮箱：<a href="&#x6d;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#x41;&#x70;&#112;&#82;&#101;&#x76;&#x69;&#x65;&#x77;&#64;&#97;&#112;&#x70;&#x70;&#108;&#x65;&#46;&#x63;&#111;&#109;">&#x41;&#x70;&#x70;&#x52;&#101;&#x76;&#x69;&#101;&#119;&#x40;&#97;&#112;&#x70;&#112;&#108;&#x65;&#x2e;&#x63;&#111;&#109;</a></p>
+<p>苹果加急审核邮箱：<a href="&#x6d;&#x61;&#105;&#x6c;&#x74;&#111;&#x3a;&#x41;&#112;&#112;&#82;&#x65;&#118;&#x69;&#x65;&#119;&#64;&#x61;&#112;&#x70;&#x70;&#108;&#x65;&#x2e;&#99;&#111;&#109;">&#x41;&#x70;&#x70;&#82;&#101;&#118;&#105;&#x65;&#x77;&#64;&#x61;&#112;&#x70;&#x70;&#x6c;&#101;&#x2e;&#99;&#x6f;&#x6d;</a></p>
 
 <p>网页提交地址：<a href="https://developer.apple.com/appstore/contact/?topic=expedite">https://developer.apple.com/appstore/contact/?topic=expedite</a></p>
 
