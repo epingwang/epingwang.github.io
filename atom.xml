@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-09-24T14:26:03+08:00</updated>
+  <updated>2014-12-05T18:34:26+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -12,6 +12,189 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[iOS7以上系统中，UITextView输入滚动错位的bug]]></title>
+    <link href="http://epingwang.github.io/blog/2014/12/05/ios7yi-shang-xi-tong-zhong-%2Cuitextviewshu-ru-gun-dong-cuo-wei-de-bug/"/>
+    <updated>2014-12-05T18:20:23+08:00</updated>
+    <id>http://epingwang.github.io/blog/2014/12/05/ios7yi-shang-xi-tong-zhong-,uitextviewshu-ru-gun-dong-cuo-wei-de-bug</id>
+    <content type="html"><![CDATA[<p>在iOS7中，<code>UITextView</code>多了一个<code>textContainer</code>属性用来描述一些Layout。</p>
+
+<p>在用</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">UITextView</span> <span class="o">*</span><span class="n">textView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UITextView</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个方法时，并没用初始化textContainer，会导致输入中文时页面滚动出现bug。修复这个bug，用以下的方法初始化。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@implementation</span> <span class="nc">WYPTextView</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">init</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">IOS7</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">NSTextStorage</span><span class="o">*</span> <span class="n">textStorage</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSTextStorage</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSLayoutManager</span><span class="o">*</span> <span class="n">layoutManager</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSLayoutManager</span> <span class="n">new</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">textStorage</span> <span class="nl">addLayoutManager:</span><span class="n">layoutManager</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSTextContainer</span> <span class="o">*</span><span class="n">textContainer</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSTextContainer</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithSize:</span><span class="n">CGSizeMake</span><span class="p">(</span><span class="n">someWidth</span><span class="p">,</span> <span class="n">someHeight</span><span class="p">)];</span>
+</span><span class='line'>        <span class="n">textContainer</span><span class="p">.</span><span class="n">widthTracksTextView</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">textContainer</span><span class="p">.</span><span class="n">heightTracksTextView</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">layoutManager</span> <span class="nl">addTextContainer:</span><span class="n">textContainer</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithFrame:</span><span class="n">CGRectZero</span> <span class="nl">textContainer:</span><span class="n">textContainer</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="n">init</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithFrame:</span><span class="p">(</span><span class="n">CGRect</span><span class="p">)</span><span class="nv">frame</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">IOS7</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">NSTextStorage</span><span class="o">*</span> <span class="n">textStorage</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSTextStorage</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSLayoutManager</span><span class="o">*</span> <span class="n">layoutManager</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSLayoutManager</span> <span class="n">new</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">textStorage</span> <span class="nl">addLayoutManager:</span><span class="n">layoutManager</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSTextContainer</span> <span class="o">*</span><span class="n">textContainer</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSTextContainer</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithSize:</span><span class="n">CGSizeMake</span><span class="p">(</span><span class="n">frame</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">kDeviceHeight</span><span class="p">)];</span>
+</span><span class='line'>        <span class="n">textContainer</span><span class="p">.</span><span class="n">widthTracksTextView</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">textContainer</span><span class="p">.</span><span class="n">heightTracksTextView</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">layoutManager</span> <span class="nl">addTextContainer:</span><span class="n">textContainer</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithFrame:</span><span class="n">frame</span> <span class="nl">textContainer:</span><span class="n">textContainer</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithFrame:</span><span class="n">frame</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ScrollsT 使用小结]]></title>
+    <link href="http://epingwang.github.io/blog/2014/10/23/scrollst-shi-yong-xiao-jie/"/>
+    <updated>2014-10-23T17:17:19+08:00</updated>
+    <id>http://epingwang.github.io/blog/2014/10/23/scrollst-shi-yong-xiao-jie</id>
+    <content type="html"><![CDATA[<p>我们经常会看到，很多App中点击StatusBar，tableView就会滚回顶部。</p>
+
+<p>在<code>UIScrollView</code>中，<code>scrollsToTop</code>这个属性可以实现这个效果。</p>
+
+<p>iOS官方注视中是这样解释的</p>
+
+<blockquote><p>  When the user taps the status bar, the scroll view beneath the touch which is closest to the status bar will be scrolled to top, but only if its <code>scrollsToTop</code> property is YES, its delegate does not return NO from <code>shouldScrollViewScrollToTop</code>, and it is not already at the top.</p>
+
+<p>  On iPhone, we execute this gesture only if there&rsquo;s one on-screen scroll view with <code>scrollsToTop</code> == YES. If more than one is found, none will be scrolled.</p></blockquote>
+
+<p>简单翻译一下:</p>
+
+<blockquote><p>  当用户点击status bar, 靠近status bar的scroll view会滚动到顶端。但只有 <code>scrollsToTop</code>属性设为YES，代理中<code>shouldScrollViewScrollToTop</code>方法返回YES，并且scroll view没有在顶端时会生效。</p>
+
+<p>  在iPhone中，只有当前屏幕中只有一个scroll view的<code>scrollsToTop</code>属性为YES时，该手势才会执行。如果有多个，任何一个scroll view都不会滚动。</p></blockquote>
+
+<p>在实际使用中，我们可能会用到很多UIScrollView的派生类，例如:</p>
+
+<ul>
+<li>UITableView</li>
+<li>UICollectionView</li>
+<li>UITextView</li>
+<li>UIWebView中也有一个UIScrollView</li>
+</ul>
+
+
+<p>我写了一个小工具来检测当前View中，包含的UIScrollView</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@implementation</span> <span class="nc">UIView</span> <span class="nl">(Utility)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">checkConflictScrollViews</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="n">subView</span> <span class="k">in</span> <span class="n">self</span><span class="p">.</span><span class="n">subviews</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">subView</span> <span class="n">checkConflictScrollViews</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">([</span><span class="n">subView</span> <span class="nl">isKindOfClass:</span><span class="p">[</span><span class="n">UIScrollView</span> <span class="n">class</span><span class="p">]]</span> <span class="o">&amp;&amp;</span> <span class="p">[(</span><span class="n">UIScrollView</span> <span class="o">*</span><span class="p">)</span><span class="n">subView</span> <span class="n">scrollsToTop</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="n">subView</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[AppStore审核经验分享]]></title>
@@ -100,7 +283,7 @@
 
 <p>一旦你的加急审核申请通过了，你的App会在一个工作日内被处理，如果这期间因为可能出现的其它问题导致再次被reject，你只需要重新提交修改后的build或补充说明（metadata reject）就行，你的App将会一直处于加急审核队列，直到审核通过。</p>
 
-<p>苹果加急审核邮箱：<a href="&#109;&#97;&#x69;&#x6c;&#x74;&#111;&#x3a;&#x41;&#112;&#112;&#x52;&#101;&#118;&#x69;&#x65;&#119;&#x40;&#97;&#x70;&#x70;&#x70;&#108;&#x65;&#46;&#99;&#111;&#109;">&#x41;&#x70;&#112;&#82;&#x65;&#118;&#105;&#x65;&#119;&#64;&#97;&#x70;&#x70;&#112;&#108;&#x65;&#x2e;&#x63;&#111;&#x6d;</a></p>
+<p>苹果加急审核邮箱：<a href="&#x6d;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#x41;&#x70;&#112;&#82;&#101;&#x76;&#x69;&#x65;&#x77;&#64;&#97;&#112;&#x70;&#x70;&#108;&#x65;&#46;&#x63;&#111;&#109;">&#x41;&#x70;&#x70;&#x52;&#101;&#x76;&#x69;&#101;&#119;&#x40;&#97;&#112;&#x70;&#112;&#108;&#x65;&#x2e;&#x63;&#111;&#109;</a></p>
 
 <p>网页提交地址：<a href="https://developer.apple.com/appstore/contact/?topic=expedite">https://developer.apple.com/appstore/contact/?topic=expedite</a></p>
 
