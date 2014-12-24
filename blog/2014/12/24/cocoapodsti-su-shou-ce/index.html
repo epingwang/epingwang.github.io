@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>ScrollsToTop 使用小结 - EpingWang's Blog</title>
+  <title>Cocoapods提速手册 - EpingWang's Blog</title>
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="我们经常会看到，很多App中点击StatusBar，tableView就会滚回顶部。 在UIScrollView中，scrollsToTop这个属性可以实现这个效果。 iOS官方注视中是这样解释的 When the user taps the status bar, the scroll view &hellip;">
+  <meta name="description" content="转自 CodingTime 前言 相信大家在使用cocoapods的时候，都感到在墙内速度怨念把。今天po主我在家更新代码时执行&#8217;pod install
+居然花了2个小时，各种怒从中来，遂整理了一下cocoapods提速的各种方法，给大家参考。 1.cocoapods安装提速 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -24,7 +25,7 @@
   
 
   
-  <link rel="canonical" href="http://epingwang.github.io/blog/2014/10/23/scrollst-shi-yong-xiao-jie">
+  <link rel="canonical" href="http://epingwang.github.io/blog/2014/12/24/cocoapodsti-su-shou-ce">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="EpingWang's Blog" type="application/atom+xml">
@@ -77,7 +78,7 @@
   
   <header>
     
-      <h1 class="entry-title">ScrollsToTop 使用小结</h1>
+      <h1 class="entry-title">Cocoapods提速手册</h1>
     
     
       <p class="meta">
@@ -93,7 +94,7 @@
   
 
 
-<time datetime="2014-10-23T17:17:19+08:00" pubdate data-updated="true">Oct 23<span>rd</span>, 2014</time>
+<time datetime="2014-12-24T11:09:14+08:00" pubdate data-updated="true">Dec 24<span>th</span>, 2014</time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://epingwang.github.io">Comments</a>
@@ -103,62 +104,74 @@
   </header>
 
 
-<div class="entry-content"><p>我们经常会看到，很多App中点击StatusBar，tableView就会滚回顶部。</p>
+<div class="entry-content"><p>转自 <a href="http://www.codingtime.info/post/posts/leng-zhi-shi/2014_07_28_speed_up_cocoapods">CodingTime</a></p>
 
-<p>在<code>UIScrollView</code>中，<code>scrollsToTop</code>这个属性可以实现这个效果。</p>
+<blockquote><p>前言</p>
 
-<p>iOS官方注视中是这样解释的</p>
+<p>相信大家在使用cocoapods的时候，都感到在墙内速度怨念把。今天po主我在家更新代码时执行&#8217;pod install
+居然花了2个小时，各种怒从中来，遂整理了一下cocoapods提速的各种方法，给大家参考。</p></blockquote>
 
-<blockquote><p>  When the user taps the status bar, the scroll view beneath the touch which is closest to the status bar will be scrolled to top, but only if its <code>scrollsToTop</code> property is YES, its delegate does not return NO from <code>shouldScrollViewScrollToTop</code>, and it is not already at the top.</p>
+<h3>1.cocoapods安装提速</h3>
 
-<p>  On iPhone, we execute this gesture only if there&rsquo;s one on-screen scroll view with <code>scrollsToTop</code> == YES. If more than one is found, none will be scrolled.</p></blockquote>
+<p>我们在使用&#8217;gem install cocoapods&#8217;来安装cocoapods时，是不是感觉都奇慢无比？都是gem官方源被墙惹的祸！将gem的默认官方镜像更换成淘宝镜像可以解决这一问题。在命令行中执行</p>
 
-<p>简单翻译一下:</p>
-
-<blockquote><p>  当用户点击status bar, 靠近status bar的scroll view会滚动到顶端。但只有 <code>scrollsToTop</code>属性设为YES，代理中<code>shouldScrollViewScrollToTop</code>方法返回YES，并且scroll view没有在顶端时会生效。</p>
-
-<p>  在iPhone中，只有当前屏幕中只有一个scroll view的<code>scrollsToTop</code>属性为YES时，该手势才会执行。如果有多个，任何一个scroll view都不会滚动。</p></blockquote>
-
-<p>在实际使用中，我们可能会用到很多UIScrollView的派生类，例如:</p>
-
-<ul>
-<li>UITableView</li>
-<li>UICollectionView</li>
-<li>UITextView</li>
-<li>UIWebView中也有一个UIScrollView</li>
-</ul>
-
-
-<p>我写了一个小工具来检测当前View中，包含的UIScrollView</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@implementation</span> <span class="nc">UIView</span> <span class="nl">(Utility)</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">checkConflictScrollViews</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="n">subView</span> <span class="k">in</span> <span class="n">self</span><span class="p">.</span><span class="n">subviews</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="p">[</span><span class="n">subView</span> <span class="n">checkConflictScrollViews</span><span class="p">];</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">([</span><span class="n">subView</span> <span class="nl">isKindOfClass:</span><span class="p">[</span><span class="n">UIScrollView</span> <span class="n">class</span><span class="p">]]</span> <span class="o">&amp;&amp;</span> <span class="p">[(</span><span class="n">UIScrollView</span> <span class="o">*</span><span class="p">)</span><span class="n">subView</span> <span class="n">scrollsToTop</span><span class="p">])</span> <span class="p">{</span>
-</span><span class='line'>            <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="n">subView</span><span class="p">);</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@end</span>
-</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem sources --remove https://rubygems.org/
+</span><span class='line'>gem sources -a https://ruby.taobao.org/
+</span><span class='line'>gem sources -l</span></code></pre></td></tr></table></div></figure>
 
+
+<p>若显示</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>*** CURRENT SOURCES ***
+</span><span class='line'>
+</span><span class='line'>https://ruby.taobao.org</span></code></pre></td></tr></table></div></figure>
+
+
+<p>则淘宝源替换成功。这是再执行gem install cocoapods会发现安装速度明显变快。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>注意：
+</span><span class='line'>更换淘宝gem镜像只是提高cocoapods安装速度和更新速度，不会影响任何pod命令的速度。＝  ＝</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2. 获取specs文件提速</h3>
+
+<p>cocoapods的spec文件都放在github中，而国内访问github总有些不顺畅，导致每次更新cocoapods spec文件都时候速度都比较慢。将cocoapods的spec版本库改成国内可以提升spec文件的更新速度。</p>
+
+<p>在命令行中执行</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pod repo remove master
+</span><span class='line'>pod repo add master https://gitcafe.com/akuandev/Specs.git
+</span><span class='line'>pod repo update</span></code></pre></td></tr></table></div></figure>
+
+
+<p>默认的cocoapods master仓库会被替换成国内gitcafe仓库。</p>
+
+<h3>3. pod install提速</h3>
+
+<p>每次执行<code>pod install</code>和<code>pod update</code>的时候，cocoapods都会默认更新一次spec仓库。这是一个比较耗时的操作。在确认spec版本哭不需要更新时，给这两个命令加一个参数跳过spec版本库更新</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pod install --verbose --no-repo-update
+</span><span class='line'>pod update --verbose --no-repo-update</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以明显提高这两个命令的执行速度。</p>
+
+<h3>4. 终极提速大法</h3>
+
+<p>在将gem、cocoapods spec文件都改成国内镜像之后，剩下的还能提速的步骤就是将各个pod的源码也拖到国内了。不过将pod list里5000多个pod全部镜像下来并一一修改spec文件，这工程量完全不是我等小屌丝能够完成的。目前似乎也没有哪个牛逼大厂完成这个壮举。所以所谓的终极提速大法，就是无论干什么最终都得有个好用的梯子。</p>
 </div>
 
 
@@ -181,7 +194,7 @@
   
 
 
-<time datetime="2014-10-23T17:17:19+08:00" pubdate data-updated="true">Oct 23<span>rd</span>, 2014</time>
+<time datetime="2014-12-24T11:09:14+08:00" pubdate data-updated="true">Dec 24<span>th</span>, 2014</time>
       
 
 
@@ -231,10 +244,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/09/24/appstoreshen-he-jing-yan-fen-xiang/" title="Previous Post: AppStore审核经验分享">&laquo; AppStore审核经验分享</a>
+        <a class="basic-alignment left" href="/blog/2014/12/05/ios7yi-shang-xi-tong-zhong-%2Cuitextviewshu-ru-gun-dong-cuo-wei-de-bug/" title="Previous Post: iOS7以上系统中，UITextView输入滚动错位的bug">&laquo; iOS7以上系统中，UITextView输入滚动错位的bug</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/12/05/ios7yi-shang-xi-tong-zhong-%2Cuitextviewshu-ru-gun-dong-cuo-wei-de-bug/" title="Next Post: iOS7以上系统中，UITextView输入滚动错位的bug">iOS7以上系统中，UITextView输入滚动错位的bug &raquo;</a>
       
     </p>
   </footer>
@@ -322,8 +333,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://epingwang.github.io/blog/2014/10/23/scrollst-shi-yong-xiao-jie/';
-        var disqus_url = 'http://epingwang.github.io/blog/2014/10/23/scrollst-shi-yong-xiao-jie/';
+        var disqus_identifier = 'http://epingwang.github.io/blog/2014/12/24/cocoapodsti-su-shou-ce/';
+        var disqus_url = 'http://epingwang.github.io/blog/2014/12/24/cocoapodsti-su-shou-ce/';
         var disqus_script = 'embed.js';
       
     (function () {

@@ -9,8 +9,8 @@
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="在iOS7中，UITextView多了一个textContainer属性用来描述一些Layout。 在用 1
-UITextView *textView = [[UITextView alloc] init]; 这个方法时，并没用初始化textContainer，会导致输入中文时页面滚动出现bug。 &hellip;">
+  <meta name="description" content="转自 CodingTime 前言 相信大家在使用cocoapods的时候，都感到在墙内速度怨念把。今天po主我在家更新代码时执行&#8217;pod install
+居然花了2个小时，各种怒从中来，遂整理了一下cocoapods提速的各种方法，给大家参考。 1.cocoapods安装提速 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,112 @@ UITextView *textView = [[UITextView alloc] init]; 这个方法时，并没用初
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/24/cocoapodsti-su-shou-ce/">Cocoapods提速手册</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-24T11:09:14+08:00" pubdate data-updated="true">Dec 24<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/12/24/cocoapodsti-su-shou-ce/#disqus_thread"
+             data-disqus-identifier="http://epingwang.github.io/blog/2014/12/24/cocoapodsti-su-shou-ce/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>转自 <a href="http://www.codingtime.info/post/posts/leng-zhi-shi/2014_07_28_speed_up_cocoapods">CodingTime</a></p>
+
+<blockquote><p>前言</p>
+
+<p>相信大家在使用cocoapods的时候，都感到在墙内速度怨念把。今天po主我在家更新代码时执行&#8217;pod install
+居然花了2个小时，各种怒从中来，遂整理了一下cocoapods提速的各种方法，给大家参考。</p></blockquote>
+
+<h3>1.cocoapods安装提速</h3>
+
+<p>我们在使用&#8217;gem install cocoapods&#8217;来安装cocoapods时，是不是感觉都奇慢无比？都是gem官方源被墙惹的祸！将gem的默认官方镜像更换成淘宝镜像可以解决这一问题。在命令行中执行</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem sources --remove https://rubygems.org/
+</span><span class='line'>gem sources -a https://ruby.taobao.org/
+</span><span class='line'>gem sources -l</span></code></pre></td></tr></table></div></figure>
+
+
+<p>若显示</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>*** CURRENT SOURCES ***
+</span><span class='line'>
+</span><span class='line'>https://ruby.taobao.org</span></code></pre></td></tr></table></div></figure>
+
+
+<p>则淘宝源替换成功。这是再执行gem install cocoapods会发现安装速度明显变快。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>注意：
+</span><span class='line'>更换淘宝gem镜像只是提高cocoapods安装速度和更新速度，不会影响任何pod命令的速度。＝  ＝</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2. 获取specs文件提速</h3>
+
+<p>cocoapods的spec文件都放在github中，而国内访问github总有些不顺畅，导致每次更新cocoapods spec文件都时候速度都比较慢。将cocoapods的spec版本库改成国内可以提升spec文件的更新速度。</p>
+
+<p>在命令行中执行</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pod repo remove master
+</span><span class='line'>pod repo add master https://gitcafe.com/akuandev/Specs.git
+</span><span class='line'>pod repo update</span></code></pre></td></tr></table></div></figure>
+
+
+<p>默认的cocoapods master仓库会被替换成国内gitcafe仓库。</p>
+
+<h3>3. pod install提速</h3>
+
+<p>每次执行<code>pod install</code>和<code>pod update</code>的时候，cocoapods都会默认更新一次spec仓库。这是一个比较耗时的操作。在确认spec版本哭不需要更新时，给这两个命令加一个参数跳过spec版本库更新</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pod install --verbose --no-repo-update
+</span><span class='line'>pod update --verbose --no-repo-update</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以明显提高这两个命令的执行速度。</p>
+
+<h3>4. 终极提速大法</h3>
+
+<p>在将gem、cocoapods spec文件都改成国内镜像之后，剩下的还能提速的步骤就是将各个pod的源码也拖到国内了。不过将pod list里5000多个pod全部镜像下来并一一修改spec文件，这工程量完全不是我等小屌丝能够完成的。目前似乎也没有哪个牛逼大厂完成这个壮举。所以所谓的终极提速大法，就是无论干什么最终都得有个好用的梯子。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -761,54 +867,6 @@ UITextView *textView = [[UITextView alloc] init]; 这个方法时，并没用初
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/">Session 216 Building Adaptive Apps With UIKit</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-10T17:32:04+08:00" pubdate data-updated="true">Jun 10<span>th</span>, 2014</time>
-        
-           | <a href="/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/#disqus_thread"
-             data-disqus-identifier="http://epingwang.github.io/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Session 216</p>
-
-<p>Jacob Xiao</p>
-
-<p>使用UIKit 创建 Universial App</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -835,6 +893,10 @@ UITextView *textView = [[UITextView alloc] init]; 这个方法时，并没用初
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/24/cocoapodsti-su-shou-ce/">Cocoapods提速手册</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/12/05/ios7yi-shang-xi-tong-zhong-%2Cuitextviewshu-ru-gun-dong-cuo-wei-de-bug/">iOS7以上系统中，UITextView输入滚动错位的bug</a>
       </li>
     
@@ -848,10 +910,6 @@ UITextView *textView = [[UITextView alloc] init]; 这个方法时，并没用初
     
       <li class="post">
         <a href="/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu/">iOS8 关于地理位置的获取</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/08/19/ios7wang-luo-qing-qiu/">iOS7网络请求</a>
       </li>
     
   </ul>
