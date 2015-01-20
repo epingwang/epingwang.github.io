@@ -11,6 +11,8 @@ categories:
 
 最近苹果审核更严厉了，我们产品新版（陪你看电影App）提交也接连被苹果Reject，平均更新审核周期也在12天左右。前两天3.3.0新版终于尼玛审核通过了，前后花了一个多月时间也是醉了，中间的各种苦逼心酸和无奈不提也罢，总结下经验教训吧。当然，审核不通过可以有太多的原因，大家可以参考苹果最新公布的审核指南，我在这里只聊聊我们这次新版提交审核遇到的一些问题。
 
+<!--more-->
+
 ### 关于“第三方登录”
 
 > 10.6 Apple and our customers place a high value on simple, refined, creative, well thought through interfaces. They take more work but are worth it. Apple sets a high bar. If your user interface is complex or less than very good, it may be rejected.
