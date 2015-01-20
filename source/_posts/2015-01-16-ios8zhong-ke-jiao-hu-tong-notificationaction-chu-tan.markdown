@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "iOS8中可交互通(NotificationAction)初探"
+title: "iOS8中可交互通知(NotificationAction)初探"
 date: 2015-01-16 15:30:39 +0800
 comments: true
 categories: 
