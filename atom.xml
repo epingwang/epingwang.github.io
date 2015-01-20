@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.github.io/atom.xml" rel="self"/>
   <link href="http://epingwang.github.io/"/>
-  <updated>2014-12-24T11:59:21+08:00</updated>
+  <updated>2015-01-20T15:09:53+08:00</updated>
   <id>http://epingwang.github.io/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -12,6 +12,157 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[iOS8中可交互通(NotificationAction)初探]]></title>
+    <link href="http://epingwang.github.io/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/"/>
+    <updated>2015-01-16T15:30:39+08:00</updated>
+    <id>http://epingwang.github.io/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan</id>
+    <content type="html"><![CDATA[<p>iOS8中，可交互推送/通知可以在<strong>锁屏界面/通知中心/推送消息Banner</strong>上以按钮形式与App交互。</p>
+
+<h2>注册可交互推送</h2>
+
+<figure class='code'><figcaption><span>UIMutableUserNotificationAction *acceptAction =[[UIMutableUserNotificationAction alloc] init];</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">// 回调时按钮的ID</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s">@&quot;ACCEPT_IDENTIFIER&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 按钮title(Facebook使用了emoji)</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;Accept&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/* UIUserNotificationActivationModeBackground </span>
+</span><span class='line'><span class="cm">* APP会在后台启动</span>
+</span><span class='line'><span class="cm">* UIUserNotificationActivationModeForeground</span>
+</span><span class='line'><span class="cm">* APP会在前台启动</span>
+</span><span class='line'><span class="cm">*/</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">activationMode</span> <span class="o">=</span> <span class="n">UIUserNotificationActivationModeBackground</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// YES为红色，NO为蓝色</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">destructive</span> <span class="o">=</span> <span class="n">NO</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 是否需要解锁</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">authenticationRequired</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="n">UIMutableUserNotificationCategory</span> <span class="o">*</span><span class="n">category</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIMutableUserNotificationCategory</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 消息的ID(区分服务器推送过来时消息的种类)</span>
+</span><span class='line'><span class="n">category</span><span class="p">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s">@&quot;INVITE_CATEGORY&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Alert形式展现的推送</span>
+</span><span class='line'><span class="p">[</span><span class="n">category</span> <span class="nl">setActions:</span><span class="err">@</span><span class="p">[</span><span class="n">acceptAction</span><span class="p">]</span> <span class="nl">forContext:</span><span class="n">UIUserNotificationActionContextDefault</span><span class="p">];</span>
+</span><span class='line'><span class="c1">// Banner/锁屏形式展现的推送</span>
+</span><span class='line'><span class="p">[</span><span class="n">category</span> <span class="nl">setActions:</span><span class="err">@</span><span class="p">[</span><span class="n">acceptAction</span><span class="p">]</span> <span class="nl">forContext:</span><span class="n">UIUserNotificationActionContextMinimal</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">UIUserNotificationSettings</span> <span class="o">*</span><span class="n">settings</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIUserNotificationSettings</span> <span class="nl">settingsForTypes:</span><span class="n">UIUserNotificationTypeAlert</span> <span class="o">|</span> <span class="n">UIUserNotificationTypeBadge</span> <span class="o">|</span> <span class="n">UIUserNotificationTypeSound</span> <span class="nl">categories:</span><span class="p">[</span><span class="n">NSSet</span> <span class="nl">setWithObject:</span><span class="n">category</span><span class="p">]];</span>
+</span><span class='line'><span class="p">[[</span><span class="n">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nl">registerUserNotificationSettings:</span><span class="n">settings</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Discussion:</h4>
+
+<ul>
+<li>当Contenxt为<code>UIUserNotificationActionContextMinimal</code>时，最多展现两个按钮。</li>
+<li>当Contenxt为<code>UIUserNotificationActionContextDefault</code>时，最多展现四个按钮。</li>
+<li>当Contenxt为<code>UIUserNotificationActionContextMinimal</code>时，第一个按钮在右边，第二个按钮在左边。</li>
+<li>当Contenxt为<code>UIUserNotificationActionContextMinimal</code>时，若两个按钮的<code>destructive</code>属性都为NO，则第一个为蓝色，第二个为灰色。</li>
+<li>当Contenxt为<code>UIUserNotificationActionContextDefault</code>时，按钮顺序由上到下排列。</li>
+</ul>
+
+
+<h2>Schedule推送</h2>
+
+<!--more-->
+
+
+<h4>Remote Notifications</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nt">&quot;aps&quot;</span> <span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>       <span class="nt">&quot;alert&quot;</span> <span class="p">:</span> <span class="s2">&quot;You’re invited!&quot;</span><span class="p">,</span>
+</span><span class='line'>       <span class="nt">&quot;category&quot;</span> <span class="p">:</span> <span class="s2">&quot;INVITE_CATEGORY&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Local Notifications</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">UILocalNotification</span> <span class="o">*</span><span class="n">notification</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UILocalNotification</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="c1">///...</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">notification</span><span class="p">.</span><span class="n">category</span> <span class="o">=</span> <span class="s">@&quot;INVITE_CATEGORY&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">[[</span><span class="n">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nl">scheduleLocalNotification:</span><span class="n">notification</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>推送处理</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">// 当收到推送时，会调用这两个方法</span>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">handleActionWithIdentifier:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">identifier</span> <span class="nf">forRemoteNotification:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">userInfo</span> <span class="nf">completionHandler:</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)())</span><span class="nv">completionHandler</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">handleActionWithIdentifier:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">identifier</span> <span class="nf">forLocalNotification:</span><span class="p">(</span><span class="n">UILocalNotification</span> <span class="o">*</span><span class="p">)</span><span class="nv">notification</span> <span class="nf">completionHandler:</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)())</span><span class="nv">completionHandler</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 当执行完事件处理的代码后，调用`completionHandler()`，通知系统处理完成</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Discussion:</h4>
+
+<ul>
+<li>虽然在WWDC视频中，提到事件处理的时间限定在几秒钟，但是实际上在子线程执行一次网络请求等异步操作也是可以的。只需要在网络请求结束后再调用<code>completionHandler()</code>即可。（猜测: 几秒钟的限制应该是主线程的执行时间）</li>
+<li>我是否只能调用静态方法: 经过简单的实验，APP中的数据是可以被读取的，并且当APP进程被终止，也是可以读取数据的，所以可以调用动态的方法。（需要在实际项目中继续验证）</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Cocoapods提速手册]]></title>
@@ -359,7 +510,7 @@
 
 <p>一旦你的加急审核申请通过了，你的App会在一个工作日内被处理，如果这期间因为可能出现的其它问题导致再次被reject，你只需要重新提交修改后的build或补充说明（metadata reject）就行，你的App将会一直处于加急审核队列，直到审核通过。</p>
 
-<p>苹果加急审核邮箱：<a href="&#109;&#97;&#x69;&#108;&#116;&#111;&#x3a;&#x41;&#112;&#x70;&#82;&#101;&#118;&#105;&#x65;&#x77;&#x40;&#x61;&#x70;&#112;&#x70;&#x6c;&#101;&#x2e;&#99;&#x6f;&#x6d;">&#65;&#x70;&#112;&#x52;&#x65;&#118;&#105;&#101;&#119;&#64;&#x61;&#x70;&#112;&#x70;&#108;&#x65;&#x2e;&#99;&#111;&#109;</a></p>
+<p>苹果加急审核邮箱：<a href="&#x6d;&#97;&#105;&#x6c;&#116;&#111;&#58;&#65;&#x70;&#x70;&#82;&#x65;&#118;&#x69;&#x65;&#x77;&#x40;&#97;&#x70;&#112;&#112;&#x6c;&#101;&#x2e;&#x63;&#111;&#109;">&#x41;&#x70;&#x70;&#x52;&#101;&#x76;&#x69;&#x65;&#x77;&#x40;&#97;&#x70;&#112;&#x70;&#108;&#x65;&#x2e;&#x63;&#x6f;&#109;</a></p>
 
 <p>网页提交地址：<a href="https://developer.apple.com/appstore/contact/?topic=expedite">https://developer.apple.com/appstore/contact/?topic=expedite</a></p>
 
