@@ -11,7 +11,8 @@ iOS8中，可交互推送/通知可以在**锁屏界面/通知中心/推送消�
 注册可交互推送
 ------
 
-```objcUIMutableUserNotificationAction *acceptAction =[[UIMutableUserNotificationAction alloc] init];
+```objc
+UIMutableUserNotificationAction *acceptAction =[[UIMutableUserNotificationAction alloc] init];
 // 回调时按钮的IDacceptAction.identifier = @"ACCEPT_IDENTIFIER";
 // 按钮title(Facebook使用了emoji)acceptAction.title = @"Accept";
 /* UIUserNotificationActivationModeBackground * APP会在后台启动
@@ -34,7 +35,8 @@ category.identifier = @"INVITE_CATEGORY";
 // Banner/锁屏形式展现的推送
 [category setActions:@[acceptAction] forContext:UIUserNotificationActionContextMinimal];
 
-UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound categories:[NSSet setWithObject:category]];
+UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:
+UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound categories:[NSSet setWithObject:category]];
 [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
 ```
 
