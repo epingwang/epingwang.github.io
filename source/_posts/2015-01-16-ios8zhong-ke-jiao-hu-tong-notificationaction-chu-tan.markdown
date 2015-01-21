@@ -78,4 +78,4 @@ UILocalNotification *notification = [[UILocalNotification alloc] init];
 
 #### Discussion:
 * 虽然在WWDC视频中，提到事件处理的时间限定在几秒钟，但是实际上在子线程执行一次网络请求等异步操作也是可以的，甚至连网络超时事件都可以拿到。只需要在网络请求结束后再调用`completionHandler()`即可。（猜测: 几秒钟的限制应该是主线程的执行时间）
-* 我是否只能调用静态方法: 经过简单的实验，APP中的数据是可以被读取的，并且当APP进程被终止，也是可以读取数据的，所以可以调用动态的方法。（需要在实际项目中继续验证）
+* 我是否只能调用静态方法: 经过简单的实验，当App在后台，但进程未被**Terminate**时，是可以读取App内的数据的，但不会调用`applicationDidBecomeActive`。若App进程被**Terminate**后，用户点击按钮后会先加在App，调用`application: didFinishLaunchingWithOptions`。
