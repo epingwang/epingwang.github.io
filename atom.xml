@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.me/atom.xml" rel="self"/>
   <link href="http://epingwang.me/"/>
-  <updated>2015-05-04T10:36:39+08:00</updated>
+  <updated>2015-05-04T11:33:10+08:00</updated>
   <id>http://epingwang.me/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -12,6 +12,72 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[一些有意思的问题]]></title>
+    <link href="http://epingwang.me/blog/2015/05/04/%5B%3F%5D-xie-you-yi-si-de-wen-ti/"/>
+    <updated>2015-05-04T11:02:14+08:00</updated>
+    <id>http://epingwang.me/blog/2015/05/04/[?]-xie-you-yi-si-de-wen-ti</id>
+    <content type="html"><![CDATA[<blockquote><p>前几天一个朋友问了一些蛮有意思的问题，在这里总结一下</p></blockquote>
+
+<h3>@property 中 NSString 的属性为什么要用 copy</h3>
+
+<hr />
+
+<p>NSString 是 NSMutableString 的基类，在赋值时，对这两个情况要分开讨论：</p>
+
+<h4>当传入 NSString 对象时</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>2015-05-04 11:09:04.270 StringTest[540:218144] content = 0x10010e4a8
+</span><span class='line'>2015-05-04 11:09:04.271 StringTest[540:218144] self.content = 0x10010e4a8</span></code></pre></td></tr></table></div></figure>
+
+
+<p>赋值操作直接把传入的 NSString 的内存地址赋给 self.content</p>
+
+<h4>当传入 NSMutableString 对象时</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>2015-05-04 11:09:04.271 StringTest[540:218144] mutable content = 0x17406ec40
+</span><span class='line'>2015-05-04 11:09:04.271 StringTest[540:218144] self.content = 0x17403b4a0</span></code></pre></td></tr></table></div></figure>
+
+
+<p>赋值操作创建了一个新的 NSString 并赋值给 self.content</p>
+
+<h4>这样做的意义：</h4>
+
+<p>NSString 是不可变对象，用 copy 属性可以保证传入 NSMutableString 后，其引用的值始终不变。</p>
+
+<h3>ViewController 中的一些调用问题</h3>
+
+<hr />
+
+<h4>loadView 在什么时候调用</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span><span class="n">retain</span><span class="p">)</span> <span class="n">UIView</span> <span class="o">*</span><span class="n">view</span><span class="p">;</span> <span class="c1">// The getter first invokes [self loadView] if the view hasn&#39;t been set yet. Subclasses must call super if they override the setter or getter.</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">loadView</span><span class="p">;</span> <span class="c1">// This is where subclasses should create their custom view hierarchy if they aren&#39;t using a nib. Should never be called directly.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里注释解释的比较清楚，在调用<code>someViewController.view</code>时，如果<code>view == nil</code>，则首先调用<code>[self loadView]</code></p>
+
+<p>那么可以推断出，<code>[self viewDidLoad]</code>的调用是在<code>[self loadView]</code>之后。</p>
+
+<h4>viewDidLoad 可以调用几次</h4>
+
+<p>最开始想当然的认为只能调用一次。</p>
+
+<p>实际上在iOS6之前，当 Application 收到 Memory warning 之后，会将 hierarchy 中不在前台显示的 viewController.view 设为 nil，并调用<code>- (void)didReceiveMemoryWarning</code>, <code>- (void)viewWillUnload;</code>, <code>- (void)viewDidUnload</code>方法。</p>
+
+<p>在iOS6之后，默认不会卸载view，但是也可以在<code>- (void)didReceiveMemoryWarning</code>中手动卸载掉。</p>
+
+<p>当被卸载的view进入屏幕时，会重新加载，并调用<code>[self viewDidLoad]</code>。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[iOS8中可交互通知(NotificationAction)初探]]></title>
@@ -518,7 +584,7 @@
 
 <p>一旦你的加急审核申请通过了，你的App会在一个工作日内被处理，如果这期间因为可能出现的其它问题导致再次被reject，你只需要重新提交修改后的build或补充说明（metadata reject）就行，你的App将会一直处于加急审核队列，直到审核通过。</p>
 
-<p>苹果加急审核邮箱：<a href="&#109;&#x61;&#105;&#108;&#x74;&#111;&#58;&#x41;&#112;&#112;&#x52;&#x65;&#x76;&#105;&#x65;&#x77;&#x40;&#x61;&#x70;&#x70;&#112;&#108;&#101;&#46;&#99;&#x6f;&#109;">&#65;&#x70;&#x70;&#82;&#x65;&#118;&#105;&#x65;&#x77;&#64;&#x61;&#112;&#x70;&#112;&#x6c;&#101;&#x2e;&#99;&#111;&#x6d;</a></p>
+<p>苹果加急审核邮箱：<a href="&#x6d;&#x61;&#x69;&#108;&#116;&#x6f;&#58;&#x41;&#x70;&#x70;&#82;&#101;&#118;&#x69;&#x65;&#119;&#x40;&#x61;&#112;&#112;&#x70;&#108;&#x65;&#x2e;&#x63;&#x6f;&#x6d;">&#x41;&#x70;&#x70;&#82;&#101;&#118;&#x69;&#101;&#119;&#64;&#97;&#112;&#x70;&#x70;&#108;&#x65;&#x2e;&#x63;&#111;&#x6d;</a></p>
 
 <p>网页提交地址：<a href="https://developer.apple.com/appstore/contact/?topic=expedite">https://developer.apple.com/appstore/contact/?topic=expedite</a></p>
 
