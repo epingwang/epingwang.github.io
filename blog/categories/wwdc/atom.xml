@@ -2,17 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: WWDC | EpingWang's Blog]]></title>
-<<<<<<< HEAD
   <link href="http://epingwang.me/blog/categories/wwdc/atom.xml" rel="self"/>
   <link href="http://epingwang.me/"/>
-  <updated>2015-05-04T10:13:11+08:00</updated>
+  <updated>2015-05-04T10:28:21+08:00</updated>
   <id>http://epingwang.me/</id>
-=======
-  <link href="http://epingwang.github.io/blog/categories/wwdc/atom.xml" rel="self"/>
-  <link href="http://epingwang.github.io/"/>
-  <updated>2015-03-03T12:54:00+08:00</updated>
-  <id>http://epingwang.github.io/</id>
->>>>>>> 2f6f26a1f7407675641ab28bf5bb21c4a87c7b6a
   <author>
     <name><![CDATA[Eping Wang]]></name>
     
@@ -22,15 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Session 214 View Controller Advancements for iOS8 笔记]]></title>
-<<<<<<< HEAD
     <link href="http://epingwang.me/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji/"/>
     <updated>2014-06-11T15:52:27+08:00</updated>
     <id>http://epingwang.me/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji</id>
-=======
-    <link href="http://epingwang.github.io/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji/"/>
-    <updated>2014-06-11T15:52:27+08:00</updated>
-    <id>http://epingwang.github.io/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji</id>
->>>>>>> 2f6f26a1f7407675641ab28bf5bb21c4a87c7b6a
     <content type="html"><![CDATA[<p>Session 214</p>
 
 <p>Bruce D. Nilo</p>
@@ -190,15 +177,9 @@ svc.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
   
   <entry>
     <title type="html"><![CDATA[Session 216 Building Adaptive Apps With UIKit]]></title>
-<<<<<<< HEAD
     <link href="http://epingwang.me/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/"/>
     <updated>2014-06-10T17:32:04+08:00</updated>
     <id>http://epingwang.me/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit</id>
-=======
-    <link href="http://epingwang.github.io/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/"/>
-    <updated>2014-06-10T17:32:04+08:00</updated>
-    <id>http://epingwang.github.io/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit</id>
->>>>>>> 2f6f26a1f7407675641ab28bf5bb21c4a87c7b6a
     <content type="html"><![CDATA[<p>Session 216</p>
 
 <p>Jacob Xiao</p>
@@ -352,15 +333,9 @@ UITraitCollection *newCollection = [UITraitCollection traitCollectionWithHorizon
   
   <entry>
     <title type="html"><![CDATA[Session 202 What's New in Cocoa Touch 笔记]]></title>
-<<<<<<< HEAD
     <link href="http://epingwang.me/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji/"/>
     <updated>2014-06-10T15:24:54+08:00</updated>
     <id>http://epingwang.me/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji</id>
-=======
-    <link href="http://epingwang.github.io/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji/"/>
-    <updated>2014-06-10T15:24:54+08:00</updated>
-    <id>http://epingwang.github.io/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji</id>
->>>>>>> 2f6f26a1f7407675641ab28bf5bb21c4a87c7b6a
     <content type="html"><![CDATA[<p>Session 202</p>
 
 <p>Luke Hiesterman</p>

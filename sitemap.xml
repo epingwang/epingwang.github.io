@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-<<<<<<< HEAD
         <loc>http://epingwang.me/blog/2014/06/10/hello-world/</loc>
         <lastmod>2015-05-04T09:29:14+08:00</lastmod>
     </url>
@@ -78,89 +77,5 @@
     <url>
         <loc>http://epingwang.me/robots.txt</loc>
         <lastmod>2015-05-04T09:29:14+08:00</lastmod>
-=======
-        <loc>http://epingwang.github.io/blog/2014/06/10/hello-world/</loc>
-        <lastmod>2014-09-24T10:58:20+08:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://epingwang.github.io/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji/
-        </loc>
-        <lastmod>2014-09-24T10:58:20+08:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://epingwang.github.io/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/
-        </loc>
-        <lastmod>2014-09-24T10:58:20+08:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://epingwang.github.io/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji/
-        </loc>
-        <lastmod>2014-09-24T10:58:20+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://epingwang.github.io/blog/2014/06/13/xiao-shi-auto-layout-vflpian/</loc>
-        <lastmod>2014-09-24T10:58:20+08:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://epingwang.github.io/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/
-        </loc>
-        <lastmod>2014-09-24T10:58:20+08:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://epingwang.github.io/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo/
-        </loc>
-        <lastmod>2014-09-24T10:58:20+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://epingwang.github.io/blog/2014/08/19/ios7wang-luo-qing-qiu/</loc>
-        <lastmod>2014-09-24T10:58:20+08:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://epingwang.github.io/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu/
-        </loc>
-        <lastmod>2014-09-24T10:58:20+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://epingwang.github.io/blog/2014/09/24/appstoreshen-he-jing-yan-fen-xiang/</loc>
-        <lastmod>2014-09-24T14:25:35+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://epingwang.github.io/blog/2014/10/23/scrollst-shi-yong-xiao-jie/</loc>
-        <lastmod>2014-12-05T18:39:38+08:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://epingwang.github.io/blog/2014/12/05/ios7yi-shang-xi-tong-zhong-%2Cuitextviewshu-ru-gun-dong-cuo-wei-de-bug/
-        </loc>
-        <lastmod>2014-12-05T18:38:44+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://epingwang.github.io/blog/2014/12/24/cocoapodsti-su-shou-ce/</loc>
-        <lastmod>2014-12-24T11:13:56+08:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://epingwang.github.io/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/
-        </loc>
-        <lastmod>2015-01-21T16:03:21+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://epingwang.github.io/blog/archives/</loc>
-        <lastmod>2015-01-21T16:03:21+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://epingwang.github.io/</loc>
-        <lastmod>2015-01-21T16:03:21+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://epingwang.github.io/robots.txt</loc>
-        <lastmod>2014-09-24T10:58:20+08:00</lastmod>
->>>>>>> 2f6f26a1f7407675641ab28bf5bb21c4a87c7b6a
     </url>
 </urlset>

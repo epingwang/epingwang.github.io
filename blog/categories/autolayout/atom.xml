@@ -2,17 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: AutoLayout | EpingWang's Blog]]></title>
-<<<<<<< HEAD
   <link href="http://epingwang.me/blog/categories/autolayout/atom.xml" rel="self"/>
   <link href="http://epingwang.me/"/>
-  <updated>2015-05-04T10:13:11+08:00</updated>
+  <updated>2015-05-04T10:28:21+08:00</updated>
   <id>http://epingwang.me/</id>
-=======
-  <link href="http://epingwang.github.io/blog/categories/autolayout/atom.xml" rel="self"/>
-  <link href="http://epingwang.github.io/"/>
-  <updated>2015-03-03T12:54:00+08:00</updated>
-  <id>http://epingwang.github.io/</id>
->>>>>>> 2f6f26a1f7407675641ab28bf5bb21c4a87c7b6a
   <author>
     <name><![CDATA[Eping Wang]]></name>
     
@@ -22,15 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[小试Auto Layout——VFL篇]]></title>
-<<<<<<< HEAD
     <link href="http://epingwang.me/blog/2014/06/13/xiao-shi-auto-layout-vflpian/"/>
     <updated>2014-06-13T18:47:42+08:00</updated>
     <id>http://epingwang.me/blog/2014/06/13/xiao-shi-auto-layout-vflpian</id>
-=======
-    <link href="http://epingwang.github.io/blog/2014/06/13/xiao-shi-auto-layout-vflpian/"/>
-    <updated>2014-06-13T18:47:42+08:00</updated>
-    <id>http://epingwang.github.io/blog/2014/06/13/xiao-shi-auto-layout-vflpian</id>
->>>>>>> 2f6f26a1f7407675641ab28bf5bb21c4a87c7b6a
     <content type="html"><![CDATA[<h3>为什么要AutoLayout</h3>
 
 <p>从iOS6开始，移动端开始支持AutoLayout。与传统的Layout方法相比，AutoLayout不再使用Origin+Size的方式描述View的位置和大小，而是使用<code>Constraints</code>（约束）来描述。</p>

@@ -1,8 +1,4 @@
 User-agent: *
 Disallow: 
 
-<<<<<<< HEAD
 Sitemap: http://epingwang.me/sitemap.xml 
-=======
-Sitemap: http://epingwang.github.io/sitemap.xml 
->>>>>>> 2f6f26a1f7407675641ab28bf5bb21c4a87c7b6a
