@@ -1,1 +1,1072 @@
-My Octopress Page is coming soon &hellip;
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>EpingWang's Blog</title>
+  <meta name="author" content="Eping Wang">
+
+  
+  <meta name="description" content="iOS8中，可交互推送/通知可以在锁屏界面/通知中心/推送消息Banner上以按钮形式与App交互。 注册可交互推送 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+      
+  <!-- Verification -->
+  <meta name="baidu-site-verification" content="h0CbEUGEMK" />
+  <meta name="msvalidate.01" content="8AD60CB9FBDEC14BCDBD80BC2525D396" />
+      
+  
+
+  
+  <link rel="canonical" href="http://epingwang.me">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="EpingWang's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+ -->
+<link href="/stylesheets/google-fonts-local.css" rel="stylesheet" type="text/css">
+
+  
+  
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">EpingWang's Blog</a></h1>
+  
+    <h2>漆黑舞台，怎能掩盖，我们的流光溢彩</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:epingwang.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/">iOS8中可交互通知(NotificationAction)初探</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-01-16T15:30:39+08:00" pubdate data-updated="true">Jan 16<span>th</span>, 2015</time>
+        
+           | <a href="/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>iOS8中，可交互推送/通知可以在<strong>锁屏界面/通知中心/推送消息Banner</strong>上以按钮形式与App交互。</p>
+
+<h2>注册可交互推送</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">UIMutableUserNotificationAction</span> <span class="o">*</span><span class="n">acceptAction</span> <span class="o">=</span>
+</span><span class='line'><span class="p">[[</span><span class="n">UIMutableUserNotificationAction</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 回调时按钮的ID</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s">@&quot;ACCEPT_IDENTIFIER&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 按钮title(Facebook使用了emoji)</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;Accept&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/* UIUserNotificationActivationModeBackground </span>
+</span><span class='line'><span class="cm">* APP会在后台启动</span>
+</span><span class='line'><span class="cm">* UIUserNotificationActivationModeForeground</span>
+</span><span class='line'><span class="cm">* APP会在前台启动</span>
+</span><span class='line'><span class="cm">*/</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">activationMode</span> <span class="o">=</span> <span class="n">UIUserNotificationActivationModeBackground</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// YES为红色，NO为蓝色</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">destructive</span> <span class="o">=</span> <span class="n">NO</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 是否需要解锁</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">authenticationRequired</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="n">UIMutableUserNotificationCategory</span> <span class="o">*</span><span class="n">category</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIMutableUserNotificationCategory</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 消息的ID(区分服务器推送过来时消息的种类)</span>
+</span><span class='line'><span class="n">category</span><span class="p">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s">@&quot;INVITE_CATEGORY&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Alert形式展现的推送</span>
+</span><span class='line'><span class="p">[</span><span class="n">category</span> <span class="nl">setActions:</span><span class="err">@</span><span class="p">[</span><span class="n">acceptAction</span><span class="p">]</span> <span class="nl">forContext:</span><span class="n">UIUserNotificationActionContextDefault</span><span class="p">];</span>
+</span><span class='line'><span class="c1">// Banner/锁屏形式展现的推送</span>
+</span><span class='line'><span class="p">[</span><span class="n">category</span> <span class="nl">setActions:</span><span class="err">@</span><span class="p">[</span><span class="n">acceptAction</span><span class="p">]</span> <span class="nl">forContext:</span><span class="n">UIUserNotificationActionContextMinimal</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">UIUserNotificationSettings</span> <span class="o">*</span><span class="n">settings</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIUserNotificationSettings</span> <span class="nl">settingsForTypes:</span>
+</span><span class='line'><span class="n">UIUserNotificationTypeAlert</span> <span class="o">|</span> <span class="n">UIUserNotificationTypeBadge</span> <span class="o">|</span> <span class="n">UIUserNotificationTypeSound</span> <span class="nl">categories:</span><span class="p">[</span><span class="n">NSSet</span> <span class="nl">setWithObject:</span><span class="n">category</span><span class="p">]];</span>
+</span><span class='line'><span class="p">[[</span><span class="n">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nl">registerUserNotificationSettings:</span><span class="n">settings</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Discussion:</h4>
+
+<ul>
+<li>当Contenxt为<code>UIUserNotificationActionContextMinimal</code>时，最多展现两个按钮。</li>
+<li>当Contenxt为<code>UIUserNotificationActionContextDefault</code>时，最多展现四个按钮。</li>
+<li>当Contenxt为<code>UIUserNotificationActionContextMinimal</code>时，第一个按钮在右边，第二个按钮在左边。</li>
+<li>当Contenxt为<code>UIUserNotificationActionContextMinimal</code>时，若两个按钮的<code>destructive</code>属性都为NO，则第一个为蓝色，第二个为灰色。</li>
+<li>当Contenxt为<code>UIUserNotificationActionContextDefault</code>时，按钮顺序由上到下排列。</li>
+</ul>
+
+
+<h2>Schedule推送</h2>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/24/cocoapodsti-su-shou-ce/">Cocoapods提速手册</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-24T11:09:14+08:00" pubdate data-updated="true">Dec 24<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/12/24/cocoapodsti-su-shou-ce/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/12/24/cocoapodsti-su-shou-ce/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>转自 <a href="http://www.codingtime.info/post/posts/leng-zhi-shi/2014_07_28_speed_up_cocoapods">CodingTime</a></p>
+
+<blockquote><p>前言</p>
+
+<p>相信大家在使用cocoapods的时候，都感到在墙内速度怨念把。今天po主我在家更新代码时执行&#8217;pod install
+居然花了2个小时，各种怒从中来，遂整理了一下cocoapods提速的各种方法，给大家参考。</p></blockquote>
+
+<h3>1.cocoapods安装提速</h3>
+
+<p>我们在使用&#8217;gem install cocoapods&#8217;来安装cocoapods时，是不是感觉都奇慢无比？都是gem官方源被墙惹的祸！将gem的默认官方镜像更换成淘宝镜像可以解决这一问题。在命令行中执行</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem sources --remove https://rubygems.org/
+</span><span class='line'>gem sources -a https://ruby.taobao.org/
+</span><span class='line'>gem sources -l</span></code></pre></td></tr></table></div></figure>
+
+
+<p>若显示</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>*** CURRENT SOURCES ***
+</span><span class='line'>
+</span><span class='line'>https://ruby.taobao.org</span></code></pre></td></tr></table></div></figure>
+
+
+<p>则淘宝源替换成功。这是再执行gem install cocoapods会发现安装速度明显变快。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>注意：
+</span><span class='line'>更换淘宝gem镜像只是提高cocoapods安装速度和更新速度，不会影响任何pod命令的速度。＝  ＝</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2. 获取specs文件提速</h3>
+
+<p>cocoapods的spec文件都放在github中，而国内访问github总有些不顺畅，导致每次更新cocoapods spec文件都时候速度都比较慢。将cocoapods的spec版本库改成国内可以提升spec文件的更新速度。</p>
+
+<p>在命令行中执行</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pod repo remove master
+</span><span class='line'>pod repo add master https://gitcafe.com/akuandev/Specs.git
+</span><span class='line'>pod repo update</span></code></pre></td></tr></table></div></figure>
+
+
+<p>默认的cocoapods master仓库会被替换成国内gitcafe仓库。</p>
+
+<h3>3. pod install提速</h3>
+
+<p>每次执行<code>pod install</code>和<code>pod update</code>的时候，cocoapods都会默认更新一次spec仓库。这是一个比较耗时的操作。在确认spec版本哭不需要更新时，给这两个命令加一个参数跳过spec版本库更新</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pod install --verbose --no-repo-update
+</span><span class='line'>pod update --verbose --no-repo-update</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以明显提高这两个命令的执行速度。</p>
+
+<h3>4. 终极提速大法</h3>
+
+<p>在将gem、cocoapods spec文件都改成国内镜像之后，剩下的还能提速的步骤就是将各个pod的源码也拖到国内了。不过将pod list里5000多个pod全部镜像下来并一一修改spec文件，这工程量完全不是我等小屌丝能够完成的。目前似乎也没有哪个牛逼大厂完成这个壮举。所以所谓的终极提速大法，就是无论干什么最终都得有个好用的梯子。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/05/ios7yi-shang-xi-tong-zhong-%2Cuitextviewshu-ru-gun-dong-cuo-wei-de-bug/">iOS7以上系统中，UITextView输入滚动错位的bug</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-05T18:20:23+08:00" pubdate data-updated="true">Dec 5<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/12/05/ios7yi-shang-xi-tong-zhong-%2Cuitextviewshu-ru-gun-dong-cuo-wei-de-bug/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/12/05/ios7yi-shang-xi-tong-zhong-%2Cuitextviewshu-ru-gun-dong-cuo-wei-de-bug/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在iOS7中，<code>UITextView</code>多了一个<code>textContainer</code>属性用来描述一些Layout。</p>
+
+<p>在用</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">UITextView</span> <span class="o">*</span><span class="n">textView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UITextView</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个方法时，并没用初始化textContainer，会导致输入中文时页面滚动出现bug。修复这个bug，用以下的方法初始化。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@implementation</span> <span class="nc">SomeTextView</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">init</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">IOS7</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">NSTextStorage</span><span class="o">*</span> <span class="n">textStorage</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSTextStorage</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSLayoutManager</span><span class="o">*</span> <span class="n">layoutManager</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSLayoutManager</span> <span class="n">new</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">textStorage</span> <span class="nl">addLayoutManager:</span><span class="n">layoutManager</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSTextContainer</span> <span class="o">*</span><span class="n">textContainer</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSTextContainer</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithSize:</span><span class="n">CGSizeMake</span><span class="p">(</span><span class="n">someWidth</span><span class="p">,</span> <span class="n">someHeight</span><span class="p">)];</span>
+</span><span class='line'>        <span class="n">textContainer</span><span class="p">.</span><span class="n">widthTracksTextView</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">textContainer</span><span class="p">.</span><span class="n">heightTracksTextView</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">layoutManager</span> <span class="nl">addTextContainer:</span><span class="n">textContainer</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithFrame:</span><span class="n">CGRectZero</span> <span class="nl">textContainer:</span><span class="n">textContainer</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="n">init</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithFrame:</span><span class="p">(</span><span class="n">CGRect</span><span class="p">)</span><span class="nv">frame</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">IOS7</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">NSTextStorage</span><span class="o">*</span> <span class="n">textStorage</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSTextStorage</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSLayoutManager</span><span class="o">*</span> <span class="n">layoutManager</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSLayoutManager</span> <span class="n">new</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">textStorage</span> <span class="nl">addLayoutManager:</span><span class="n">layoutManager</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSTextContainer</span> <span class="o">*</span><span class="n">textContainer</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSTextContainer</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithSize:</span><span class="n">CGSizeMake</span><span class="p">(</span><span class="n">frame</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">kDeviceHeight</span><span class="p">)];</span>
+</span><span class='line'>        <span class="n">textContainer</span><span class="p">.</span><span class="n">widthTracksTextView</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">textContainer</span><span class="p">.</span><span class="n">heightTracksTextView</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">layoutManager</span> <span class="nl">addTextContainer:</span><span class="n">textContainer</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithFrame:</span><span class="n">frame</span> <span class="nl">textContainer:</span><span class="n">textContainer</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithFrame:</span><span class="n">frame</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/10/23/scrollst-shi-yong-xiao-jie/">ScrollsToTop 使用小结</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-10-23T17:17:19+08:00" pubdate data-updated="true">Oct 23<span>rd</span>, 2014</time>
+        
+           | <a href="/blog/2014/10/23/scrollst-shi-yong-xiao-jie/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/10/23/scrollst-shi-yong-xiao-jie/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>我们经常会看到，很多App中点击StatusBar，tableView就会滚回顶部。</p>
+
+<p>在<code>UIScrollView</code>中，<code>scrollsToTop</code>这个属性可以实现这个效果。</p>
+
+<p>iOS官方注视中是这样解释的</p>
+
+<blockquote><p>  When the user taps the status bar, the scroll view beneath the touch which is closest to the status bar will be scrolled to top, but only if its <code>scrollsToTop</code> property is YES, its delegate does not return NO from <code>shouldScrollViewScrollToTop</code>, and it is not already at the top.</p>
+
+<p>  On iPhone, we execute this gesture only if there&rsquo;s one on-screen scroll view with <code>scrollsToTop</code> == YES. If more than one is found, none will be scrolled.</p></blockquote>
+
+<p>简单翻译一下:</p>
+
+<blockquote><p>  当用户点击status bar, 靠近status bar的scroll view会滚动到顶端。但只有 <code>scrollsToTop</code>属性设为YES，代理中<code>shouldScrollViewScrollToTop</code>方法返回YES，并且scroll view没有在顶端时会生效。</p>
+
+<p>  在iPhone中，只有当前屏幕中只有一个scroll view的<code>scrollsToTop</code>属性为YES时，该手势才会执行。如果有多个，任何一个scroll view都不会滚动。</p></blockquote>
+
+<p>在实际使用中，我们可能会用到很多UIScrollView的派生类，例如:</p>
+
+<ul>
+<li>UITableView</li>
+<li>UICollectionView</li>
+<li>UITextView</li>
+<li>UIWebView中也有一个UIScrollView</li>
+</ul>
+
+
+<p>我写了一个小工具来检测当前View中，包含的UIScrollView</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@implementation</span> <span class="nc">UIView</span> <span class="nl">(Utility)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">checkConflictScrollViews</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="n">subView</span> <span class="k">in</span> <span class="n">self</span><span class="p">.</span><span class="n">subviews</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">subView</span> <span class="n">checkConflictScrollViews</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">([</span><span class="n">subView</span> <span class="nl">isKindOfClass:</span><span class="p">[</span><span class="n">UIScrollView</span> <span class="n">class</span><span class="p">]]</span> <span class="o">&amp;&amp;</span> <span class="p">[(</span><span class="n">UIScrollView</span> <span class="o">*</span><span class="p">)</span><span class="n">subView</span> <span class="n">scrollsToTop</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="n">subView</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/09/24/appstoreshen-he-jing-yan-fen-xiang/">AppStore审核经验分享</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-09-24T10:32:16+08:00" pubdate data-updated="true">Sep 24<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/09/24/appstoreshen-he-jing-yan-fen-xiang/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/09/24/appstoreshen-he-jing-yan-fen-xiang/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>原文链接 <a href="http://blog.sina.com.cn/s/blog_4b4ddfea0102v07f.html">SAM1023的博客</a></p>
+
+<p>最近苹果审核更严厉了，我们产品新版（陪你看电影App）提交也接连被苹果Reject，平均更新审核周期也在12天左右。前两天3.3.0新版终于尼玛审核通过了，前后花了一个多月时间也是醉了，中间的各种苦逼心酸和无奈不提也罢，总结下经验教训吧。当然，审核不通过可以有太多的原因，大家可以参考苹果最新公布的审核指南，我在这里只聊聊我们这次新版提交审核遇到的一些问题。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/09/24/appstoreshen-he-jing-yan-fen-xiang/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu/">iOS8 关于地理位置的获取</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-09-23T17:32:39+08:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2014</time>
+        
+           | <a href="/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>在iOS8之前</h3>
+
+<p>当我们调用</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">CLLocationManager</span> <span class="o">*</span><span class="n">locationManager</span> <span class="o">=</span> <span class="p">[[</span><span class="n">CLLocationManager</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">locationManager</span> <span class="n">startUpdatingLocation</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个方法时，会自动弹出警告，请求用户通过地理位置权限</p>
+
+<h3>iOS8中</h3>
+
+<p>获取地理位置的权限默认为<code>kCLAuthorizationStatusNotDetermined</code>，即未确定权限。当调用<code>startUpdatingLocation</code>时，不会自动请求获取权限。</p>
+
+<p>Apple文档中的解释</p>
+
+<p><strong>&ndash; (void)requestWhenInUseAuthorization 中: </strong></p>
+
+<blockquote><p>You must call this method or the requestAlwaysAuthorization method prior to using location services. If the user grants “when-in-use” authorization to your app, your app can start most (but not all) location services while it is in the foreground. (Apps cannot use any services that automatically relaunch the app, such as region monitoring or the significant location change service.) When started in the foreground, services continue to run in the background if your app has enabled background location updates in the Capabilities tab of your Xcode project. Attempts to start location services while your app is running in the background will fail. The system displays a location-services indicator in the status bar when your app moves to the background with active location services.</p></blockquote>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/08/19/ios7wang-luo-qing-qiu/">iOS7网络请求</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-19T18:20:37+08:00" pubdate data-updated="true">Aug 19<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/08/19/ios7wang-luo-qing-qiu/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/08/19/ios7wang-luo-qing-qiu/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>NSURLSession</h3>
+
+<p>NSURLSession，提供后台链接，当APP关闭时也可以下载/上传</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">// 创建</span>
+</span><span class='line'><span class="n">NSURLSessionConfiguration</span> <span class="o">*</span><span class="n">conf</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLSessionConfiguration</span> <span class="nl">backgroundSessionConfiguration:</span><span class="s">@&quot;identifier&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSURLSession</span> <span class="o">*</span><span class="n">session</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLSession</span> <span class="nl">sessionWithConfiguration:</span><span class="n">conf</span> <span class="nl">delegate:</span><span class="n">self</span> <span class="nl">delegateQueue:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 使用</span>
+</span><span class='line'><span class="n">NSURLRequest</span> <span class="o">*</span><span class="n">request</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLRequest</span> <span class="nl">requestWithURL:</span><span class="p">[</span><span class="n">NSURL</span> <span class="nl">URLWithString:</span><span class="s">@&quot;Some URL&quot;</span><span class="p">]];</span>
+</span><span class='line'>    <span class="n">NSURLSessionDownloadTask</span> <span class="o">*</span><span class="n">task</span> <span class="o">=</span> <span class="p">[</span><span class="n">session</span> <span class="nl">downloadTaskWithRequest:</span><span class="n">request</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">task</span> <span class="n">resume</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>当Session下载/上传完成后，如果APP不在前台，iOS会自动启动APP，并且调用这个方法:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">handleEventsForBackgroundURLSession:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">identifier</span> <span class="nf">completionHandler:</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)())</span><span class="nv">completionHandler</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>session的代理会收到回调</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">URLSession:</span><span class="p">(</span><span class="n">NSURLSession</span> <span class="o">*</span><span class="p">)</span><span class="nv">session</span> <span class="nf">downloadTask:</span><span class="p">(</span><span class="n">NSURLSessionDownloadTask</span> <span class="o">*</span><span class="p">)</span><span class="nv">downloadTask</span> <span class="nf">didFinishDownloadingToURL:</span><span class="p">(</span><span class="n">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="nv">downloadURL</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">其中</span><span class="n">downloadURL</span><span class="err">中的</span><span class="n">Data</span><span class="err">就是下载完成的</span><span class="n">Data</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo/">将NSDate转为RFC822格式的时间戳</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-05T16:55:43+08:00" pubdate data-updated="true">Aug 5<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>HTTP/1.1 Protocol中要求的时间戳格式有以下三个:</p>
+
+<pre><code>  Sun, 06 Nov 1994 08:49:37 GMT  ; RFC 822, updated by RFC 1123
+  Sunday, 06-Nov-94 08:49:37 GMT ; RFC 850, obsoleted by RFC 1036
+  Sun Nov  6 08:49:37 1994       ; ANSI C's asctime() format
+</code></pre>
+
+<p>其中应用最广泛的是的RFC822格式</p>
+
+<p>转换方法如下:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSDateFormatter</span> <span class="o">*</span><span class="n">df</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSDateFormatter</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="n">df</span><span class="p">.</span><span class="n">locale</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSLocale</span> <span class="nl">localeWithLocaleIdentifier:</span><span class="s">@&quot;en-us&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="n">df</span><span class="p">.</span><span class="n">timeZone</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSTimeZone</span> <span class="nl">timeZoneWithAbbreviation:</span><span class="s">@&quot;GMT&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="n">df</span><span class="p">.</span><span class="n">dateFormat</span> <span class="o">=</span> <span class="s">@&quot;EEE&#39;,&#39; dd MMM yyyy HH&#39;:&#39;mm&#39;:&#39;ss &#39;GMT&#39;&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">dateString</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span> <span class="nl">stringFromDate:</span><span class="p">[</span><span class="n">NSDate</span> <span class="n">date</span><span class="p">]];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/">UITextField的默认Placeholder颜色</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-10T14:11:44+08:00" pubdate data-updated="true">Jul 10<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>色值为</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>R:0
+</span><span class='line'>G:0
+</span><span class='line'>B:0.0980392
+</span><span class='line'>A:0.22</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>查看方式</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSRange</span> <span class="n">range</span> <span class="o">=</span> <span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="n">NSDictionary</span> <span class="o">*</span><span class="n">dict</span> <span class="o">=</span> <span class="p">[</span><span class="n">someTextField</span><span class="p">.</span><span class="n">attributedPlaceholder</span> <span class="nl">attributesAtIndex:</span><span class="mi">0</span> <span class="nl">effectiveRange:</span><span class="o">&amp;</span><span class="n">range</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">dict</span> <span class="nl">objectForKey:</span><span class="n">NSForegroundColorAttributeName</span><span class="p">]);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/13/xiao-shi-auto-layout-vflpian/">小试Auto Layout——VFL篇</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-13T18:47:42+08:00" pubdate data-updated="true">Jun 13<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/06/13/xiao-shi-auto-layout-vflpian/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/06/13/xiao-shi-auto-layout-vflpian/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>为什么要AutoLayout</h3>
+
+<p>从iOS6开始，移动端开始支持AutoLayout。与传统的Layout方法相比，AutoLayout不再使用Origin+Size的方式描述View的位置和大小，而是使用<code>Constraints</code>（约束）来描述。</p>
+
+<p>AutoLayout的优点:</p>
+
+<ul>
+<li>iOS设备越来越多，iPhone4/5/6、iPad、甚至以后的AppleTV、iWatch，其分辨率都是不一样的，要做分辨率适配，旧的方法已经不再适合，AutoLayout提供了一个适配不同分辨率的方式。</li>
+<li>在iOS8中，View的尺寸可以通过设备旋转、Universal适配、SplitView展开/折叠等途径不断改变，就要求subview的位置和尺寸适应parent view。</li>
+<li>将View的布局计算交给View自己，而不需要在ViewController中控制，更加符合MVC。</li>
+</ul>
+
+
+<h3>为什么要用VFL</h3>
+
+<p>VFL，即Visual Format Language，是用code编码进行AutoLayout的方式。</p>
+
+<p>VFL的优点:</p>
+
+<ul>
+<li>编写简单，工作量少，代码可读性强，方便维护。</li>
+<li>由于处理的是字符串，所以符合OC的动态特性。</li>
+<li>程序员忍受得了去IB拖积木吗？</li>
+</ul>
+
+
+<h3>VFL语法</h3>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/13/xiao-shi-auto-layout-vflpian/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/2/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <html xmlns:wb=“http://open.weibo.com/wb”>
+<head>
+    <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+
+<section>
+    <wb:follow-button uid="2386878033" type="red_3" width="100%" height="24" ></wb:follow-button>
+</section>
+
+
+</html><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/">iOS8中可交互通知(NotificationAction)初探</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/24/cocoapodsti-su-shou-ce/">Cocoapods提速手册</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/05/ios7yi-shang-xi-tong-zhong-%2Cuitextviewshu-ru-gun-dong-cuo-wei-de-bug/">iOS7以上系统中，UITextView输入滚动错位的bug</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/23/scrollst-shi-yong-xiao-jie/">ScrollsToTop 使用小结</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/24/appstoreshen-he-jing-yan-fen-xiang/">AppStore审核经验分享</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+  
+</aside>
+
+<meta property="wb:webmaster" content="d3072461a702f2c6" />
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Eping Wang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'epingwang';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F4046dc33078e2928498cce69fb0d82fe' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+
+
+
+</body>
+</html>

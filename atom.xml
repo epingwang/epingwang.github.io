@@ -1,0 +1,1548 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[EpingWang's Blog]]></title>
+  <link href="http://epingwang.me/atom.xml" rel="self"/>
+  <link href="http://epingwang.me/"/>
+  <updated>2015-05-04T10:13:11+08:00</updated>
+  <id>http://epingwang.me/</id>
+  <author>
+    <name><![CDATA[Eping Wang]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[iOS8中可交互通知(NotificationAction)初探]]></title>
+    <link href="http://epingwang.me/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/"/>
+    <updated>2015-01-16T15:30:39+08:00</updated>
+    <id>http://epingwang.me/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan</id>
+    <content type="html"><![CDATA[<p>iOS8中，可交互推送/通知可以在<strong>锁屏界面/通知中心/推送消息Banner</strong>上以按钮形式与App交互。</p>
+
+<h2>注册可交互推送</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">UIMutableUserNotificationAction</span> <span class="o">*</span><span class="n">acceptAction</span> <span class="o">=</span>
+</span><span class='line'><span class="p">[[</span><span class="n">UIMutableUserNotificationAction</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 回调时按钮的ID</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s">@&quot;ACCEPT_IDENTIFIER&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 按钮title(Facebook使用了emoji)</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;Accept&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/* UIUserNotificationActivationModeBackground </span>
+</span><span class='line'><span class="cm">* APP会在后台启动</span>
+</span><span class='line'><span class="cm">* UIUserNotificationActivationModeForeground</span>
+</span><span class='line'><span class="cm">* APP会在前台启动</span>
+</span><span class='line'><span class="cm">*/</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">activationMode</span> <span class="o">=</span> <span class="n">UIUserNotificationActivationModeBackground</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// YES为红色，NO为蓝色</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">destructive</span> <span class="o">=</span> <span class="n">NO</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 是否需要解锁</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">authenticationRequired</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="n">UIMutableUserNotificationCategory</span> <span class="o">*</span><span class="n">category</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIMutableUserNotificationCategory</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 消息的ID(区分服务器推送过来时消息的种类)</span>
+</span><span class='line'><span class="n">category</span><span class="p">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s">@&quot;INVITE_CATEGORY&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Alert形式展现的推送</span>
+</span><span class='line'><span class="p">[</span><span class="n">category</span> <span class="nl">setActions:</span><span class="err">@</span><span class="p">[</span><span class="n">acceptAction</span><span class="p">]</span> <span class="nl">forContext:</span><span class="n">UIUserNotificationActionContextDefault</span><span class="p">];</span>
+</span><span class='line'><span class="c1">// Banner/锁屏形式展现的推送</span>
+</span><span class='line'><span class="p">[</span><span class="n">category</span> <span class="nl">setActions:</span><span class="err">@</span><span class="p">[</span><span class="n">acceptAction</span><span class="p">]</span> <span class="nl">forContext:</span><span class="n">UIUserNotificationActionContextMinimal</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">UIUserNotificationSettings</span> <span class="o">*</span><span class="n">settings</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIUserNotificationSettings</span> <span class="nl">settingsForTypes:</span>
+</span><span class='line'><span class="n">UIUserNotificationTypeAlert</span> <span class="o">|</span> <span class="n">UIUserNotificationTypeBadge</span> <span class="o">|</span> <span class="n">UIUserNotificationTypeSound</span> <span class="nl">categories:</span><span class="p">[</span><span class="n">NSSet</span> <span class="nl">setWithObject:</span><span class="n">category</span><span class="p">]];</span>
+</span><span class='line'><span class="p">[[</span><span class="n">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nl">registerUserNotificationSettings:</span><span class="n">settings</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Discussion:</h4>
+
+<ul>
+<li>当Contenxt为<code>UIUserNotificationActionContextMinimal</code>时，最多展现两个按钮。</li>
+<li>当Contenxt为<code>UIUserNotificationActionContextDefault</code>时，最多展现四个按钮。</li>
+<li>当Contenxt为<code>UIUserNotificationActionContextMinimal</code>时，第一个按钮在右边，第二个按钮在左边。</li>
+<li>当Contenxt为<code>UIUserNotificationActionContextMinimal</code>时，若两个按钮的<code>destructive</code>属性都为NO，则第一个为蓝色，第二个为灰色。</li>
+<li>当Contenxt为<code>UIUserNotificationActionContextDefault</code>时，按钮顺序由上到下排列。</li>
+</ul>
+
+
+<h2>Schedule推送</h2>
+
+<!--more-->
+
+
+<h4>Remote Notifications</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nt">&quot;aps&quot;</span> <span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>       <span class="nt">&quot;alert&quot;</span> <span class="p">:</span> <span class="s2">&quot;You’re invited!&quot;</span><span class="p">,</span>
+</span><span class='line'>       <span class="nt">&quot;category&quot;</span> <span class="p">:</span> <span class="s2">&quot;INVITE_CATEGORY&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Local Notifications</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">UILocalNotification</span> <span class="o">*</span><span class="n">notification</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UILocalNotification</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="c1">///...</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">notification</span><span class="p">.</span><span class="n">category</span> <span class="o">=</span> <span class="s">@&quot;INVITE_CATEGORY&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">[[</span><span class="n">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nl">scheduleLocalNotification:</span><span class="n">notification</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>推送处理</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">// 当收到推送时，会调用这两个方法</span>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">handleActionWithIdentifier:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">identifier</span> <span class="nf">forRemoteNotification:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">userInfo</span> <span class="nf">completionHandler:</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)())</span><span class="nv">completionHandler</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">handleActionWithIdentifier:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">identifier</span> <span class="nf">forLocalNotification:</span><span class="p">(</span><span class="n">UILocalNotification</span> <span class="o">*</span><span class="p">)</span><span class="nv">notification</span> <span class="nf">completionHandler:</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)())</span><span class="nv">completionHandler</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 当执行完事件处理的代码后，调用`completionHandler()`，通知系统处理完成</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Discussion:</h4>
+
+<ul>
+<li>虽然在WWDC视频中，提到事件处理的时间限定在几秒钟，但是实际上在子线程执行一次网络请求等异步操作也是可以的，甚至连网络超时事件都可以拿到。只需要在网络请求结束后再调用<code>completionHandler()</code>即可。（猜测: 几秒钟的限制应该是主线程的执行时间）</li>
+<li>我是否只能调用静态方法: 经过简单的实验，当App在后台，但进程未被<strong>Terminate</strong>时，是可以读取App内的数据的，但不会调用<code>applicationDidBecomeActive</code>。若App进程被<strong>Terminate</strong>后，用户点击按钮后会先加在App，调用<code>application: didFinishLaunchingWithOptions</code>。</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Cocoapods提速手册]]></title>
+    <link href="http://epingwang.me/blog/2014/12/24/cocoapodsti-su-shou-ce/"/>
+    <updated>2014-12-24T11:09:14+08:00</updated>
+    <id>http://epingwang.me/blog/2014/12/24/cocoapodsti-su-shou-ce</id>
+    <content type="html"><![CDATA[<p>转自 <a href="http://www.codingtime.info/post/posts/leng-zhi-shi/2014_07_28_speed_up_cocoapods">CodingTime</a></p>
+
+<blockquote><p>前言</p>
+
+<p>相信大家在使用cocoapods的时候，都感到在墙内速度怨念把。今天po主我在家更新代码时执行&#8217;pod install
+居然花了2个小时，各种怒从中来，遂整理了一下cocoapods提速的各种方法，给大家参考。</p></blockquote>
+
+<h3>1.cocoapods安装提速</h3>
+
+<p>我们在使用&#8217;gem install cocoapods&#8217;来安装cocoapods时，是不是感觉都奇慢无比？都是gem官方源被墙惹的祸！将gem的默认官方镜像更换成淘宝镜像可以解决这一问题。在命令行中执行</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem sources --remove https://rubygems.org/
+</span><span class='line'>gem sources -a https://ruby.taobao.org/
+</span><span class='line'>gem sources -l</span></code></pre></td></tr></table></div></figure>
+
+
+<p>若显示</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>*** CURRENT SOURCES ***
+</span><span class='line'>
+</span><span class='line'>https://ruby.taobao.org</span></code></pre></td></tr></table></div></figure>
+
+
+<p>则淘宝源替换成功。这是再执行gem install cocoapods会发现安装速度明显变快。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>注意：
+</span><span class='line'>更换淘宝gem镜像只是提高cocoapods安装速度和更新速度，不会影响任何pod命令的速度。＝  ＝</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2. 获取specs文件提速</h3>
+
+<p>cocoapods的spec文件都放在github中，而国内访问github总有些不顺畅，导致每次更新cocoapods spec文件都时候速度都比较慢。将cocoapods的spec版本库改成国内可以提升spec文件的更新速度。</p>
+
+<p>在命令行中执行</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pod repo remove master
+</span><span class='line'>pod repo add master https://gitcafe.com/akuandev/Specs.git
+</span><span class='line'>pod repo update</span></code></pre></td></tr></table></div></figure>
+
+
+<p>默认的cocoapods master仓库会被替换成国内gitcafe仓库。</p>
+
+<h3>3. pod install提速</h3>
+
+<p>每次执行<code>pod install</code>和<code>pod update</code>的时候，cocoapods都会默认更新一次spec仓库。这是一个比较耗时的操作。在确认spec版本哭不需要更新时，给这两个命令加一个参数跳过spec版本库更新</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pod install --verbose --no-repo-update
+</span><span class='line'>pod update --verbose --no-repo-update</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以明显提高这两个命令的执行速度。</p>
+
+<h3>4. 终极提速大法</h3>
+
+<p>在将gem、cocoapods spec文件都改成国内镜像之后，剩下的还能提速的步骤就是将各个pod的源码也拖到国内了。不过将pod list里5000多个pod全部镜像下来并一一修改spec文件，这工程量完全不是我等小屌丝能够完成的。目前似乎也没有哪个牛逼大厂完成这个壮举。所以所谓的终极提速大法，就是无论干什么最终都得有个好用的梯子。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS7以上系统中，UITextView输入滚动错位的bug]]></title>
+    <link href="http://epingwang.me/blog/2014/12/05/ios7yi-shang-xi-tong-zhong-%2Cuitextviewshu-ru-gun-dong-cuo-wei-de-bug/"/>
+    <updated>2014-12-05T18:20:23+08:00</updated>
+    <id>http://epingwang.me/blog/2014/12/05/ios7yi-shang-xi-tong-zhong-,uitextviewshu-ru-gun-dong-cuo-wei-de-bug</id>
+    <content type="html"><![CDATA[<p>在iOS7中，<code>UITextView</code>多了一个<code>textContainer</code>属性用来描述一些Layout。</p>
+
+<p>在用</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">UITextView</span> <span class="o">*</span><span class="n">textView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UITextView</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个方法时，并没用初始化textContainer，会导致输入中文时页面滚动出现bug。修复这个bug，用以下的方法初始化。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@implementation</span> <span class="nc">SomeTextView</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">init</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">IOS7</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">NSTextStorage</span><span class="o">*</span> <span class="n">textStorage</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSTextStorage</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSLayoutManager</span><span class="o">*</span> <span class="n">layoutManager</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSLayoutManager</span> <span class="n">new</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">textStorage</span> <span class="nl">addLayoutManager:</span><span class="n">layoutManager</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSTextContainer</span> <span class="o">*</span><span class="n">textContainer</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSTextContainer</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithSize:</span><span class="n">CGSizeMake</span><span class="p">(</span><span class="n">someWidth</span><span class="p">,</span> <span class="n">someHeight</span><span class="p">)];</span>
+</span><span class='line'>        <span class="n">textContainer</span><span class="p">.</span><span class="n">widthTracksTextView</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">textContainer</span><span class="p">.</span><span class="n">heightTracksTextView</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">layoutManager</span> <span class="nl">addTextContainer:</span><span class="n">textContainer</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithFrame:</span><span class="n">CGRectZero</span> <span class="nl">textContainer:</span><span class="n">textContainer</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="n">init</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithFrame:</span><span class="p">(</span><span class="n">CGRect</span><span class="p">)</span><span class="nv">frame</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">IOS7</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">NSTextStorage</span><span class="o">*</span> <span class="n">textStorage</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSTextStorage</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSLayoutManager</span><span class="o">*</span> <span class="n">layoutManager</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSLayoutManager</span> <span class="n">new</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">textStorage</span> <span class="nl">addLayoutManager:</span><span class="n">layoutManager</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSTextContainer</span> <span class="o">*</span><span class="n">textContainer</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSTextContainer</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithSize:</span><span class="n">CGSizeMake</span><span class="p">(</span><span class="n">frame</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">kDeviceHeight</span><span class="p">)];</span>
+</span><span class='line'>        <span class="n">textContainer</span><span class="p">.</span><span class="n">widthTracksTextView</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">textContainer</span><span class="p">.</span><span class="n">heightTracksTextView</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">layoutManager</span> <span class="nl">addTextContainer:</span><span class="n">textContainer</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithFrame:</span><span class="n">frame</span> <span class="nl">textContainer:</span><span class="n">textContainer</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithFrame:</span><span class="n">frame</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ScrollsToTop 使用小结]]></title>
+    <link href="http://epingwang.me/blog/2014/10/23/scrollst-shi-yong-xiao-jie/"/>
+    <updated>2014-10-23T17:17:19+08:00</updated>
+    <id>http://epingwang.me/blog/2014/10/23/scrollst-shi-yong-xiao-jie</id>
+    <content type="html"><![CDATA[<p>我们经常会看到，很多App中点击StatusBar，tableView就会滚回顶部。</p>
+
+<p>在<code>UIScrollView</code>中，<code>scrollsToTop</code>这个属性可以实现这个效果。</p>
+
+<p>iOS官方注视中是这样解释的</p>
+
+<blockquote><p>  When the user taps the status bar, the scroll view beneath the touch which is closest to the status bar will be scrolled to top, but only if its <code>scrollsToTop</code> property is YES, its delegate does not return NO from <code>shouldScrollViewScrollToTop</code>, and it is not already at the top.</p>
+
+<p>  On iPhone, we execute this gesture only if there&rsquo;s one on-screen scroll view with <code>scrollsToTop</code> == YES. If more than one is found, none will be scrolled.</p></blockquote>
+
+<p>简单翻译一下:</p>
+
+<blockquote><p>  当用户点击status bar, 靠近status bar的scroll view会滚动到顶端。但只有 <code>scrollsToTop</code>属性设为YES，代理中<code>shouldScrollViewScrollToTop</code>方法返回YES，并且scroll view没有在顶端时会生效。</p>
+
+<p>  在iPhone中，只有当前屏幕中只有一个scroll view的<code>scrollsToTop</code>属性为YES时，该手势才会执行。如果有多个，任何一个scroll view都不会滚动。</p></blockquote>
+
+<p>在实际使用中，我们可能会用到很多UIScrollView的派生类，例如:</p>
+
+<ul>
+<li>UITableView</li>
+<li>UICollectionView</li>
+<li>UITextView</li>
+<li>UIWebView中也有一个UIScrollView</li>
+</ul>
+
+
+<p>我写了一个小工具来检测当前View中，包含的UIScrollView</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@implementation</span> <span class="nc">UIView</span> <span class="nl">(Utility)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">checkConflictScrollViews</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="n">subView</span> <span class="k">in</span> <span class="n">self</span><span class="p">.</span><span class="n">subviews</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">subView</span> <span class="n">checkConflictScrollViews</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">([</span><span class="n">subView</span> <span class="nl">isKindOfClass:</span><span class="p">[</span><span class="n">UIScrollView</span> <span class="n">class</span><span class="p">]]</span> <span class="o">&amp;&amp;</span> <span class="p">[(</span><span class="n">UIScrollView</span> <span class="o">*</span><span class="p">)</span><span class="n">subView</span> <span class="n">scrollsToTop</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="n">subView</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[AppStore审核经验分享]]></title>
+    <link href="http://epingwang.me/blog/2014/09/24/appstoreshen-he-jing-yan-fen-xiang/"/>
+    <updated>2014-09-24T10:32:16+08:00</updated>
+    <id>http://epingwang.me/blog/2014/09/24/appstoreshen-he-jing-yan-fen-xiang</id>
+    <content type="html"><![CDATA[<p>原文链接 <a href="http://blog.sina.com.cn/s/blog_4b4ddfea0102v07f.html">SAM1023的博客</a></p>
+
+<p>最近苹果审核更严厉了，我们产品新版（陪你看电影App）提交也接连被苹果Reject，平均更新审核周期也在12天左右。前两天3.3.0新版终于尼玛审核通过了，前后花了一个多月时间也是醉了，中间的各种苦逼心酸和无奈不提也罢，总结下经验教训吧。当然，审核不通过可以有太多的原因，大家可以参考苹果最新公布的审核指南，我在这里只聊聊我们这次新版提交审核遇到的一些问题。</p>
+
+<!--more-->
+
+
+<h3>关于“第三方登录”</h3>
+
+<blockquote><p>10.6 Apple and our customers place a high value on simple, refined, creative, well thought through interfaces. They take more work but are worth it. Apple sets a high bar. If your user interface is complex or less than very good, it may be rejected.</p>
+
+<p>(Apple和我们的用户都对界面报以很高期望，希望他设计的超级简洁，精致，充满创造力，深思熟虑。做到这些确实会消耗很多精力，但是值得。Apple在这方面要求非常高。如果你的用户界面过于复杂，甚至仅仅是不够好，都可能被拒。)</p></blockquote>
+
+<p>很多产品都流行使用第三方平台账户做单点登录，比如微博、QQ和微信登录，可以拉低用户注册成本，甚至可以拉取第三方平台的好友关系链。</p>
+
+<p>实际的体验场景是当用户当前设备安装了第三方客户端时，可以直接调用第三方客户端进行验证登录，但是，如果用户当前设备没有安装第三方客户端，则通常是会弹出H5的授权验证页面，但因为这个页面有被钓鱼的风险，新版QQ登录SDK是不提供这种方式进行验证授权的，就有了如下图所示的结果。</p>
+
+<p><img class="center" src="images/2014/09/qq_login.jpeg"></p>
+
+<p>虽然苹果Reject的理由是他们认为这个界面的体验违背了上述的10.6条款，但实际上苹果应该也是<strong>不允许在应用内有阻碍用户继续操作的行为包括提示引导用户去下载第三方App的行为</strong>。</p>
+
+<h4>解决方式：</h4>
+
+<p>用户在打开应用时如果检测到当前设备已安装手Q则显示QQ登录按钮，反之，则隐藏QQ登录按钮。还有一种做法是当用户打开应用时如果没检测到手Q则提示“未安装XX客户端，请选择其它登录方式或安装XX客户端后再进行登录”（这种方式我没有验证过）。</p>
+
+<h3>关于“Advertising Identifier (IDFA)”</h3>
+
+<blockquote><p>PLA 3.3.12  We found your app uses the iOS Advertising Identifier but does not include ad functionality. This does not comply with the terms of the iOS Developer Program License Agreement, as required by the App Store Review Guidelines</p>
+
+<p>（我们发现你的应用使用了IDFA，但并没有提供广告功能，这不符合苹果App Store审核规范关于iOS开发者协议的条款）。</p></blockquote>
+
+<p>Advertising Identifier就是所谓的IDFA，是每台iOS设备的唯一标识符，IDFA的使用必须有明确的广告用途才被允许，苹果在前两年宣布淘汰UDID后，IDFA成为提供精确广告的唯一方法。很多开发者包括第三方数据统计分析平台都会在统计激活安装量时使用到IDFA，比如积分墙厂商在跟CP结算数据时也都倾向使用IDFA。
+苹果审核一般会检测以下三个调用判断你是否使用IDFA：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class: ASIdentifierManager
+</span><span class='line'>selector: advertisingIdentifier
+</span><span class='line'>framework: AdSupport.framework</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>如果你希望在应用内展示广告，但又想使用IDFA，请尝试以下：</strong></p>
+
+<p>在应用内插一个可在后台自主关闭的展示Banner展示，比如使用有米或友盟的广告SDK（虽然有米的这个Banner广告也未使用到IDFA），通过审核后如果不要这个广告再把Banner条关闭掉。一定要注意的是尽量把这个广告放在比较容易被发现的位置，如果放在深层目录的话最好在提交的时候说明如何locate Ads。有做积分墙朋友建议使用苹果的iAD广告框架，插上素材，用户点击后跳转到淘宝、天猫等电商页面，其实这也有个风险，因为Banner右下角会显示来自iAD的广告，而审核人员知道iAD是没有使用IDFA的，这可能会成为reject的理由（事实上，这也是我们被Reject的理由）。</p>
+
+<p>还有一种方案是不做任何代码修改，在提交的时候勾选第三项“将在这款应用内采取的措施归因于之前发布的广告”（我没有验证过）。</p>
+
+<p><img class="center" src="http://epingwang.me/images/2014/09/idfa.jpeg"></p>
+
+<h3>关于“应用内活动”</h3>
+
+<blockquote><p>20.2 Official rules for sweepstakes and contests, must be presented in the App and make it clear that Apple is not a sponsor or involved in the activity in any manner.</p>
+
+<p>（ 应用中必须展示赌博和竞赛的官方条款，并声明Apple不是资助者，并且在任何情况下与此事无关。）</p></blockquote>
+
+<p>也许你应用内活动真的跟苹果公司无半毛钱关系，也保不准一定能通过审核，很简单，在活动页声明“本活动与苹果公司无关”即可，但还是建议不要在审核期间上线类似送壕机的活动。</p>
+
+<p><img class="center" src="http://epingwang.me/images/2014/09/in_app_activity.png"></p>
+
+<h3>关于“应用推荐”</h3>
+
+<p>关于“应用推荐”不用多说了，跟很多苹果助手类产品一样，苹果很早就表示拒绝这类软件和功能的上架（仅接受推自家产品），不过依然有很多CP为了换量的需求而上这个功能，虽然有些能侥幸通过审核，但还是不建议在审核期展示出来。</p>
+
+<p><img class="center" src="http://epingwang.me/images/2014/09/app_advertise.png"></p>
+
+<h3>关于“支持ARM64bit”</h3>
+
+<p>尽管自从iPhone5s开始处理器已支持64bit，且苹果在官网上要求开发者开发的应用必须兼容32位和64位处理器，但显然不管是平台还是开发者大多还没有重视这块。9月10日下午一直到第二天凌晨，大量开发者反映因为ARM64问题导致无法提交Build，出错信息如下。</p>
+
+<p><img class="center" src="http://epingwang.me/images/2014/09/arm64_error.jpeg"></p>
+
+<p>截至目前除了微信及友盟有提供64位SDK版本外，其它主流第三方平台SDK都还木有更新。虽然，第二天早上这个问题已不再出现，但是兼容64位已是大势所趋，建议开发者可以着手考虑调整64位架构了。</p>
+
+<p><img class="center" src="http://epingwang.me/images/2014/09/apple_forum.jpeg"></p>
+
+<h3>关于“加急审核”</h3>
+
+<p>不是每个人的加急审核申请都能被通过，一般来说如果你的当前线上产品有很致命的严重影响用户使用的Bug申请加急审核都能被通过，当然也有因为市场活动原因申请加急审核申请被通过的。</p>
+
+<p>一旦你的加急审核申请通过了，你的App会在一个工作日内被处理，如果这期间因为可能出现的其它问题导致再次被reject，你只需要重新提交修改后的build或补充说明（metadata reject）就行，你的App将会一直处于加急审核队列，直到审核通过。</p>
+
+<p>苹果加急审核邮箱：<a href="&#x6d;&#97;&#x69;&#108;&#x74;&#111;&#x3a;&#65;&#112;&#x70;&#x52;&#101;&#118;&#x69;&#101;&#119;&#x40;&#x61;&#x70;&#112;&#x70;&#108;&#x65;&#46;&#99;&#111;&#109;">&#65;&#x70;&#112;&#82;&#101;&#118;&#105;&#101;&#x77;&#64;&#97;&#x70;&#x70;&#x70;&#108;&#x65;&#x2e;&#99;&#x6f;&#x6d;</a></p>
+
+<p>网页提交地址：<a href="https://developer.apple.com/appstore/contact/?topic=expedite">https://developer.apple.com/appstore/contact/?topic=expedite</a></p>
+
+<p>最后，允许我自私的给自家产品打个广告吧，陪你看电影——好电影，要分享！ 一键下载链接：<a href="http://www.3ovie.com">http://www.3ovie.com</a> 或在App Store和各大Android商店搜索“陪你看电影”。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS8 关于地理位置的获取]]></title>
+    <link href="http://epingwang.me/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu/"/>
+    <updated>2014-09-23T17:32:39+08:00</updated>
+    <id>http://epingwang.me/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu</id>
+    <content type="html"><![CDATA[<h3>在iOS8之前</h3>
+
+<p>当我们调用</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">CLLocationManager</span> <span class="o">*</span><span class="n">locationManager</span> <span class="o">=</span> <span class="p">[[</span><span class="n">CLLocationManager</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">locationManager</span> <span class="n">startUpdatingLocation</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个方法时，会自动弹出警告，请求用户通过地理位置权限</p>
+
+<h3>iOS8中</h3>
+
+<p>获取地理位置的权限默认为<code>kCLAuthorizationStatusNotDetermined</code>，即未确定权限。当调用<code>startUpdatingLocation</code>时，不会自动请求获取权限。</p>
+
+<p>Apple文档中的解释</p>
+
+<p><strong>&ndash; (void)requestWhenInUseAuthorization 中: </strong></p>
+
+<blockquote><p>You must call this method or the requestAlwaysAuthorization method prior to using location services. If the user grants “when-in-use” authorization to your app, your app can start most (but not all) location services while it is in the foreground. (Apps cannot use any services that automatically relaunch the app, such as region monitoring or the significant location change service.) When started in the foreground, services continue to run in the background if your app has enabled background location updates in the Capabilities tab of your Xcode project. Attempts to start location services while your app is running in the background will fail. The system displays a location-services indicator in the status bar when your app moves to the background with active location services.</p></blockquote>
+
+<!--more-->
+
+
+<p><strong>简单解释:</strong></p>
+
+<p>当请求地理位置之前，必须先显式调用<code>-(void)requestWhenInUseAuthorization</code>或者<code>- (void)requestAlwaysAuthorization</code>方法，当用户通过请求时，前者可以在程序前台运行时获取地理位置，后者则可以在程序后台运行时继续获取位置，并可唤醒程序</p>
+
+<h4>其他的事项</h4>
+
+<ul>
+<li><p>请求时和在设置中显示的文本:</p>
+
+<p>  在<code>Info.plist</code>中修改，Key为<code>NSLocationWhenInUseUsageDescription</code>或<code>NSLocationAlwaysUsageDescription</code></p></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS7网络请求]]></title>
+    <link href="http://epingwang.me/blog/2014/08/19/ios7wang-luo-qing-qiu/"/>
+    <updated>2014-08-19T18:20:37+08:00</updated>
+    <id>http://epingwang.me/blog/2014/08/19/ios7wang-luo-qing-qiu</id>
+    <content type="html"><![CDATA[<h3>NSURLSession</h3>
+
+<p>NSURLSession，提供后台链接，当APP关闭时也可以下载/上传</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">// 创建</span>
+</span><span class='line'><span class="n">NSURLSessionConfiguration</span> <span class="o">*</span><span class="n">conf</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLSessionConfiguration</span> <span class="nl">backgroundSessionConfiguration:</span><span class="s">@&quot;identifier&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSURLSession</span> <span class="o">*</span><span class="n">session</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLSession</span> <span class="nl">sessionWithConfiguration:</span><span class="n">conf</span> <span class="nl">delegate:</span><span class="n">self</span> <span class="nl">delegateQueue:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 使用</span>
+</span><span class='line'><span class="n">NSURLRequest</span> <span class="o">*</span><span class="n">request</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLRequest</span> <span class="nl">requestWithURL:</span><span class="p">[</span><span class="n">NSURL</span> <span class="nl">URLWithString:</span><span class="s">@&quot;Some URL&quot;</span><span class="p">]];</span>
+</span><span class='line'>    <span class="n">NSURLSessionDownloadTask</span> <span class="o">*</span><span class="n">task</span> <span class="o">=</span> <span class="p">[</span><span class="n">session</span> <span class="nl">downloadTaskWithRequest:</span><span class="n">request</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">task</span> <span class="n">resume</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>当Session下载/上传完成后，如果APP不在前台，iOS会自动启动APP，并且调用这个方法:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">handleEventsForBackgroundURLSession:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">identifier</span> <span class="nf">completionHandler:</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)())</span><span class="nv">completionHandler</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>session的代理会收到回调</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">URLSession:</span><span class="p">(</span><span class="n">NSURLSession</span> <span class="o">*</span><span class="p">)</span><span class="nv">session</span> <span class="nf">downloadTask:</span><span class="p">(</span><span class="n">NSURLSessionDownloadTask</span> <span class="o">*</span><span class="p">)</span><span class="nv">downloadTask</span> <span class="nf">didFinishDownloadingToURL:</span><span class="p">(</span><span class="n">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="nv">downloadURL</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">其中</span><span class="n">downloadURL</span><span class="err">中的</span><span class="n">Data</span><span class="err">就是下载完成的</span><span class="n">Data</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[将NSDate转为RFC822格式的时间戳]]></title>
+    <link href="http://epingwang.me/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo/"/>
+    <updated>2014-08-05T16:55:43+08:00</updated>
+    <id>http://epingwang.me/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo</id>
+    <content type="html"><![CDATA[<p>HTTP/1.1 Protocol中要求的时间戳格式有以下三个:</p>
+
+<pre><code>  Sun, 06 Nov 1994 08:49:37 GMT  ; RFC 822, updated by RFC 1123
+  Sunday, 06-Nov-94 08:49:37 GMT ; RFC 850, obsoleted by RFC 1036
+  Sun Nov  6 08:49:37 1994       ; ANSI C's asctime() format
+</code></pre>
+
+<p>其中应用最广泛的是的RFC822格式</p>
+
+<p>转换方法如下:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSDateFormatter</span> <span class="o">*</span><span class="n">df</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSDateFormatter</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="n">df</span><span class="p">.</span><span class="n">locale</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSLocale</span> <span class="nl">localeWithLocaleIdentifier:</span><span class="s">@&quot;en-us&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="n">df</span><span class="p">.</span><span class="n">timeZone</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSTimeZone</span> <span class="nl">timeZoneWithAbbreviation:</span><span class="s">@&quot;GMT&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="n">df</span><span class="p">.</span><span class="n">dateFormat</span> <span class="o">=</span> <span class="s">@&quot;EEE&#39;,&#39; dd MMM yyyy HH&#39;:&#39;mm&#39;:&#39;ss &#39;GMT&#39;&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">dateString</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span> <span class="nl">stringFromDate:</span><span class="p">[</span><span class="n">NSDate</span> <span class="n">date</span><span class="p">]];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[UITextField的默认Placeholder颜色]]></title>
+    <link href="http://epingwang.me/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/"/>
+    <updated>2014-07-10T14:11:44+08:00</updated>
+    <id>http://epingwang.me/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se</id>
+    <content type="html"><![CDATA[<h3>色值为</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>R:0
+</span><span class='line'>G:0
+</span><span class='line'>B:0.0980392
+</span><span class='line'>A:0.22</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>查看方式</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSRange</span> <span class="n">range</span> <span class="o">=</span> <span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="n">NSDictionary</span> <span class="o">*</span><span class="n">dict</span> <span class="o">=</span> <span class="p">[</span><span class="n">someTextField</span><span class="p">.</span><span class="n">attributedPlaceholder</span> <span class="nl">attributesAtIndex:</span><span class="mi">0</span> <span class="nl">effectiveRange:</span><span class="o">&amp;</span><span class="n">range</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">dict</span> <span class="nl">objectForKey:</span><span class="n">NSForegroundColorAttributeName</span><span class="p">]);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[小试Auto Layout——VFL篇]]></title>
+    <link href="http://epingwang.me/blog/2014/06/13/xiao-shi-auto-layout-vflpian/"/>
+    <updated>2014-06-13T18:47:42+08:00</updated>
+    <id>http://epingwang.me/blog/2014/06/13/xiao-shi-auto-layout-vflpian</id>
+    <content type="html"><![CDATA[<h3>为什么要AutoLayout</h3>
+
+<p>从iOS6开始，移动端开始支持AutoLayout。与传统的Layout方法相比，AutoLayout不再使用Origin+Size的方式描述View的位置和大小，而是使用<code>Constraints</code>（约束）来描述。</p>
+
+<p>AutoLayout的优点:</p>
+
+<ul>
+<li>iOS设备越来越多，iPhone4/5/6、iPad、甚至以后的AppleTV、iWatch，其分辨率都是不一样的，要做分辨率适配，旧的方法已经不再适合，AutoLayout提供了一个适配不同分辨率的方式。</li>
+<li>在iOS8中，View的尺寸可以通过设备旋转、Universal适配、SplitView展开/折叠等途径不断改变，就要求subview的位置和尺寸适应parent view。</li>
+<li>将View的布局计算交给View自己，而不需要在ViewController中控制，更加符合MVC。</li>
+</ul>
+
+
+<h3>为什么要用VFL</h3>
+
+<p>VFL，即Visual Format Language，是用code编码进行AutoLayout的方式。</p>
+
+<p>VFL的优点:</p>
+
+<ul>
+<li>编写简单，工作量少，代码可读性强，方便维护。</li>
+<li>由于处理的是字符串，所以符合OC的动态特性。</li>
+<li>程序员忍受得了去IB拖积木吗？</li>
+</ul>
+
+
+<h3>VFL语法</h3>
+
+<!--more-->
+
+
+<h4>创建一个VFL约束:</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">NSLayoutConstraint</span>
+</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nf">constraintsWithVisualFormat:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">format</span> <span class="nf">options:</span><span class="p">(</span><span class="n">NSLayoutFormatOptions</span><span class="p">)</span><span class="nv">opts</span> <span class="nf">metrics:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">metrics</span> <span class="nf">views:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">views</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其中:</p>
+
+<ul>
+<li>@param format: VFL语句</li>
+<li>@param opts: 约束方式，见后续</li>
+<li>@param metrics: 约束中固定值的字典，Value必须是NSNumber</li>
+<li>@param views: 约束语句中用到的view的字典</li>
+<li>@return 返回一个NSArray，其中Object为<code>NSLayoutConstraint</code>类型</li>
+</ul>
+
+
+<p>其返回值用这个方法接收:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">UIView</span> <span class="nl">(UIConstraintBasedLayoutInstallingConstraints)</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addConstraints:</span><span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">constraints</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">6</span><span class="n">_0</span><span class="p">);</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>NSLayoutFormatOptions</h4>
+
+<p>在写VFL时，遇到一个问题，我很难描述一个View需要居中的约束。</p>
+
+<p>通过计算左右边界与SuperView边界的距离是可以实现的，但很明显背离了VFL的初衷。</p>
+
+<p>查阅文档后发现这些选项就在<code>opts</code>这个参数中，不但可以设置居中，也可以设计约束的参考位置，以及对其方式，可以用位运算选择多个方式。</p>
+
+<h4>一行VFL语句:</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">(</span><span class="o">&lt;</span><span class="n">orientation</span><span class="o">&gt;:</span><span class="p">)</span><span class="o">?</span>
+</span><span class='line'><span class="p">(</span><span class="o">&lt;</span><span class="n">superview</span><span class="o">&gt;&lt;</span><span class="n">connection</span><span class="o">&gt;</span><span class="p">)</span><span class="o">?</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">view</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&lt;</span><span class="n">connection</span><span class="o">&gt;&lt;</span><span class="n">view</span><span class="o">&gt;</span><span class="p">)</span><span class="o">*</span>
+</span><span class='line'><span class="p">(</span><span class="o">&lt;</span><span class="n">connection</span><span class="o">&gt;&lt;</span><span class="n">superview</span><span class="o">&gt;</span><span class="p">)</span><span class="o">?</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>例如:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="s">@&quot;V:|-vSpace-[_touchImageView(==avatarHeight)]-vPad-[_nameTextField(==textFieldHeight)]&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><p>orientation:</p>
+
+<p>  <code>
+V: 纵向约束
+H: (默认)横向约束
+</code></p></li>
+<li>superview: <code>|</code></li>
+<li><p>view:</p>
+
+<p>  <code>[&lt;viewname&gt;(&lt;predicateListWithParens)?]</code></p></li>
+<li><p>connection:</p>
+
+<p>  <code>-padding-</code>，其中padding可以使matrics字典中的某一项，也可以是一个数值，如<code>-20-</code></p></li>
+<li><p>predicateListWithParens:</p>
+
+<p>  <code>(&lt;predicate&gt;(,&lt;predicate&gt;)*)</code>，一组predicate，用逗号隔开</p></li>
+<li><p>predicate:</p>
+
+<p>  <code>(&lt;relation&gt;)?(&lt;objectOfPredicate&gt;)(@&lt;priority&gt;)?</code>，例如(>=vPad@100)，意义为宽/高大于vPad（metrics字典中一项），优先级为100</p></li>
+</ul>
+
+
+<h4>注意事项:</h4>
+
+<ul>
+<li>一行VFL中，所有被约束的View一定是添加约束View的SubView</li>
+<li><p>被约束的View要设置</p>
+
+<p>  <code>
+  [someView setTranslatesAutoresizingMaskIntoConstraints:NO];]
+ </code></p></li>
+<li><p>使用VFL之后，系统不再调用这个方法</p>
+
+<p>  <code>
+  -(void) setFrame:(CGRect)frame
+ </code></p></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Session 214 View Controller Advancements for iOS8 笔记]]></title>
+    <link href="http://epingwang.me/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji/"/>
+    <updated>2014-06-11T15:52:27+08:00</updated>
+    <id>http://epingwang.me/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji</id>
+    <content type="html"><![CDATA[<p>Session 214</p>
+
+<p>Bruce D. Nilo</p>
+
+<h2>OverView</h2>
+
+<ul>
+<li>A brief discussion about UIKit&rsquo;s new Adaptive APIs</li>
+<li>New UISplitViewController features</li>
+<li>Some new ways to condense and hide bars</li>
+<li>Presentations and popovers</li>
+<li>New API that uses transition coordinators</li>
+<li>Coordinate spaces</li>
+</ul>
+
+
+<!--more-->
+
+
+<h2>Support for Adaptive User Interfaces</h2>
+
+<p>Universal App中，相同的页面会展示为不同的Layout</p>
+
+<p>在iOS8之前，Layout取决于</p>
+
+<ul>
+<li>设备类型      Device type</li>
+<li>设备方向      Interface Orientation</li>
+<li>Window大小  Size</li>
+</ul>
+
+
+<p>iOS8之后:</p>
+
+<ul>
+<li>Traits and trait collections</li>
+<li>Size</li>
+</ul>
+
+
+<h3>什么是 &ldquo;trait collection&rdquo;?</h3>
+
+<p>Trait collection 是一个trait的集合</p>
+
+<p>例如: 在一个竖屏的 iPhone5s 中</p>
+
+<table>
+<thead>
+<tr>
+<th>Trait </th>
+<th> Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>horizontalSizeClass </td>
+<td> Compact</td>
+</tr>
+<tr>
+<td>verticalSizeClass </td>
+<td> Regular</td>
+</tr>
+<tr>
+<td>userInterfaceIdiom </td>
+<td> Phone</td>
+</tr>
+<tr>
+<td>displayScale </td>
+<td> 2.0</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>什么是 &ldquo;size class&rdquo;?</h3>
+
+<ul>
+<li>Size class 是简单定义<code>可用空间</code>的一个 <code>trait</code></li>
+<li>可以定义在Horizontal方向和Vertical方向是Compact or Regular</li>
+</ul>
+
+
+<h3>Trait Environments</h3>
+
+<p>在iOS8中, <code>UIView</code>和<code>UIViewController</code>均 conforms <code>&lt;UITraitEnvironment&gt;</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@protocol</span> <span class="nc">UITraitEnvironment</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">UITraitCollection</span> <span class="o">*</span><span class="n">traitCollection</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">traitCollectionDidChange:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nv">previousTraitCollection</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>并不是每个View都有自己的TraitCollection，当获取<code>Leaf View</code>的<code>traitCollection</code>时，会沿着View的hierarchy找到最近的traitCollection</p>
+
+<h2>Split View Controller</h2>
+
+<p>UISplitViewControllers can now be used on the phone</p>
+
+<p>新增了这个方法:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">UISplitViewController</span> : <span class="nc">UIViewController</span>
+</span><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">getter</span><span class="o">=</span><span class="n">isCollapsed</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">collapsed</span>  <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">8</span><span class="n">_0</span><span class="p">);</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Expanded split view controller</h4>
+
+<p><img class="center" src="http://epingwang.me/images/2014/06/SplitViewController.jpg"></p>
+
+<h4>Collapsed split view controller</h4>
+
+<p><img class="center" src="http://epingwang.me/images/2014/06/SplitViewControllerCollapsed.jpg"></p>
+
+<h3>在ViewController中添加SplitViewcontroller，并启用Collapse</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">svc</span><span class="p">.</span><span class="n">preferredDisplayMode</span> <span class="o">=</span> <span class="n">UISplitViewControllerDisplayModeAllVisible</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>控制分栏的宽度</h3>
+
+<p>通过以下几个属性</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">preferredPrimaryColumnWidthFraction</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">8</span><span class="n">_0</span><span class="p">);</span>
+</span><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">minimumPrimaryColumnWidth</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">8</span><span class="n">_0</span><span class="p">);</span>
+</span><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">maximumPrimaryColumnWidth</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">8</span><span class="n">_0</span><span class="p">);</span>
+</span><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span><span class="n">readonly</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">primaryColumnWidth</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">8</span><span class="n">_0</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Condesing Bars</h2>
+
+<p>现在隐藏NavigationBar和ToolBar变得相当简单，只需要以下几个属性</p>
+
+<p>自动隐藏:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">condensesBarsOnSwipe</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">condensesBarsWhenKeyboardAppears</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">hidesBarsWhenVerticallyCompact</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">hidesBarsOnTap</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">UITapGestureRecognizer</span> <span class="o">*</span><span class="n">barHideGestureRecognizer</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>手动控制:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">,</span> <span class="n">getter</span> <span class="o">=</span> <span class="n">isNavigationBarCondensed</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">navigationBarCondensed</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Session 216 Building Adaptive Apps With UIKit]]></title>
+    <link href="http://epingwang.me/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/"/>
+    <updated>2014-06-10T17:32:04+08:00</updated>
+    <id>http://epingwang.me/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit</id>
+    <content type="html"><![CDATA[<p>Session 216</p>
+
+<p>Jacob Xiao</p>
+
+<p>使用UIKit 创建 Universial App</p>
+
+<!--more-->
+
+
+<h2>Summary</h2>
+
+<ul>
+<li>Adaptive Concepts</li>
+<li>View Controllers</li>
+<li>Interface Builder</li>
+</ul>
+
+
+<h3>Size Classes</h3>
+
+<p>之前区分设备方向，使用 <code>UIInterfaceOrientation</code>(iPhone) 和 <code>UIUserInterfaceIdiom</code>(iPad)</p>
+
+<p>现在用 <code>Size Classes</code> 取代</p>
+
+<p>在iPad上:</p>
+
+<ul>
+<li>Potrait: Regular Horizontal &amp; Regular Vertical</li>
+<li>Landscape: Regular Horizontal &amp; Regular Vertical</li>
+</ul>
+
+
+<p>在iPhone上:</p>
+
+<ul>
+<li>Potrait: Compact Horizontal &amp; Regular Vertical</li>
+<li>Landscape: Compact Hotizontal &amp; Compact Vertical</li>
+</ul>
+
+
+<h3>UITraitCollection</h3>
+
+<h4>成员:</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">UIUserInterfaceSizeClass</span> <span class="n">horizontalSizeClass</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">UIUserInterfaceSizeClass</span> <span class="n">verticalSizeClass</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">displayScale</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">UIUserInterfaceIdiom</span> <span class="n">userInterfaceIdiom</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Trait Environments</h4>
+
+<ul>
+<li>UIScreen</li>
+<li>UIWindow</li>
+<li>UIViewController</li>
+<li>UIView</li>
+<li>UIPresentationController</li>
+</ul>
+
+
+<p>所有层级共享同样的<code>UITraitCollection</code></p>
+
+<p>当<code>TraitCollection</code>发生改变时，触发</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">traitCollectionDidChange:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nv">previousTraitCollection</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重写这个方法来响应方向变化事件</p>
+
+<h4>Trait Collections</h4>
+
+<p>可以自己创建<code>UITraitCollection</code></p>
+
+<p>可适用于横屏播放器之类的界面</p>
+
+<p>可用于UITraitCollection的比较</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">UITraitCollection</span> <span class="o">*</span><span class="n">collection</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">traitCollection</span><span class="p">;</span>
+</span><span class='line'><span class="n">UITraitCollection</span> <span class="o">*</span><span class="n">newCollection</span> <span class="o">=</span> <span class="p">[</span><span class="n">UITraitCollection</span> <span class="nl">traitCollectionWithHorizontalSizeClass:</span><span class="n">UIUserInterfaceSizeClassCompact</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">collection</span> <span class="nl">containsTraitsInCollection:</span><span class="n">newCollection</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以合并<code>UITraitCollection</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nf">traitCollectionWithTraitsFromCollections:</span><span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">traitCollections</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其中 <code>Compact</code> + <code>Regular</code> = <code>Regular</code></p>
+
+<h3>Appearance Proxy</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">+</span><span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">appearanceForTraitCollection:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nv">trait</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Customize views for different traits</li>
+<li>UIImage 可以响应这个方法，返回different version of image</li>
+<li>UIImageAssets</li>
+</ul>
+
+
+<h3>Adaptive View Controllers</h3>
+
+<h4>Split View Controller</h4>
+
+<p>现在Split View Controller 是Universal的</p>
+
+<h4>生命周期</h4>
+
+<p>Setup开始时:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">willTransitionToTraitCollection:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nv">newCollection</span> <span class="nf">withTransitionCoordinator:</span><span class="p">(</span><span class="kt">id</span><span class="o">&lt;</span><span class="n">UIViewControllerTransitionCoordinator</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">coordinator</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在这个方法可以自定义动画，并执行completion block，其顺序在下面方法之后。</p>
+
+<p>Setup结束时:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">traitCollectionDidChange:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nv">previousTraitCollection</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Showing View Controllers</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">navigationController</span> <span class="nl">pushViewController:</span><span class="p">...];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个机制被废弃</p>
+
+<p>取而代之的是</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">showViewController:</span><span class="p">(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">vc</span> <span class="nf">sender:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">showDetailViewController:</span><span class="p">(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">vc</span> <span class="nf">sender:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这两个方法总是保证，无论当前ViewController被包含在<code>NavigationController</code>, <code>SplitViewController</code>, 还是没有被包含在任何ViewController中，都会有正确的表现。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Session 202 What's New in Cocoa Touch 笔记]]></title>
+    <link href="http://epingwang.me/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji/"/>
+    <updated>2014-06-10T15:24:54+08:00</updated>
+    <id>http://epingwang.me/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji</id>
+    <content type="html"><![CDATA[<p>Session 202</p>
+
+<p>Luke Hiesterman</p>
+
+<p>Core idea iOS8 &ndash;> Adaptivity</p>
+
+<!--more-->
+
+
+<h2>Adaptive Layout</h2>
+
+<p>Orientations, sizes, and margins</p>
+
+<h3>Adaptive Interface Orientation</h3>
+
+<p>Layout 不再关心设备的方向以及设备的类型，而只关心屏幕画布的尺寸</p>
+
+<p>范例: UITraitCollection
+成员属性:</p>
+
+<ul>
+<li>horizontalSizeClass</li>
+<li>displayScale</li>
+<li>userInterfaceIdiom</li>
+<li>verticalSizeClass</li>
+</ul>
+
+
+<p>UIViewController Conforms to <code>UITraitEnviroment</code>
+当屏幕尺寸变化（设备方向改变）时，会调用</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">traitCollectionDidChange:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nv">previousTraitCollection</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="c1">// 使用Layout设置CollectionView</span>
+</span><span class='line'>    <span class="n">UITraitCollection</span> <span class="o">*</span><span class="n">currentTraits</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">traitCollection</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">UICollectionViewLayout</span> <span class="o">*</span><span class="n">newLayout</span> <span class="o">=</span> <span class="n">currentTraits</span><span class="p">.</span><span class="n">horizontalSizeClass</span> <span class="o">==</span> <span class="n">UIUserInterfaceSizeClassCompact</span> <span class="o">?</span> <span class="n">self</span><span class="p">.</span><span class="n">squaresLayout</span> <span class="o">:</span> <span class="n">self</span><span class="p">.</span><span class="n">rectanglesLayout</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">collectionView</span> <span class="nl">setCollectionViewLayout:</span><span class="n">newLayout</span> <span class="nl">animated:</span><span class="n">YES</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Adaptive Margins</h3>
+
+<p>UIViewController 的属性:</p>
+
+<ul>
+<li>bottomLayoutGuide</li>
+<li>topLayoutGuide</li>
+<li>leftLayoutGuide</li>
+<li>rightLayoutGuide</li>
+</ul>
+
+
+<p>可以确定四个边界（不用计算Navigation、ToolBar的高度）</p>
+
+<p>See More: <a href="http://epingwang.github.io/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/">Building Adaptive Apps with UIKit</a></p>
+
+<h3>Adaptive View Controllers</h3>
+
+<h4>Rotation Deprecations</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">willRotateToInterfaceOrientation:</span><span class="p">(</span><span class="n">UIInterfaceOrientation</span><span class="p">)</span><span class="nv">toInterfaceOrientation</span> <span class="nf">duration:</span><span class="p">(</span><span class="n">NSTimeInterval</span><span class="p">)</span><span class="nv">duration</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">willAnimateFirstHalfOfRotationToInterfaceOrientation:</span><span class="p">(</span><span class="n">UIInterfaceOrientation</span><span class="p">)</span><span class="nv">toInterfaceOrientation</span> <span class="nf">duration:</span><span class="p">(</span><span class="n">NSTimeInterval</span><span class="p">)</span><span class="nv">duration</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didRotateFromInterfaceOrientation:</span><span class="p">(</span><span class="n">UIInterfaceOrientation</span><span class="p">)</span><span class="nv">fromInterfaceOrientation</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">shouldAutomaticallyForwardRotationMethods</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="n">UIInterfaceOrientation</span><span class="p">)</span><span class="nf">interfaceOrientation</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nf">rotatingFooterView</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nf">rotatingHeaderView</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>取而代之的新方法:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">viewWillTransitionToSize:</span><span class="p">(</span><span class="n">CGSize</span><span class="p">)</span><span class="nv">size</span> <span class="nf">withTransitionCoordinator:</span><span class="p">(</span><span class="kt">id</span> <span class="o">&lt;</span><span class="n">UIViewControllerTransitionCoordinator</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">coordinator</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">8</span><span class="n">_0</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Adaptive View Controller Hierarchies</h3>
+
+<h4>UISplitViewController</h4>
+
+<p>Primary &ndash; Secondary (TableView &ndash; Detail) 视图</p>
+
+<p>现在可以用<code>Split View Controller - Detail View Controller</code></p>
+
+<ul>
+<li>全设备支持</li>
+<li>处理 <code>primary-secondary</code> 样式的视图交互</li>
+<li>增强的可定制性</li>
+</ul>
+
+
+<p>See more: <a href="">View Controller Advancements in iOS8</a></p>
+
+<h3>Adaptive Presentations</h3>
+
+<p>适应不同设备的 <code>弹出视图(Popovers)</code>、<code>SearchBar</code>、<code>警告(Alerts)</code></p>
+
+<h4>Popovers</h4>
+
+<p>iPad上不再需要<code>UIPopOverController</code>，<code>Popover</code>以后做为UIViewController的Style使用
+在iPhone上显示为PresentViewController样式</p>
+
+<h4>Search Results</h4>
+
+<p><code>UISearchDisplayController</code> replaced by</p>
+
+<p><code>UISearchController</code> &ndash;> <code>UIViewController</code> subclass</p>
+
+<ul>
+<li><p>可以使用UIViewController的一切特性</p></li>
+<li><p>可以定制UISearchController的UI</p></li>
+</ul>
+
+
+<h4>Alerts</h4>
+
+<p><code>UIAlertController</code> replaces <code>UIAlertView</code> and <code>UIActionSheet</code></p>
+
+<p>UIAlertController 也是 UIViewController 的 subclass</p>
+
+<p>See More: <a href="">A Look Inside Presentation Controllers</a></p>
+
+<h2>Testing with the iOS Simulator</h2>
+
+<p>Simulator 可以直接调整 Size</p>
+
+<ul>
+<li>Resizeable iPhone</li>
+<li>Resizeable iPad</li>
+</ul>
+
+
+<h2>Visual Effects</h2>
+
+<p>UIVisualEffectView</p>
+
+<p>可以接收<code>UIEffect</code>，来影响View及Subview上的Layer</p>
+
+<ul>
+<li>UIBlurEffect</li>
+<li>UIVibrancyEffect</li>
+</ul>
+
+
+<h2>Image Assets</h2>
+
+<p>直接返回正确的图片</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nf">imageNamed:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span>
+</span><span class='line'>               <span class="nf">inBundle:</span><span class="p">(</span><span class="n">NSBundle</span> <span class="o">*</span><span class="p">)</span><span class="nv">bundle</span>
+</span><span class='line'><span class="nf">compatibleWithTraitCollection:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nv">traitCollection</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Condensing Bars</h2>
+
+<p>当用户滚动Scroll时，Navigation Bar 变小</p>
+
+<p>See More: <a href="">Creating Custom iOS User Interfaces</a></p>
+
+<h2>Self-sizing Table Cells</h2>
+
+<p><strong> cell的 <code>height</code> 将无需在 <code>heightForRowAtIndexPath:</code> 中实现 </strong></p>
+
+<p>cell 可以自己计算它的尺寸</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithStyle:</span><span class="p">(</span><span class="n">UITableViewCellStyle</span><span class="p">)</span><span class="nv">style</span> <span class="nf">reuseIdentifier:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">reuseIdentifier</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithStyle:</span><span class="n">style</span> <span class="nl">reuseIdentifier:</span><span class="n">reuseIdentifier</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">contentView</span> <span class="nl">addConstraints:</span><span class="p">[</span><span class="n">NSLayoutConstraint</span>
+</span><span class='line'>                                          <span class="nl">constraintsWithVisualFormat:</span><span class="s">@&quot;V:|-myTextView-|&quot;</span>
+</span><span class='line'>                                          <span class="nl">options:</span><span class="mi">0</span>
+</span><span class='line'>                                          <span class="nl">metrics:</span><span class="nb">nil</span>
+</span><span class='line'>                                            <span class="nl">views:</span><span class="n">NSDictionaryOfVariableBindings</span><span class="p">(</span><span class="n">_myTextView</span><span class="p">)]];</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">contentView</span> <span class="nl">addConstraints:</span><span class="p">[</span><span class="n">NSLayoutConstraint</span>
+</span><span class='line'>                                          <span class="nl">constraintsWithVisualFormat:</span><span class="s">@&quot;H:|-myTextView-|&quot;</span>
+</span><span class='line'>                                          <span class="nl">options:</span><span class="mi">0</span>
+</span><span class='line'>                                          <span class="nl">metrics:</span><span class="nb">nil</span>
+</span><span class='line'>                                            <span class="nl">views:</span><span class="n">NSDictionaryOfVariableBindings</span><span class="p">(</span><span class="n">_myTextView</span><span class="p">)]];</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>See More: <a href="">What&rsquo;s new in Table and Collection Views</a></p>
+
+<h2>App Extensions</h2>
+
+<p>可以写系统增强插件，例如在<code>Photo</code>中调用我们写的<code>Filter软件</code>或者<code>Share Extention</code></p>
+
+<ul>
+<li>Photo</li>
+<li>Sharing</li>
+<li>Notification Center Widgets</li>
+<li>Action without UI</li>
+<li>Document providers (向其他应用提供内容的Extension)</li>
+<li>Custom keyboards</li>
+</ul>
+
+
+<p>See More: <a href="">Creating Extensions for iOS and OS X</a></p>
+
+<h2>Notification Updates</h2>
+
+<ul>
+<li>不需要Show UI的Notification，不再需要用户的Permission</li>
+<li>Notification可以进行用户交互</li>
+<li>可以进行基于地理位置的Notification</li>
+<li>payload size (256 bytes &ndash;> 1k)</li>
+</ul>
+
+
+<p>See More: <a href="">What&rsquo;s New in iOS Notifications</a></p>
+
+<h2>Document Picker</h2>
+
+<p>UIDocumentPickerViewController</p>
+
+<p>System UI for selection documents</p>
+
+<ul>
+<li>Local documents</li>
+<li>iCloud documents</li>
+<li>Third-party document providers</li>
+</ul>
+
+
+<p>See more: <a href="">Building a Document-based App</a></p>
+
+<h2>SDK Modernization</h2>
+
+<ul>
+<li>NS_DESIGNATED_INITIALIZER</li>
+<li>id &ndash;> instancetype</li>
+<li>Additional @properties</li>
+</ul>
+
+
+<h2>Handoff</h2>
+
+<ul>
+<li>通过Handoff用户可以在多设备之间共享操作</li>
+<li>UIKit 和 AppKit 均支持 Handoff</li>
+</ul>
+
+
+<p>See More: <a href="">Adopting Handoff on iOS and OS X</a></p>
+
+<h2>More Goodies in iOS</h2>
+
+<h2>Photos</h2>
+
+<ul>
+<li>Photo Library 的读写权限</li>
+<li>Custom CoreImage Filters</li>
+</ul>
+
+
+<p>See More: <a href="">Introducing the Photos Frameword</a></p>
+
+<h2>CloudKit</h2>
+
+<ul>
+<li>更多的API，控制iCloud上的数据</li>
+<li>创建一个 C/S App，无需搭设服务器</li>
+</ul>
+
+
+<p>See More: <a href="">Introducing CloudKit</a></p>
+
+<h2>HealthKit</h2>
+
+<p>See More: <a href="">Introducing HealthKit</a></p>
+
+<h2>HomeKit</h2>
+
+<p>See More: <a href="">Introducing HomeKit</a></p>
+
+<h2>Local Authentication</h2>
+
+<p>开放的指纹识别系统</p>
+
+<ul>
+<li>TouchID</li>
+</ul>
+
+
+<p>See More: <a href="">Keychain and Authentication with Touch ID</a></p>
+
+<h2>SceneKit</h2>
+
+<p>跨设备的3D渲染——For iOS</p>
+
+<h2>Core Location</h2>
+
+<ul>
+<li>可以获得 Indoor Location，获得精确的楼层信息</li>
+<li>更省电</li>
+<li>当使用时获得用户的授权</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Hello World]]></title>
+    <link href="http://epingwang.me/blog/2014/06/10/hello-world/"/>
+    <updated>2014-06-10T14:58:19+08:00</updated>
+    <id>http://epingwang.me/blog/2014/06/10/hello-world</id>
+    <content type="html"><![CDATA[<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Hello world</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,370 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>EpingWang's Blog</title>
+  <meta name="author" content="Eping Wang">
+
+  
+  <meta name="description" content="Session 214 Bruce D. Nilo OverView A brief discussion about UIKit&rsquo;s new Adaptive APIs
+New UISplitViewController features
+Some new ways to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+      
+  <!-- Verification -->
+  <meta name="baidu-site-verification" content="h0CbEUGEMK" />
+  <meta name="msvalidate.01" content="8AD60CB9FBDEC14BCDBD80BC2525D396" />
+      
+  
+
+  
+  <link rel="canonical" href="http://epingwang.me/blog/page/2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="EpingWang's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+ -->
+<link href="/stylesheets/google-fonts-local.css" rel="stylesheet" type="text/css">
+
+  
+  
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">EpingWang's Blog</a></h1>
+  
+    <h2>漆黑舞台，怎能掩盖，我们的流光溢彩</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:epingwang.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji/">Session 214 View Controller Advancements for iOS8 笔记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-11T15:52:27+08:00" pubdate data-updated="true">Jun 11<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Session 214</p>
+
+<p>Bruce D. Nilo</p>
+
+<h2>OverView</h2>
+
+<ul>
+<li>A brief discussion about UIKit&rsquo;s new Adaptive APIs</li>
+<li>New UISplitViewController features</li>
+<li>Some new ways to condense and hide bars</li>
+<li>Presentations and popovers</li>
+<li>New API that uses transition coordinators</li>
+<li>Coordinate spaces</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/">Session 216 Building Adaptive Apps With UIKit</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-10T17:32:04+08:00" pubdate data-updated="true">Jun 10<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Session 216</p>
+
+<p>Jacob Xiao</p>
+
+<p>使用UIKit 创建 Universial App</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji/">Session 202 What&#8217;s New in Cocoa Touch 笔记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-10T15:24:54+08:00" pubdate data-updated="true">Jun 10<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Session 202</p>
+
+<p>Luke Hiesterman</p>
+
+<p>Core idea iOS8 &ndash;> Adaptivity</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/10/hello-world/">Hello World</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-10T14:58:19+08:00" pubdate data-updated="true">Jun 10<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/06/10/hello-world/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/06/10/hello-world/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Hello world</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <html xmlns:wb=“http://open.weibo.com/wb”>
+<head>
+    <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+
+<section>
+    <wb:follow-button uid="2386878033" type="red_3" width="100%" height="24" ></wb:follow-button>
+</section>
+
+
+</html><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/">iOS8中可交互通知(NotificationAction)初探</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/24/cocoapodsti-su-shou-ce/">Cocoapods提速手册</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/05/ios7yi-shang-xi-tong-zhong-%2Cuitextviewshu-ru-gun-dong-cuo-wei-de-bug/">iOS7以上系统中，UITextView输入滚动错位的bug</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/23/scrollst-shi-yong-xiao-jie/">ScrollsToTop 使用小结</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/24/appstoreshen-he-jing-yan-fen-xiang/">AppStore审核经验分享</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+  
+</aside>
+
+<meta property="wb:webmaster" content="d3072461a702f2c6" />
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Eping Wang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'epingwang';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F4046dc33078e2928498cce69fb0d82fe' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+
+
+
+</body>
+</html>
