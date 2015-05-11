@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Cocoapods | EpingWang's Blog]]></title>
   <link href="http://epingwang.me/blog/categories/cocoapods/atom.xml" rel="self"/>
   <link href="http://epingwang.me/"/>
-  <updated>2015-05-11T11:12:08+08:00</updated>
+  <updated>2015-05-11T11:14:55+08:00</updated>
   <id>http://epingwang.me/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -34,8 +34,12 @@
 
 <ul>
 <li><a href="">http://guides.cocoapods.org/making/private-cocoapods.html</a></li>
-<li><a href="">http://guides.cocoapods.org/making/using-pod-lib-create.html</a></li>
+<li><a href="">http://guides.cocoapods.org/making/using-pod-lib-create.html</a>
+]</li>
 </ul>
+
+
+<!--more-->
 
 
 <h2>Step 1: 创建一个私有 Spec Repo</h2>
