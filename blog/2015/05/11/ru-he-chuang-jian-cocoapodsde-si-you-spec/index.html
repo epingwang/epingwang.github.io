@@ -5,22 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>UITextField的默认Placeholder颜色 - EpingWang's Blog</title>
+  <title>如何创建Cocoapods的私有Spec - EpingWang's Blog</title>
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="色值为 1
-2
-3
-4
-R:0
-G:0
-B:0.0980392
-A:0.22 查看方式 1
-2
-3
-NSRange range = NSMakeRange(0, 1);
-NSDictionary *dict = [someTextField.attributedPlaceholder &hellip;">
+  <meta name="description" content="很多项目使用 CocoaPods (http://cocoapods.org/) 管理项目依赖，非常方便的引入了大量的第三方开源代码。CocoaPods 项目本身也是开源的，这意味着可以很方便的通过 CocoaPods 管理私有/本地项目。 主要分为以下几步 创建一个私有 Spec Repo &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -35,7 +24,7 @@ NSDictionary *dict = [someTextField.attributedPlaceholder &hellip;">
   
 
   
-  <link rel="canonical" href="http://epingwang.me/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se">
+  <link rel="canonical" href="http://epingwang.me/blog/2015/05/11/ru-he-chuang-jian-cocoapodsde-si-you-spec">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="EpingWang's Blog" type="application/atom+xml">
@@ -88,7 +77,7 @@ NSDictionary *dict = [someTextField.attributedPlaceholder &hellip;">
   
   <header>
     
-      <h1 class="entry-title">UITextField的默认Placeholder颜色</h1>
+      <h1 class="entry-title">如何创建Cocoapods的私有Spec</h1>
     
     
       <p class="meta">
@@ -104,7 +93,7 @@ NSDictionary *dict = [someTextField.attributedPlaceholder &hellip;">
   
 
 
-<time datetime="2014-07-10T14:11:44+08:00" pubdate data-updated="true">Jul 10<span>th</span>, 2014</time>
+<time datetime="2015-05-11T09:56:40+08:00" pubdate data-updated="true">May 11<span>th</span>, 2015</time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://epingwang.me">Comments</a>
@@ -114,30 +103,144 @@ NSDictionary *dict = [someTextField.attributedPlaceholder &hellip;">
   </header>
 
 
-<div class="entry-content"><h3>色值为</h3>
+<div class="entry-content"><blockquote><p>很多项目使用 CocoaPods (<a href="">http://cocoapods.org/</a>) 管理项目依赖，非常方便的引入了大量的第三方开源代码。CocoaPods 项目本身也是开源的，这意味着可以很方便的通过 CocoaPods 管理私有/本地项目。</p></blockquote>
+
+<h3>主要分为以下几步</h3>
+
+<ol>
+<li>创建一个私有 Spec Repo</li>
+<li>创建并初始化适合 CocoaPods 管理的项目</li>
+<li>创建并发布该项目的 podspec 描述文件</li>
+<li>项目协作，Podfile编写</li>
+</ol>
+
+
+<h3>参考资料</h3>
+
+<ul>
+<li><a href="">http://guides.cocoapods.org/making/private-cocoapods.html</a></li>
+<li><a href="">http://guides.cocoapods.org/making/using-pod-lib-create.html</a></li>
+</ul>
+
+
+<h2>Step 1: 创建一个私有 Spec Repo</h2>
+
+<p>Spec Repo 是存放 CocoaPods 项目描述文件（.podspec）的仓库，其 master branch 由 CocoaPods 维护 (<a href="">https://github.com/CocoaPods/Specs</a>)。</p>
+
+<p>创建私有 Spec Repo，我们不需要 fork master repo，只需要按照以下结构创建这样一个 Git 项目，并上传到 Git</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>R:0
-</span><span class='line'>G:0
-</span><span class='line'>B:0.0980392
-</span><span class='line'>A:0.22</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>.
+</span><span class='line'>├── Specs
+</span><span class='line'>    └── [SPEC_NAME]
+</span><span class='line'>        └── [VERSION]
+</span><span class='line'>            └── [SPEC_NAME].podspec</span></code></pre></td></tr></table></div></figure>
 
 
-<h3>查看方式</h3>
+<p>上传完成后，执行以下命令，将 Spec Repo 添加到本地。</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ pod repo add REPO_NAME SOURCE_URL</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Step 2: 创建并初始化适合 CocoaPods 管理的项目</h2>
+
+<p>我们可以手动创建一个开源项目，也可以通过 CocoaPods 的模版创建。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ pod lib create DemoLibrary</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在 Bash 中执行该命令，创建一个名为 DemoLibrary 的模版，我们可以看到项目结构如下:</p>
+
+<p><img class="center" src="images/2015/05/20150511-1@2x.png"></p>
+
+<p>在 Podspec Metadata 文件夹中，提供了非常重要的三个文件:</p>
+
+<ul>
+<li>.podspec 是该项目的描述文件</li>
+<li>README.md 大家都懂的</li>
+<li>LICENSE 默认提供了一个 MIT 许可协议</li>
+</ul>
+
+
+<p>我们将需要创建的 Class 放入<code>./Pod/Classes</code>中，将资源文件放入<code>./Pod/Assets</code>中，将项目 push 到你的 Git Repo。</p>
+
+<h2>Step 3: 创建并发布该项目的 podspec 描述文件</h2>
+
+<p>我们在 Demo 项目中，已经生成了一个<code>DemoLibrary.podspec</code>文件。如果没有使用模版生成项目，我们需要使用</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ pod spec create [NAME|https://github.com/USER/REPO]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>命令来创建<code>.podspec</code>文件。</p>
+
+<p>打开该文件，根据注释编写自己的 podspec 即可。</p>
+
+<p>在提交之前，我们需要使用</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ pod spec lint DemoLibrary.podspec</span></code></pre></td></tr></table></div></figure>
+
+
+<p>来验证 podspec 的合法性。</p>
+
+<p>如果验证通过，我们可以用</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ pod repo push REPO_NAME SPEC_NAME.podspec</span></code></pre></td></tr></table></div></figure>
+
+
+<p>提交这个 podspec</p>
+
+<h4>Note:</h4>
+
+<p>我们在使用<code>$ pod spec lint</code>和<code>$ pod repo push</code>命令时，会收到各种 warning 或者 error，导致提交失败。</p>
+
+<p>使用<code>--allow-warnings</code>来忽略一些 warning。</p>
+
+<h2>Step 4: 项目协作，Podfile编写</h2>
+
+<p>首先，如果需要你的小伙伴们也使用你的项目，需要他们安装 CocoaPods，并执行</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ pod repo add REPO_NAME SOURCE_URL</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在他们项目的 Podfile 中，加入你的开源项目，例如：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSRange</span> <span class="n">range</span> <span class="o">=</span> <span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-</span><span class='line'><span class="n">NSDictionary</span> <span class="o">*</span><span class="n">dict</span> <span class="o">=</span> <span class="p">[</span><span class="n">someTextField</span><span class="p">.</span><span class="n">attributedPlaceholder</span> <span class="nl">attributesAtIndex:</span><span class="mi">0</span> <span class="nl">effectiveRange:</span><span class="o">&amp;</span><span class="n">range</span><span class="p">];</span>
-</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">dict</span> <span class="nl">objectForKey:</span><span class="n">NSForegroundColorAttributeName</span><span class="p">]);</span>
-</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>platform :ios, ‘8.0’
+</span><span class='line'>
+</span><span class='line'>target 'DemoApp' do
+</span><span class='line'>
+</span><span class='line'>source 'https://github.com/CocoaPods/Specs.git'
+</span><span class='line'>pod 'GPUImage', '~&gt; 0.1.6'
+</span><span class='line'>
+</span><span class='line'>source 'git@git.letv.cn:wangyiping1/specs.git'
+</span><span class='line'>pod 'CocoaHelpers', '~&gt; 1.0.0'
+</span><span class='line'>
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
 
+<p>注意: 在 CocoaPods 0.36.0版本之后，需要显示指定 source，否则会出现<code>Unable to find a specification for XXX</code>错误。</p>
 
+<p>执行<code>pod install</code>，大功告成！</p>
 </div>
 
 
@@ -160,8 +263,14 @@ NSDictionary *dict = [someTextField.attributedPlaceholder &hellip;">
   
 
 
-<time datetime="2014-07-10T14:11:44+08:00" pubdate data-updated="true">Jul 10<span>th</span>, 2014</time>
+<time datetime="2015-05-11T09:56:40+08:00" pubdate data-updated="true">May 11<span>th</span>, 2015</time>
       
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cocoapods/'>Cocoapods</a>
+  
+</span>
 
 
       <html xmlns:wb=“http://open.weibo.com/wb”>
@@ -210,10 +319,8 @@ NSDictionary *dict = [someTextField.attributedPlaceholder &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/06/13/xiao-shi-auto-layout-vflpian/" title="Previous Post: 小试Auto Layout——VFL篇">&laquo; 小试Auto Layout——VFL篇</a>
+        <a class="basic-alignment left" href="/blog/2015/05/04/%5B%3F%5D-xie-you-yi-si-de-wen-ti/" title="Previous Post: 一些有意思的问题">&laquo; 一些有意思的问题</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo/" title="Next Post: 将NSDate转为RFC822格式的时间戳">将NSDate转为RFC822格式的时间戳 &raquo;</a>
       
     </p>
   </footer>
@@ -301,8 +408,8 @@ NSDictionary *dict = [someTextField.attributedPlaceholder &hellip;">
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://epingwang.me/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/';
-        var disqus_url = 'http://epingwang.me/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/';
+        var disqus_identifier = 'http://epingwang.me/blog/2015/05/11/ru-he-chuang-jian-cocoapodsde-si-you-spec/';
+        var disqus_url = 'http://epingwang.me/blog/2015/05/11/ru-he-chuang-jian-cocoapodsde-si-you-spec/';
         var disqus_script = 'embed.js';
       
     (function () {

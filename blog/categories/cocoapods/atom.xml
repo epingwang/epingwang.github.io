@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Cocoapods | EpingWang's Blog]]></title>
+  <link href="http://epingwang.me/blog/categories/cocoapods/atom.xml" rel="self"/>
+  <link href="http://epingwang.me/"/>
+  <updated>2015-05-11T11:12:08+08:00</updated>
+  <id>http://epingwang.me/</id>
+  <author>
+    <name><![CDATA[Eping Wang]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[如何创建Cocoapods的私有Spec]]></title>
+    <link href="http://epingwang.me/blog/2015/05/11/ru-he-chuang-jian-cocoapodsde-si-you-spec/"/>
+    <updated>2015-05-11T09:56:40+08:00</updated>
+    <id>http://epingwang.me/blog/2015/05/11/ru-he-chuang-jian-cocoapodsde-si-you-spec</id>
+    <content type="html"><![CDATA[<blockquote><p>很多项目使用 CocoaPods (<a href="">http://cocoapods.org/</a>) 管理项目依赖，非常方便的引入了大量的第三方开源代码。CocoaPods 项目本身也是开源的，这意味着可以很方便的通过 CocoaPods 管理私有/本地项目。</p></blockquote>
+
+<h3>主要分为以下几步</h3>
+
+<ol>
+<li>创建一个私有 Spec Repo</li>
+<li>创建并初始化适合 CocoaPods 管理的项目</li>
+<li>创建并发布该项目的 podspec 描述文件</li>
+<li>项目协作，Podfile编写</li>
+</ol>
+
+
+<h3>参考资料</h3>
+
+<ul>
+<li><a href="">http://guides.cocoapods.org/making/private-cocoapods.html</a></li>
+<li><a href="">http://guides.cocoapods.org/making/using-pod-lib-create.html</a></li>
+</ul>
+
+
+<h2>Step 1: 创建一个私有 Spec Repo</h2>
+
+<p>Spec Repo 是存放 CocoaPods 项目描述文件（.podspec）的仓库，其 master branch 由 CocoaPods 维护 (<a href="">https://github.com/CocoaPods/Specs</a>)。</p>
+
+<p>创建私有 Spec Repo，我们不需要 fork master repo，只需要按照以下结构创建这样一个 Git 项目，并上传到 Git</p>
+
+<p>```
+.
+├── Specs</p>
+
+<pre><code>└── [SPEC_NAME]
+    └── [VERSION]
+        └── [SPEC_NAME].podspec
+</code></pre>
+
+<p>```
+上传完成后，执行以下命令，将 Spec Repo 添加到本地。</p>
+
+<p><code>
+$ pod repo add REPO_NAME SOURCE_URL
+</code></p>
+
+<h2>Step 2: 创建并初始化适合 CocoaPods 管理的项目</h2>
+
+<p>我们可以手动创建一个开源项目，也可以通过 CocoaPods 的模版创建。</p>
+
+<p><code>
+$ pod lib create DemoLibrary
+</code></p>
+
+<p>在 Bash 中执行该命令，创建一个名为 DemoLibrary 的模版，我们可以看到项目结构如下:</p>
+
+<p><img class="center" src="images/2015/05/20150511-1@2x.png"></p>
+
+<p>在 Podspec Metadata 文件夹中，提供了非常重要的三个文件:</p>
+
+<ul>
+<li>.podspec 是该项目的描述文件</li>
+<li>README.md 大家都懂的</li>
+<li>LICENSE 默认提供了一个 MIT 许可协议</li>
+</ul>
+
+
+<p>我们将需要创建的 Class 放入<code>./Pod/Classes</code>中，将资源文件放入<code>./Pod/Assets</code>中，将项目 push 到你的 Git Repo。</p>
+
+<h2>Step 3: 创建并发布该项目的 podspec 描述文件</h2>
+
+<p>我们在 Demo 项目中，已经生成了一个<code>DemoLibrary.podspec</code>文件。如果没有使用模版生成项目，我们需要使用</p>
+
+<p><code>
+$ pod spec create [NAME|https://github.com/USER/REPO]
+</code></p>
+
+<p>命令来创建<code>.podspec</code>文件。</p>
+
+<p>打开该文件，根据注释编写自己的 podspec 即可。</p>
+
+<p>在提交之前，我们需要使用</p>
+
+<p><code>
+$ pod spec lint DemoLibrary.podspec
+</code>
+来验证 podspec 的合法性。</p>
+
+<p>如果验证通过，我们可以用</p>
+
+<p><code>
+$ pod repo push REPO_NAME SPEC_NAME.podspec
+</code>
+提交这个 podspec</p>
+
+<h4>Note:</h4>
+
+<p>我们在使用<code>$ pod spec lint</code>和<code>$ pod repo push</code>命令时，会收到各种 warning 或者 error，导致提交失败。</p>
+
+<p>使用<code>--allow-warnings</code>来忽略一些 warning。</p>
+
+<h2>Step 4: 项目协作，Podfile编写</h2>
+
+<p>首先，如果需要你的小伙伴们也使用你的项目，需要他们安装 CocoaPods，并执行</p>
+
+<p><code>
+$ pod repo add REPO_NAME SOURCE_URL
+</code></p>
+
+<p>在他们项目的 Podfile 中，加入你的开源项目，例如：</p>
+
+<p>```
+platform :ios, ‘8.0’</p>
+
+<p>target &lsquo;DemoApp&rsquo; do</p>
+
+<p>source &lsquo;<a href="https://github.com/CocoaPods/Specs.git">https://github.com/CocoaPods/Specs.git</a>&rsquo;
+pod &lsquo;GPUImage&rsquo;, &lsquo;~> 0.1.6&rsquo;</p>
+
+<p>source &lsquo;git@git.letv.cn:wangyiping1/specs.git&rsquo;
+pod &lsquo;CocoaHelpers&rsquo;, &lsquo;~> 1.0.0&rsquo;</p>
+
+<p>end
+```</p>
+
+<p>注意: 在 CocoaPods 0.36.0版本之后，需要显示指定 source，否则会出现<code>Unable to find a specification for XXX</code>错误。</p>
+
+<p>执行<code>pod install</code>，大功告成！</p>
+]]></content>
+  </entry>
+  
+</feed>
