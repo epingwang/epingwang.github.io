@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.me/atom.xml" rel="self"/>
   <link href="http://epingwang.me/"/>
-  <updated>2015-05-21T09:16:46+08:00</updated>
+  <updated>2015-05-21T15:16:50+08:00</updated>
   <id>http://epingwang.me/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -76,7 +76,7 @@
 
 <p>在 Bash 中执行该命令，创建一个名为 DemoLibrary 的模版，我们可以看到项目结构如下:</p>
 
-<p><img class="center" src="images/2015/05/20150511-1@2x.png"></p>
+<p><img class="center" src="http://epingwang.me/images/2015/05/20150511-1@2x.png"></p>
 
 <p>在 Podspec Metadata 文件夹中，提供了非常重要的三个文件:</p>
 
@@ -151,7 +151,7 @@
 </span><span class='line'>source 'https://github.com/CocoaPods/Specs.git'
 </span><span class='line'>pod 'GPUImage', '~&gt; 0.1.6'
 </span><span class='line'>
-</span><span class='line'>source 'git@git.letv.cn:wangyiping1/specs.git'
+</span><span class='line'>source 'git@git.github.com:YourPrivateRepo/specs.git'
 </span><span class='line'>pod 'CocoaHelpers', '~&gt; 1.0.0'
 </span><span class='line'>
 </span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
@@ -734,7 +734,7 @@
 
 <p>一旦你的加急审核申请通过了，你的App会在一个工作日内被处理，如果这期间因为可能出现的其它问题导致再次被reject，你只需要重新提交修改后的build或补充说明（metadata reject）就行，你的App将会一直处于加急审核队列，直到审核通过。</p>
 
-<p>苹果加急审核邮箱：<a href="&#109;&#x61;&#x69;&#108;&#116;&#x6f;&#x3a;&#x41;&#x70;&#112;&#x52;&#x65;&#118;&#105;&#x65;&#x77;&#64;&#x61;&#x70;&#x70;&#112;&#108;&#x65;&#x2e;&#99;&#x6f;&#109;">&#x41;&#x70;&#112;&#82;&#101;&#x76;&#105;&#101;&#x77;&#x40;&#97;&#x70;&#x70;&#112;&#108;&#101;&#46;&#99;&#x6f;&#x6d;</a></p>
+<p>苹果加急审核邮箱：<a href="&#x6d;&#x61;&#x69;&#108;&#x74;&#111;&#58;&#x41;&#x70;&#112;&#82;&#x65;&#x76;&#x69;&#101;&#x77;&#x40;&#97;&#x70;&#x70;&#112;&#x6c;&#x65;&#x2e;&#99;&#111;&#x6d;">&#x41;&#112;&#x70;&#82;&#x65;&#x76;&#105;&#101;&#119;&#64;&#97;&#112;&#x70;&#x70;&#108;&#101;&#46;&#x63;&#x6f;&#x6d;</a></p>
 
 <p>网页提交地址：<a href="https://developer.apple.com/appstore/contact/?topic=expedite">https://developer.apple.com/appstore/contact/?topic=expedite</a></p>
 

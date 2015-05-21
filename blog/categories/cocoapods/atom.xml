@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Cocoapods | EpingWang's Blog]]></title>
   <link href="http://epingwang.me/blog/categories/cocoapods/atom.xml" rel="self"/>
   <link href="http://epingwang.me/"/>
-  <updated>2015-05-21T09:16:46+08:00</updated>
+  <updated>2015-05-21T15:16:50+08:00</updated>
   <id>http://epingwang.me/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -74,7 +74,7 @@ $ pod lib create DemoLibrary
 
 <p>在 Bash 中执行该命令，创建一个名为 DemoLibrary 的模版，我们可以看到项目结构如下:</p>
 
-<p><img class="center" src="images/2015/05/20150511-1@2x.png"></p>
+<p><img class="center" src="/images/2015/05/20150511-1@2x.png"></p>
 
 <p>在 Podspec Metadata 文件夹中，提供了非常重要的三个文件:</p>
 
@@ -137,7 +137,7 @@ platform :ios, ‘8.0’</p>
 <p>source &lsquo;<a href="https://github.com/CocoaPods/Specs.git">https://github.com/CocoaPods/Specs.git</a>&rsquo;
 pod &lsquo;GPUImage&rsquo;, &lsquo;~> 0.1.6&rsquo;</p>
 
-<p>source &lsquo;git@git.letv.cn:wangyiping1/specs.git&rsquo;
+<p>source &lsquo;git@git.github.com:YourPrivateRepo/specs.git&rsquo;
 pod &lsquo;CocoaHelpers&rsquo;, &lsquo;~> 1.0.0&rsquo;</p>
 
 <p>end
