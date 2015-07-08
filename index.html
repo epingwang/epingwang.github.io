@@ -126,66 +126,6 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2015/06/10/xcode7-bet-xia-zai-di-zhi/">XCode7 Beta 下载地址</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-06-10T11:15:27+08:00" pubdate data-updated="true">Jun 10<span>th</span>, 2015</time>
-        
-           | <a href="/blog/2015/06/10/xcode7-bet-xia-zai-di-zhi/#disqus_thread"
-             data-disqus-identifier="http://epingwang.me/blog/2015/06/10/xcode7-bet-xia-zai-di-zhi/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://developer.apple.com/services-account/download?path=/WWDC_2015/Xcode_7_beta/Xcode_7_beta.dmg">https://developer.apple.com/services-account/download?path=/WWDC_2015/Xcode_7_beta/Xcode_7_beta.dmg</a></p>
-
-<p>创业项目招募UI设计师一名。现在手里有两个手机APP项目：其中一个客户端＋服务器程序全部完成，很快可以上线；另一个已经有完备的产品原型图以及非常靠谱的技术团队。本人在这两个项目中负责程序开发。在规定时间内兼职完成即可，在校学生只要有实力一样欢迎。</p>
-
-<p>希望找到这样的你：
-1. 对手机App有一定的审美，了解设计规范。
-2. 有扎实的PS/Sketch绘图基础，能够根据原型图绘制界面、设计图标。
-3. 有一定的沟通能力，迅速理解产品逻辑。
-4. 有时间观念和自我驱动能力。</p>
-
-<p>加分项：
-1. 有过移动App产品设计经历。
-2. 有Dribbble/Behance账号，在上面发表过作品的尤佳。
-3. 有个人blog。</p>
-
-<p>你可以得到的：
-1. 现金报酬及初创项目的一部分股权。
-2. 北京一二线互联网公司（BAT、乐视、京东、美丽说等）和最牛的创业公司（IDG、红杉、蓝驰、华创等顶级风投投资）的内推机会。
-3. 一群有趣的朋友。</p>
-
-<p>有兴趣请将你的作品发到我的邮箱：
-<a href="&#x6d;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#109;&#101;&#64;&#x65;&#112;&#105;&#x6e;&#103;&#x77;&#x61;&#x6e;&#103;&#46;&#109;&#101;">&#x6d;&#101;&#64;&#x65;&#x70;&#105;&#x6e;&#103;&#x77;&#97;&#x6e;&#103;&#x2e;&#109;&#101;</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
       <h1 class="entry-title"><a href="/blog/2015/05/11/ru-he-chuang-jian-cocoapodsde-si-you-spec/">如何创建Cocoapods的私有Spec</a></h1>
     
     
@@ -934,6 +874,84 @@
 
     </article>
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/08/19/ios7wang-luo-qing-qiu/">iOS7网络请求</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-19T18:20:37+08:00" pubdate data-updated="true">Aug 19<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/08/19/ios7wang-luo-qing-qiu/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/08/19/ios7wang-luo-qing-qiu/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>NSURLSession</h3>
+
+<p>NSURLSession，提供后台链接，当APP关闭时也可以下载/上传</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">// 创建</span>
+</span><span class='line'><span class="n">NSURLSessionConfiguration</span> <span class="o">*</span><span class="n">conf</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLSessionConfiguration</span> <span class="nl">backgroundSessionConfiguration:</span><span class="s">@&quot;identifier&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSURLSession</span> <span class="o">*</span><span class="n">session</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLSession</span> <span class="nl">sessionWithConfiguration:</span><span class="n">conf</span> <span class="nl">delegate:</span><span class="n">self</span> <span class="nl">delegateQueue:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 使用</span>
+</span><span class='line'><span class="n">NSURLRequest</span> <span class="o">*</span><span class="n">request</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLRequest</span> <span class="nl">requestWithURL:</span><span class="p">[</span><span class="n">NSURL</span> <span class="nl">URLWithString:</span><span class="s">@&quot;Some URL&quot;</span><span class="p">]];</span>
+</span><span class='line'>    <span class="n">NSURLSessionDownloadTask</span> <span class="o">*</span><span class="n">task</span> <span class="o">=</span> <span class="p">[</span><span class="n">session</span> <span class="nl">downloadTaskWithRequest:</span><span class="n">request</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">task</span> <span class="n">resume</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>当Session下载/上传完成后，如果APP不在前台，iOS会自动启动APP，并且调用这个方法:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">handleEventsForBackgroundURLSession:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">identifier</span> <span class="nf">completionHandler:</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)())</span><span class="nv">completionHandler</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>session的代理会收到回调</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">URLSession:</span><span class="p">(</span><span class="n">NSURLSession</span> <span class="o">*</span><span class="p">)</span><span class="nv">session</span> <span class="nf">downloadTask:</span><span class="p">(</span><span class="n">NSURLSessionDownloadTask</span> <span class="o">*</span><span class="p">)</span><span class="nv">downloadTask</span> <span class="nf">didFinishDownloadingToURL:</span><span class="p">(</span><span class="n">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="nv">downloadURL</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">其中</span><span class="n">downloadURL</span><span class="err">中的</span><span class="n">Data</span><span class="err">就是下载完成的</span><span class="n">Data</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -964,10 +982,6 @@
       </li>
     
       <li class="post">
-        <a href="/blog/2015/06/10/xcode7-bet-xia-zai-di-zhi/">XCode7 Beta 下载地址</a>
-      </li>
-    
-      <li class="post">
         <a href="/blog/2015/05/11/ru-he-chuang-jian-cocoapodsde-si-you-spec/">如何创建Cocoapods的私有Spec</a>
       </li>
     
@@ -977,6 +991,10 @@
     
       <li class="post">
         <a href="/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/">iOS8中可交互通知(NotificationAction)初探</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/24/cocoapodsti-su-shou-ce/">Cocoapods提速手册</a>
       </li>
     
   </ul>

@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.me/atom.xml" rel="self"/>
   <link href="http://epingwang.me/"/>
-  <updated>2015-07-03T13:54:32+08:00</updated>
+  <updated>2015-07-08T17:17:25+08:00</updated>
   <id>http://epingwang.me/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -1067,36 +1067,6 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[XCode7 Beta 下载地址]]></title>
-    <link href="http://epingwang.me/blog/2015/06/10/xcode7-bet-xia-zai-di-zhi/"/>
-    <updated>2015-06-10T11:15:27+08:00</updated>
-    <id>http://epingwang.me/blog/2015/06/10/xcode7-bet-xia-zai-di-zhi</id>
-    <content type="html"><![CDATA[<p><a href="https://developer.apple.com/services-account/download?path=/WWDC_2015/Xcode_7_beta/Xcode_7_beta.dmg">https://developer.apple.com/services-account/download?path=/WWDC_2015/Xcode_7_beta/Xcode_7_beta.dmg</a></p>
-
-<p>创业项目招募UI设计师一名。现在手里有两个手机APP项目：其中一个客户端＋服务器程序全部完成，很快可以上线；另一个已经有完备的产品原型图以及非常靠谱的技术团队。本人在这两个项目中负责程序开发。在规定时间内兼职完成即可，在校学生只要有实力一样欢迎。</p>
-
-<p>希望找到这样的你：
-1. 对手机App有一定的审美，了解设计规范。
-2. 有扎实的PS/Sketch绘图基础，能够根据原型图绘制界面、设计图标。
-3. 有一定的沟通能力，迅速理解产品逻辑。
-4. 有时间观念和自我驱动能力。</p>
-
-<p>加分项：
-1. 有过移动App产品设计经历。
-2. 有Dribbble/Behance账号，在上面发表过作品的尤佳。
-3. 有个人blog。</p>
-
-<p>你可以得到的：
-1. 现金报酬及初创项目的一部分股权。
-2. 北京一二线互联网公司（BAT、乐视、京东、美丽说等）和最牛的创业公司（IDG、红杉、蓝驰、华创等顶级风投投资）的内推机会。
-3. 一群有趣的朋友。</p>
-
-<p>有兴趣请将你的作品发到我的邮箱：
-<a href="&#x6d;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#109;&#101;&#64;&#x65;&#112;&#105;&#x6e;&#103;&#x77;&#x61;&#x6e;&#103;&#46;&#109;&#101;">&#x6d;&#101;&#64;&#x65;&#x70;&#105;&#x6e;&#103;&#x77;&#97;&#x6e;&#103;&#x2e;&#109;&#101;</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[如何创建Cocoapods的私有Spec]]></title>
     <link href="http://epingwang.me/blog/2015/05/11/ru-he-chuang-jian-cocoapodsde-si-you-spec/"/>
     <updated>2015-05-11T09:56:40+08:00</updated>
@@ -1817,7 +1787,7 @@
 
 <p>一旦你的加急审核申请通过了，你的App会在一个工作日内被处理，如果这期间因为可能出现的其它问题导致再次被reject，你只需要重新提交修改后的build或补充说明（metadata reject）就行，你的App将会一直处于加急审核队列，直到审核通过。</p>
 
-<p>苹果加急审核邮箱：<a href="&#109;&#x61;&#105;&#108;&#x74;&#x6f;&#x3a;&#65;&#112;&#112;&#x52;&#101;&#x76;&#105;&#101;&#119;&#x40;&#97;&#x70;&#x70;&#112;&#x6c;&#x65;&#x2e;&#99;&#111;&#109;">&#65;&#112;&#112;&#x52;&#101;&#118;&#x69;&#x65;&#x77;&#64;&#97;&#x70;&#112;&#112;&#108;&#x65;&#x2e;&#99;&#x6f;&#x6d;</a></p>
+<p>苹果加急审核邮箱：<a href="&#x6d;&#x61;&#105;&#108;&#x74;&#111;&#58;&#x41;&#x70;&#112;&#x52;&#x65;&#118;&#105;&#101;&#x77;&#64;&#x61;&#112;&#x70;&#x70;&#x6c;&#101;&#46;&#x63;&#x6f;&#x6d;">&#65;&#x70;&#x70;&#82;&#101;&#118;&#105;&#x65;&#x77;&#64;&#x61;&#112;&#112;&#x70;&#x6c;&#x65;&#46;&#x63;&#x6f;&#x6d;</a></p>
 
 <p>网页提交地址：<a href="https://developer.apple.com/appstore/contact/?topic=expedite">https://developer.apple.com/appstore/contact/?topic=expedite</a></p>
 
