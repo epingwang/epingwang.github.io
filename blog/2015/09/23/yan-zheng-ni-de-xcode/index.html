@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>iOS7网络请求 - EpingWang's Blog</title>
+  <title>验证你的XCode - EpingWang's Blog</title>
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="NSURLSession NSURLSession，提供后台链接，当APP关闭时也可以下载/上传 1
+  <meta name="description" content="苹果官方提供了验证XCode合法性的方法 Terminal中运行 1
+spctl --assess --verbose /Applications/Xcode.app 几分钟后会得到验证结果，以下为正确验证 1
 2
 3
 4
@@ -17,8 +18,7 @@
 6
 7
 8
-// 创建
-NSURLSessionConfiguration *conf = [NSURLSessionConfiguration &hellip;">
+/Applications/Xcode.app: &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -33,7 +33,7 @@ NSURLSessionConfiguration *conf = [NSURLSessionConfiguration &hellip;">
   
 
   
-  <link rel="canonical" href="http://epingwang.me/blog/2014/08/19/ios7wang-luo-qing-qiu">
+  <link rel="canonical" href="http://epingwang.me/blog/2015/09/23/yan-zheng-ni-de-xcode">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="EpingWang's Blog" type="application/atom+xml">
@@ -86,7 +86,7 @@ NSURLSessionConfiguration *conf = [NSURLSessionConfiguration &hellip;">
   
   <header>
     
-      <h1 class="entry-title">iOS7网络请求</h1>
+      <h1 class="entry-title">验证你的XCode</h1>
     
     
       <p class="meta">
@@ -102,7 +102,7 @@ NSURLSessionConfiguration *conf = [NSURLSessionConfiguration &hellip;">
   
 
 
-<time datetime="2014-08-19T18:20:37+08:00" pubdate data-updated="true">Aug 19<span>th</span>, 2014</time>
+<time datetime="2015-09-23T16:07:07+08:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2015</time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://epingwang.me">Comments</a>
@@ -112,11 +112,17 @@ NSURLSessionConfiguration *conf = [NSURLSessionConfiguration &hellip;">
   </header>
 
 
-<div class="entry-content"><h3>NSURLSession</h3>
+<div class="entry-content"><p>苹果官方提供了验证XCode合法性的方法</p>
 
-<p>NSURLSession，提供后台链接，当APP关闭时也可以下载/上传</p>
+<p>Terminal中运行</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>spctl --assess --verbose /Applications/Xcode.app</span></code></pre></td></tr></table></div></figure>
+
+
+<p>几分钟后会得到验证结果，以下为正确验证</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -124,33 +130,14 @@ NSURLSessionConfiguration *conf = [NSURLSessionConfiguration &hellip;">
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">// 创建</span>
-</span><span class='line'><span class="n">NSURLSessionConfiguration</span> <span class="o">*</span><span class="n">conf</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLSessionConfiguration</span> <span class="nl">backgroundSessionConfiguration:</span><span class="s">@&quot;identifier&quot;</span><span class="p">];</span>
-</span><span class='line'><span class="n">NSURLSession</span> <span class="o">*</span><span class="n">session</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLSession</span> <span class="nl">sessionWithConfiguration:</span><span class="n">conf</span> <span class="nl">delegate:</span><span class="n">self</span> <span class="nl">delegateQueue:</span><span class="nb">nil</span><span class="p">];</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/Applications/Xcode.app: accepted
+</span><span class='line'>source=Mac App Store
 </span><span class='line'>
-</span><span class='line'><span class="c1">// 使用</span>
-</span><span class='line'><span class="n">NSURLRequest</span> <span class="o">*</span><span class="n">request</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLRequest</span> <span class="nl">requestWithURL:</span><span class="p">[</span><span class="n">NSURL</span> <span class="nl">URLWithString:</span><span class="s">@&quot;Some URL&quot;</span><span class="p">]];</span>
-</span><span class='line'>    <span class="n">NSURLSessionDownloadTask</span> <span class="o">*</span><span class="n">task</span> <span class="o">=</span> <span class="p">[</span><span class="n">session</span> <span class="nl">downloadTaskWithRequest:</span><span class="n">request</span><span class="p">];</span>
-</span><span class='line'>    <span class="p">[</span><span class="n">task</span> <span class="n">resume</span><span class="p">];</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>当Session下载/上传完成后，如果APP不在前台，iOS会自动启动APP，并且调用这个方法:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">handleEventsForBackgroundURLSession:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">identifier</span> <span class="nf">completionHandler:</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)())</span><span class="nv">completionHandler</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>session的代理会收到回调</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">URLSession:</span><span class="p">(</span><span class="n">NSURLSession</span> <span class="o">*</span><span class="p">)</span><span class="nv">session</span> <span class="nf">downloadTask:</span><span class="p">(</span><span class="n">NSURLSessionDownloadTask</span> <span class="o">*</span><span class="p">)</span><span class="nv">downloadTask</span> <span class="nf">didFinishDownloadingToURL:</span><span class="p">(</span><span class="n">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="nv">downloadURL</span><span class="p">;</span>
+</span><span class='line'>/Applications/Xcode.app: accepted
+</span><span class='line'>source=Apple
 </span><span class='line'>
-</span><span class='line'><span class="err">其中</span><span class="n">downloadURL</span><span class="err">中的</span><span class="n">Data</span><span class="err">就是下载完成的</span><span class="n">Data</span>
-</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>/Applications/Xcode.app: accepted
+</span><span class='line'>source=Apple System</span></code></pre></td></tr></table></div></figure>
 
 </div>
 
@@ -174,7 +161,7 @@ NSURLSessionConfiguration *conf = [NSURLSessionConfiguration &hellip;">
   
 
 
-<time datetime="2014-08-19T18:20:37+08:00" pubdate data-updated="true">Aug 19<span>th</span>, 2014</time>
+<time datetime="2015-09-23T16:07:07+08:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2015</time>
       
 
 
@@ -224,10 +211,8 @@ NSURLSessionConfiguration *conf = [NSURLSessionConfiguration &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo/" title="Previous Post: 将NSDate转为RFC822格式的时间戳">&laquo; 将NSDate转为RFC822格式的时间戳</a>
+        <a class="basic-alignment left" href="/blog/2015/07/03/feng-xian-tou-zi-xie-yi-%28term-sheet%29xiang-jie/" title="Previous Post: 风险投资协议（Term  Sheet）详解">&laquo; 风险投资协议（Term  Sheet）详解</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu/" title="Next Post: iOS8 关于地理位置的获取">iOS8 关于地理位置的获取 &raquo;</a>
       
     </p>
   </footer>
@@ -315,8 +300,8 @@ NSURLSessionConfiguration *conf = [NSURLSessionConfiguration &hellip;">
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://epingwang.me/blog/2014/08/19/ios7wang-luo-qing-qiu/';
-        var disqus_url = 'http://epingwang.me/blog/2014/08/19/ios7wang-luo-qing-qiu/';
+        var disqus_identifier = 'http://epingwang.me/blog/2015/09/23/yan-zheng-ni-de-xcode/';
+        var disqus_url = 'http://epingwang.me/blog/2015/09/23/yan-zheng-ni-de-xcode/';
         var disqus_script = 'embed.js';
       
     (function () {
