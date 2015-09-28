@@ -9,16 +9,10 @@
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="NSURLSession NSURLSession，提供后台链接，当APP关闭时也可以下载/上传 1
+  <meta name="description" content="在iOS8之前 当我们调用 1
 2
-3
-4
-5
-6
-7
-8
-// 创建
-NSURLSessionConfiguration *conf = [NSURLSessionConfiguration &hellip;">
+CLLocationManager *locationManager = [[CLLocationManager alloc] init];
+[locationManager startUpdatingLocation]; 这个方法时，会自动弹出警告， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +77,71 @@ NSURLSessionConfiguration *conf = [NSURLSessionConfiguration &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu/">iOS8 关于地理位置的获取</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-09-23T17:32:39+08:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2014</time>
+        
+           | <a href="/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>在iOS8之前</h3>
+
+<p>当我们调用</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">CLLocationManager</span> <span class="o">*</span><span class="n">locationManager</span> <span class="o">=</span> <span class="p">[[</span><span class="n">CLLocationManager</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">locationManager</span> <span class="n">startUpdatingLocation</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个方法时，会自动弹出警告，请求用户通过地理位置权限</p>
+
+<h3>iOS8中</h3>
+
+<p>获取地理位置的权限默认为<code>kCLAuthorizationStatusNotDetermined</code>，即未确定权限。当调用<code>startUpdatingLocation</code>时，不会自动请求获取权限。</p>
+
+<p>Apple文档中的解释</p>
+
+<p><strong>&ndash; (void)requestWhenInUseAuthorization 中: </strong></p>
+
+<blockquote><p>You must call this method or the requestAlwaysAuthorization method prior to using location services. If the user grants “when-in-use” authorization to your app, your app can start most (but not all) location services while it is in the foreground. (Apps cannot use any services that automatically relaunch the app, such as region monitoring or the significant location change service.) When started in the foreground, services continue to run in the background if your app has enabled background location updates in the Capabilities tab of your Xcode project. Attempts to start location services while your app is running in the background will fail. The system displays a location-services indicator in the status bar when your app moves to the background with active location services.</p></blockquote>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/09/23/ios8-guan-yu-di-li-wei-zhi-de-huo-qu/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -578,6 +637,10 @@ NSURLSessionConfiguration *conf = [NSURLSessionConfiguration &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/09/28/uitabbartu-pian-qu-xiao-tintcolorhe-ju-zhong-xian-shi/">UITabBar图片取消TintColor和居中显示</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/09/23/yan-zheng-ni-de-xcode/">验证你的XCode</a>
       </li>
     
@@ -591,10 +654,6 @@ NSURLSessionConfiguration *conf = [NSURLSessionConfiguration &hellip;">
     
       <li class="post">
         <a href="/blog/2015/05/04/%5B%3F%5D-xie-you-yi-si-de-wen-ti/">一些有意思的问题</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/">iOS8中可交互通知(NotificationAction)初探</a>
       </li>
     
   </ul>
