@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.me/atom.xml" rel="self"/>
   <link href="http://epingwang.me/"/>
-  <updated>2015-09-28T11:02:08+08:00</updated>
+  <updated>2015-10-30T17:11:20+08:00</updated>
   <id>http://epingwang.me/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -12,6 +12,131 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[@dynamic使用小结]]></title>
+    <link href="http://epingwang.me/blog/2015/10/30/at-dynamicshi-yong-xiao-jie/"/>
+    <updated>2015-10-30T16:45:33+08:00</updated>
+    <id>http://epingwang.me/blog/2015/10/30/at-dynamicshi-yong-xiao-jie</id>
+    <content type="html"><![CDATA[<h3>@dynamic的作用</h3>
+
+<p>@dynamic与@synthesize对应，写在@implementation里。意思是告诉编译器Getter和Setter方法由由开发者实现。</p>
+
+<h3>使用场景</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">ClassA</span> : <span class="nc">NSObject</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">Father</span> : <span class="nc">NSObject</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">ClassA</span> <span class="o">*</span><span class="n">obj</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">ClassB</span> : <span class="nc">ClassA</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">Son</span> : <span class="nc">Father</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">ClassB</span> <span class="o">*</span><span class="n">obj</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">Son</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 变量obj的getter和setter方法，由父类Father实现</span>
+</span><span class='line'><span class="k">@dynamic</span> <span class="n">obj</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>或</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">ClassA</span> : <span class="nc">NSObject</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">Father</span> : <span class="nc">NSObject</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">ClassA</span> <span class="o">*</span><span class="n">obj</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">ClassB</span> : <span class="nc">ClassA</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">Son</span> : <span class="nc">Father</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">ClassB</span> <span class="o">*</span><span class="n">obj</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">Father</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 变量obj的getter和setter方法，必须由子类实现，否则会在运行时抛出异常（unrecognized selector）</span>
+</span><span class='line'><span class="k">@dynamic</span> <span class="n">obj</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[UITabBar图片取消TintColor和居中显示]]></title>
@@ -1857,7 +1982,7 @@
 
 <p>一旦你的加急审核申请通过了，你的App会在一个工作日内被处理，如果这期间因为可能出现的其它问题导致再次被reject，你只需要重新提交修改后的build或补充说明（metadata reject）就行，你的App将会一直处于加急审核队列，直到审核通过。</p>
 
-<p>苹果加急审核邮箱：<a href="&#x6d;&#97;&#x69;&#108;&#116;&#x6f;&#58;&#65;&#112;&#112;&#82;&#101;&#x76;&#x69;&#x65;&#119;&#x40;&#x61;&#112;&#112;&#112;&#x6c;&#101;&#x2e;&#x63;&#x6f;&#x6d;">&#65;&#112;&#x70;&#82;&#101;&#x76;&#x69;&#101;&#119;&#64;&#97;&#112;&#112;&#112;&#108;&#101;&#x2e;&#x63;&#111;&#x6d;</a></p>
+<p>苹果加急审核邮箱：<a href="&#x6d;&#97;&#105;&#108;&#x74;&#x6f;&#58;&#x41;&#112;&#x70;&#82;&#101;&#118;&#x69;&#101;&#x77;&#64;&#x61;&#x70;&#x70;&#112;&#108;&#101;&#x2e;&#99;&#111;&#x6d;">&#65;&#112;&#x70;&#82;&#x65;&#x76;&#x69;&#101;&#x77;&#64;&#97;&#112;&#112;&#x70;&#108;&#101;&#x2e;&#99;&#111;&#109;</a></p>
 
 <p>网页提交地址：<a href="https://developer.apple.com/appstore/contact/?topic=expedite">https://developer.apple.com/appstore/contact/?topic=expedite</a></p>
 

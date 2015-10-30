@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: iOS, | EpingWang's Blog]]></title>
-  <link href="http://epingwang.me/blog/categories/ios/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Objc | EpingWang's Blog]]></title>
+  <link href="http://epingwang.me/blog/categories/objc/atom.xml" rel="self"/>
   <link href="http://epingwang.me/"/>
   <updated>2015-10-30T17:11:20+08:00</updated>
   <id>http://epingwang.me/</id>
