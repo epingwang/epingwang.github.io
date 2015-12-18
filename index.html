@@ -9,28 +9,8 @@
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="@dynamic的作用 @dynamic与@synthesize对应，写在@implementation里。意思是告诉编译器Getter和Setter方法由由开发者实现。 使用场景 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22 &hellip;">
+  <meta name="description" content="现在越来越多的App使用H5页面作为App的一部分，尤其是一些运营商的需求，需要快速上线下线，只能通过网页前端完成。那么网页前端与原生App的交互就显得尤为重要。 原生对网页的调用 iOS原生App对网页前端的调用非常简单，只需要使用 1
+- (nullable NSString *) &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,6 +75,218 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/12/18/uiwebviewyu-javascriptjiao-hu/">UIWebView与Javascript交互</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-12-18T17:12:21+08:00" pubdate data-updated="true">Dec 18<span>th</span>, 2015</time>
+        
+           | <a href="/blog/2015/12/18/uiwebviewyu-javascriptjiao-hu/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2015/12/18/uiwebviewyu-javascriptjiao-hu/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote><p>现在越来越多的App使用H5页面作为App的一部分，尤其是一些运营商的需求，需要快速上线下线，只能通过网页前端完成。那么网页前端与原生App的交互就显得尤为重要。</p></blockquote>
+
+<h3>原生对网页的调用</h3>
+
+<p>iOS原生App对网页前端的调用非常简单，只需要使用</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">stringByEvaluatingJavaScriptFromString:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">script</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个方法，调用相应的JavaScript方法、传参就可以了。</p>
+
+<p>例如：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">webView</span> <span class="nl">stringByEvaluatingJavaScriptFromString:</span><span class="s">@&quot;myFunction();&quot;</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>网页对原生的调用</h3>
+
+<p>网页对原生App调用相对复杂一些。在安卓App中，我们可以注册handler来监听某个<code>JS Function</code>的调用。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">webView</span><span class="o">.</span><span class="na">addJavascriptInterface</span><span class="o">(</span><span class="k">new</span> <span class="n">Handler</span><span class="o">(),</span> <span class="s">&quot;SomeObject&quot;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在iOS中实现类似的功能，就要动一番脑筋了。</p>
+
+<p>首先我们来看一下<code>UIWebView</code>能给我们提供哪些回调方法：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@protocol</span> <span class="nc">UIWebViewDelegate</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@optional</span>
+</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nl">webView:</span><span class="p">(</span><span class="n">UIWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span> <span class="nl">shouldStartLoadWithRequest:</span><span class="p">(</span><span class="n">NSURLRequest</span> <span class="o">*</span><span class="p">)</span><span class="n">request</span> <span class="nl">navigationType:</span><span class="p">(</span><span class="n">UIWebViewNavigationType</span><span class="p">)</span><span class="n">navigationType</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">webViewDidStartLoad:</span><span class="p">(</span><span class="n">UIWebView</span> <span class="o">*</span><span class="p">)</span><span class="nv">webView</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">webViewDidFinishLoad:</span><span class="p">(</span><span class="n">UIWebView</span> <span class="o">*</span><span class="p">)</span><span class="nv">webView</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">webView:</span><span class="p">(</span><span class="n">UIWebView</span> <span class="o">*</span><span class="p">)</span><span class="nv">webView</span> <span class="nf">didFailLoadWithError:</span><span class="p">(</span><span class="n">nullable</span> <span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="nv">error</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其中，<code>- (void)webViewDidStartLoad:(UIWebView *)webView;</code>是在页面开始加载时调用，这个时候我们前端的页面和脚本都没有加载，Pass掉。
+<code>- (void)webViewDidFinishLoad:(UIWebView *)webView;</code>是在加载完成时调用一次，不满足时序要求，Pass掉。
+<code>- (void)webView:(UIWebView *)webView didFailLoadWithError:(nullable NSError *)error;</code>这个更不用说，Pass。</p>
+
+<p>那么只有<code>- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType;</code>这个方法可以用了。</p>
+
+<p>于是我们的思路确定了：<strong>在webview中注入一个JS Function，调用这个function时进行重定向，利用重定向的URL进行传参。</strong></p>
+
+<h4>编写JS脚本</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="o">%</span><span class="err">@</span> <span class="o">=</span> <span class="p">{};</span>
+</span><span class='line'><span class="o">%</span><span class="err">@</span><span class="p">.</span><span class="o">%</span><span class="err">@</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">cmd</span><span class="p">,</span> <span class="nx">param</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">param</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">param</span> <span class="o">=</span> <span class="nx">cmd</span><span class="p">;</span>
+</span><span class='line'>      <span class="nx">cmd</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;objcjsbridge://&quot;</span> <span class="o">+</span> <span class="nx">cmd</span> <span class="o">+</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="nx">escape</span><span class="p">(</span><span class="nx">param</span><span class="p">);</span>
+</span><span class='line'>  <span class="nb">document</span><span class="p">.</span><span class="nx">location</span> <span class="o">=</span> <span class="nx">url</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>运行JS脚本</h4>
+
+<p>需要在每个页面加载完成时运行</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">UIWebView</span> <span class="nl">(JavaScriptInject)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">injectJavaScriptObject:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">objectName</span> <span class="nf">function:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">functionName</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">UIWebView</span> <span class="nl">(JavaScriptInject)</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">injectJavaScriptObject:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">objectName</span> <span class="nf">function:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">functionName</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">jsPath</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBundle</span> <span class="n">mainBundle</span><span class="p">]</span> <span class="nl">pathForResource:</span><span class="s">@&quot;YPJSBridge&quot;</span> <span class="nl">ofType:</span><span class="s">@&quot;js&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">originJs</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSString</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithContentsOfFile:</span><span class="n">jsPath</span> <span class="nl">encoding:</span><span class="n">NSUTF8StringEncoding</span> <span class="nl">error:</span><span class="o">&amp;</span><span class="n">error</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">formattedJs</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nl">stringWithFormat:</span><span class="n">originJs</span><span class="p">,</span> <span class="n">objectName</span><span class="p">,</span> <span class="n">objectName</span><span class="p">,</span> <span class="n">functionName</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="n">error</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span> <span class="nl">stringByEvaluatingJavaScriptFromString:</span><span class="n">formattedJs</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 注入JS脚本</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">webViewDidFinishLoad:</span><span class="p">(</span><span class="n">UIWebView</span> <span class="o">*</span><span class="p">)</span><span class="nv">webView</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">super</span> <span class="nl">webViewDidFinishLoad:</span><span class="n">webView</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">webView</span> <span class="nl">injectJavaScriptObject:</span><span class="s">@&quot;LETV_APP_Function&quot;</span> <span class="nl">function:</span><span class="s">@&quot;callBack&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>监听回调</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">webView:</span><span class="p">(</span><span class="n">UIWebView</span> <span class="o">*</span><span class="p">)</span><span class="nv">webView</span> <span class="nf">shouldStartLoadWithRequest:</span><span class="p">(</span><span class="n">NSURLRequest</span> <span class="o">*</span><span class="p">)</span><span class="nv">request</span> <span class="nf">navigationType:</span><span class="p">(</span><span class="n">UIWebViewNavigationType</span><span class="p">)</span><span class="nv">navigationType</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">NSURL</span> <span class="o">*</span><span class="n">url</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="n">URL</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">([</span><span class="n">url</span><span class="p">.</span><span class="n">scheme</span><span class="p">.</span><span class="n">lowercaseString</span> <span class="nl">isEqualToString:</span><span class="s">@&quot;objcjsbridge&quot;</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">NSString</span> <span class="o">*</span><span class="n">command</span> <span class="o">=</span> <span class="n">url</span><span class="p">.</span><span class="n">host</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">NSString</span> <span class="o">*</span><span class="n">parameter</span> <span class="o">=</span> <span class="n">url</span><span class="p">.</span><span class="n">query</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="p">([</span><span class="n">self</span><span class="p">.</span><span class="n">delegate</span> <span class="nl">respondsToSelector:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">webView:shouldStartLoadWithRequest:navigationType:</span><span class="p">)])</span> <span class="p">{</span>
+</span><span class='line'>            <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">delegate</span> <span class="nl">webviewInjecter:</span><span class="n">self</span> <span class="nl">didRecieveJSCall:</span><span class="n">command</span> <span class="nl">parameter:</span><span class="p">[</span><span class="n">parameter</span> <span class="nl">stringByReplacingPercentEscapesUsingEncoding:</span><span class="n">NSUTF8StringEncoding</span><span class="p">]];</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="c1">// 这里return NO，保证不会重定向到这个无法访问的URL</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">NO</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -975,100 +1167,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/10/23/scrollst-shi-yong-xiao-jie/">ScrollsToTop 使用小结</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-10-23T17:17:19+08:00" pubdate data-updated="true">Oct 23<span>rd</span>, 2014</time>
-        
-           | <a href="/blog/2014/10/23/scrollst-shi-yong-xiao-jie/#disqus_thread"
-             data-disqus-identifier="http://epingwang.me/blog/2014/10/23/scrollst-shi-yong-xiao-jie/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>我们经常会看到，很多App中点击StatusBar，tableView就会滚回顶部。</p>
-
-<p>在<code>UIScrollView</code>中，<code>scrollsToTop</code>这个属性可以实现这个效果。</p>
-
-<p>iOS官方注视中是这样解释的</p>
-
-<blockquote><p>  When the user taps the status bar, the scroll view beneath the touch which is closest to the status bar will be scrolled to top, but only if its <code>scrollsToTop</code> property is YES, its delegate does not return NO from <code>shouldScrollViewScrollToTop</code>, and it is not already at the top.</p>
-
-<p>  On iPhone, we execute this gesture only if there&rsquo;s one on-screen scroll view with <code>scrollsToTop</code> == YES. If more than one is found, none will be scrolled.</p></blockquote>
-
-<p>简单翻译一下:</p>
-
-<blockquote><p>  当用户点击status bar, 靠近status bar的scroll view会滚动到顶端。但只有 <code>scrollsToTop</code>属性设为YES，代理中<code>shouldScrollViewScrollToTop</code>方法返回YES，并且scroll view没有在顶端时会生效。</p>
-
-<p>  在iPhone中，只有当前屏幕中只有一个scroll view的<code>scrollsToTop</code>属性为YES时，该手势才会执行。如果有多个，任何一个scroll view都不会滚动。</p></blockquote>
-
-<p>在实际使用中，我们可能会用到很多UIScrollView的派生类，例如:</p>
-
-<ul>
-<li>UITableView</li>
-<li>UICollectionView</li>
-<li>UITextView</li>
-<li>UIWebView中也有一个UIScrollView</li>
-</ul>
-
-
-<p>我写了一个小工具来检测当前View中，包含的UIScrollView</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@implementation</span> <span class="nc">UIView</span> <span class="nl">(Utility)</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">checkConflictScrollViews</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="n">subView</span> <span class="k">in</span> <span class="n">self</span><span class="p">.</span><span class="n">subviews</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="p">[</span><span class="n">subView</span> <span class="n">checkConflictScrollViews</span><span class="p">];</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">([</span><span class="n">subView</span> <span class="nl">isKindOfClass:</span><span class="p">[</span><span class="n">UIScrollView</span> <span class="n">class</span><span class="p">]]</span> <span class="o">&amp;&amp;</span> <span class="p">[(</span><span class="n">UIScrollView</span> <span class="o">*</span><span class="p">)</span><span class="n">subView</span> <span class="n">scrollsToTop</span><span class="p">])</span> <span class="p">{</span>
-</span><span class='line'>            <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="n">subView</span><span class="p">);</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1095,6 +1193,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/12/18/uiwebviewyu-javascriptjiao-hu/">UIWebView与Javascript交互</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/10/30/at-dynamicshi-yong-xiao-jie/">@dynamic使用小结</a>
       </li>
     
@@ -1108,10 +1210,6 @@
     
       <li class="post">
         <a href="/blog/2015/07/03/feng-xian-tou-zi-xie-yi-%28term-sheet%29xiang-jie/">风险投资协议（Term Sheet）详解</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/05/11/ru-he-chuang-jian-cocoapodsde-si-you-spec/">如何创建Cocoapods的私有Spec</a>
       </li>
     
   </ul>

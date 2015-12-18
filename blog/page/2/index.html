@@ -9,7 +9,7 @@
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="原文链接 SAM1023的博客 最近苹果审核更严厉了，我们产品新版（陪你看电影App）提交也接连被苹果Reject，平均更新审核周期也在12天左右。前两天3.3.0新版终于尼玛审核通过了，前后花了一个多月时间也是醉了，中间的各种苦逼心酸和无奈不提也罢，总结下经验教训吧。当然， &hellip;">
+  <meta name="description" content="我们经常会看到，很多App中点击StatusBar，tableView就会滚回顶部。 在UIScrollView中，scrollsToTop这个属性可以实现这个效果。 iOS官方注视中是这样解释的 When the user taps the status bar, the scroll view &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,100 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/10/23/scrollst-shi-yong-xiao-jie/">ScrollsToTop 使用小结</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-10-23T17:17:19+08:00" pubdate data-updated="true">Oct 23<span>rd</span>, 2014</time>
+        
+           | <a href="/blog/2014/10/23/scrollst-shi-yong-xiao-jie/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/10/23/scrollst-shi-yong-xiao-jie/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>我们经常会看到，很多App中点击StatusBar，tableView就会滚回顶部。</p>
+
+<p>在<code>UIScrollView</code>中，<code>scrollsToTop</code>这个属性可以实现这个效果。</p>
+
+<p>iOS官方注视中是这样解释的</p>
+
+<blockquote><p>  When the user taps the status bar, the scroll view beneath the touch which is closest to the status bar will be scrolled to top, but only if its <code>scrollsToTop</code> property is YES, its delegate does not return NO from <code>shouldScrollViewScrollToTop</code>, and it is not already at the top.</p>
+
+<p>  On iPhone, we execute this gesture only if there&rsquo;s one on-screen scroll view with <code>scrollsToTop</code> == YES. If more than one is found, none will be scrolled.</p></blockquote>
+
+<p>简单翻译一下:</p>
+
+<blockquote><p>  当用户点击status bar, 靠近status bar的scroll view会滚动到顶端。但只有 <code>scrollsToTop</code>属性设为YES，代理中<code>shouldScrollViewScrollToTop</code>方法返回YES，并且scroll view没有在顶端时会生效。</p>
+
+<p>  在iPhone中，只有当前屏幕中只有一个scroll view的<code>scrollsToTop</code>属性为YES时，该手势才会执行。如果有多个，任何一个scroll view都不会滚动。</p></blockquote>
+
+<p>在实际使用中，我们可能会用到很多UIScrollView的派生类，例如:</p>
+
+<ul>
+<li>UITableView</li>
+<li>UICollectionView</li>
+<li>UITextView</li>
+<li>UIWebView中也有一个UIScrollView</li>
+</ul>
+
+
+<p>我写了一个小工具来检测当前View中，包含的UIScrollView</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@implementation</span> <span class="nc">UIView</span> <span class="nl">(Utility)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">checkConflictScrollViews</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="n">subView</span> <span class="k">in</span> <span class="n">self</span><span class="p">.</span><span class="n">subviews</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">subView</span> <span class="n">checkConflictScrollViews</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">([</span><span class="n">subView</span> <span class="nl">isKindOfClass:</span><span class="p">[</span><span class="n">UIScrollView</span> <span class="n">class</span><span class="p">]]</span> <span class="o">&amp;&amp;</span> <span class="p">[(</span><span class="n">UIScrollView</span> <span class="o">*</span><span class="p">)</span><span class="n">subView</span> <span class="n">scrollsToTop</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="n">subView</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -613,48 +707,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/10/hello-world/">Hello World</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-10T14:58:19+08:00" pubdate data-updated="true">Jun 10<span>th</span>, 2014</time>
-        
-           | <a href="/blog/2014/06/10/hello-world/#disqus_thread"
-             data-disqus-identifier="http://epingwang.me/blog/2014/06/10/hello-world/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Hello world</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/3/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -680,6 +735,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/12/18/uiwebviewyu-javascriptjiao-hu/">UIWebView与Javascript交互</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/10/30/at-dynamicshi-yong-xiao-jie/">@dynamic使用小结</a>
       </li>
     
@@ -693,10 +752,6 @@
     
       <li class="post">
         <a href="/blog/2015/07/03/feng-xian-tou-zi-xie-yi-%28term-sheet%29xiang-jie/">风险投资协议（Term Sheet）详解</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/05/11/ru-he-chuang-jian-cocoapodsde-si-you-spec/">如何创建Cocoapods的私有Spec</a>
       </li>
     
   </ul>
