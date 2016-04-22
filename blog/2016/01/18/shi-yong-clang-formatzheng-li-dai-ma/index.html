@@ -5,22 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>UITextField的默认Placeholder颜色 - EpingWang's Blog</title>
+  <title>使用clang-format整理代码 - EpingWang's Blog</title>
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="色值为 1
-2
-3
-4
-R:0
-G:0
-B:0.0980392
-A:0.22 查看方式 1
-2
-3
-NSRange range = NSMakeRange(0, 1);
-NSDictionary *dict = [someTextField.attributedPlaceholder &hellip;">
+  <meta name="description" content="在多人协作的项目中，我们不能保证每个成员都贡献出高质量的代码。这些不规范的代码就有可能成为日后的一个bug点，或者给以后的开发造成不必要的麻烦。仅仅靠代码规范、Code Review来规范的话，也难免有疏漏。因此最好有一款工具来帮助我们规范代码，我们选择LLVM中的clang-format 初探 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -35,7 +24,7 @@ NSDictionary *dict = [someTextField.attributedPlaceholder &hellip;">
   
 
   
-  <link rel="canonical" href="http://epingwang.me/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se">
+  <link rel="canonical" href="http://epingwang.me/blog/2016/01/18/shi-yong-clang-formatzheng-li-dai-ma">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="EpingWang's Blog" type="application/atom+xml">
@@ -88,7 +77,7 @@ NSDictionary *dict = [someTextField.attributedPlaceholder &hellip;">
   
   <header>
     
-      <h1 class="entry-title">UITextField的默认Placeholder颜色</h1>
+      <h1 class="entry-title">使用clang-format整理代码</h1>
     
     
       <p class="meta">
@@ -104,7 +93,7 @@ NSDictionary *dict = [someTextField.attributedPlaceholder &hellip;">
   
 
 
-<time datetime="2014-07-10T14:11:44+08:00" pubdate data-updated="true">Jul 10<span>th</span>, 2014</time>
+<time datetime="2016-01-18T16:32:15+08:00" pubdate data-updated="true">Jan 18<span>th</span>, 2016</time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://epingwang.me">Comments</a>
@@ -114,30 +103,11 @@ NSDictionary *dict = [someTextField.attributedPlaceholder &hellip;">
   </header>
 
 
-<div class="entry-content"><h3>色值为</h3>
+<div class="entry-content"><blockquote><p>在多人协作的项目中，我们不能保证每个成员都贡献出高质量的代码。这些不规范的代码就有可能成为日后的一个bug点，或者给以后的开发造成不必要的麻烦。仅仅靠代码规范、Code Review来规范的话，也难免有疏漏。因此最好有一款工具来帮助我们规范代码，我们选择LLVM中的clang-format</p></blockquote>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>R:0
-</span><span class='line'>G:0
-</span><span class='line'>B:0.0980392
-</span><span class='line'>A:0.22</span></code></pre></td></tr></table></div></figure>
+<h3>初探</h3>
 
-
-<h3>查看方式</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSRange</span> <span class="n">range</span> <span class="o">=</span> <span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-</span><span class='line'><span class="n">NSDictionary</span> <span class="o">*</span><span class="n">dict</span> <span class="o">=</span> <span class="p">[</span><span class="n">someTextField</span><span class="p">.</span><span class="n">attributedPlaceholder</span> <span class="nl">attributesAtIndex:</span><span class="mi">0</span> <span class="nl">effectiveRange:</span><span class="o">&amp;</span><span class="n">range</span><span class="p">];</span>
-</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">dict</span> <span class="nl">objectForKey:</span><span class="n">NSForegroundColorAttributeName</span><span class="p">]);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
+<p>在<a href="http://llvm.org/releases/download.html">LLVM官网</a>，下载系统对应的Clang版本</p>
 </div>
 
 
@@ -160,7 +130,7 @@ NSDictionary *dict = [someTextField.attributedPlaceholder &hellip;">
   
 
 
-<time datetime="2014-07-10T14:11:44+08:00" pubdate data-updated="true">Jul 10<span>th</span>, 2014</time>
+<time datetime="2016-01-18T16:32:15+08:00" pubdate data-updated="true">Jan 18<span>th</span>, 2016</time>
       
 
 
@@ -210,10 +180,10 @@ NSDictionary *dict = [someTextField.attributedPlaceholder &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/06/13/xiao-shi-auto-layout-vflpian/" title="Previous Post: 小试Auto Layout——VFL篇">&laquo; 小试Auto Layout——VFL篇</a>
+        <a class="basic-alignment left" href="/blog/2015/12/18/uiwebviewyu-javascriptjiao-hu/" title="Previous Post: UIWebView与Javascript交互">&laquo; UIWebView与Javascript交互</a>
       
       
-        <a class="basic-alignment right" href="/blog/2014/08/05/jiang-nsdatezhuan-wei-rfc822ge-shi-de-shi-jian-chuo/" title="Next Post: 将NSDate转为RFC822格式的时间戳">将NSDate转为RFC822格式的时间戳 &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2016/04/22/he-bing-te-ding-de-git-commitdao-ling-%5B%3F%5D-ge-fen-zhi/" title="Next Post: 合并特定的Git Commit到另一个分支">合并特定的Git Commit到另一个分支 &raquo;</a>
       
     </p>
   </footer>
@@ -301,8 +271,8 @@ NSDictionary *dict = [someTextField.attributedPlaceholder &hellip;">
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://epingwang.me/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/';
-        var disqus_url = 'http://epingwang.me/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/';
+        var disqus_identifier = 'http://epingwang.me/blog/2016/01/18/shi-yong-clang-formatzheng-li-dai-ma/';
+        var disqus_url = 'http://epingwang.me/blog/2016/01/18/shi-yong-clang-formatzheng-li-dai-ma/';
         var disqus_script = 'embed.js';
       
     (function () {

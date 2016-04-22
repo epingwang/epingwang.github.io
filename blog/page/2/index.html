@@ -9,7 +9,8 @@
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="我们经常会看到，很多App中点击StatusBar，tableView就会滚回顶部。 在UIScrollView中，scrollsToTop这个属性可以实现这个效果。 iOS官方注视中是这样解释的 When the user taps the status bar, the scroll view &hellip;">
+  <meta name="description" content="转自 CodingTime 前言 相信大家在使用cocoapods的时候，都感到在墙内速度怨念把。今天po主我在家更新代码时执行&#8217;pod install
+居然花了2个小时，各种怒从中来，遂整理了一下cocoapods提速的各种方法，给大家参考。 1.cocoapods安装提速 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +75,261 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/24/cocoapodsti-su-shou-ce/">Cocoapods提速手册</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-24T11:09:14+08:00" pubdate data-updated="true">Dec 24<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/12/24/cocoapodsti-su-shou-ce/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/12/24/cocoapodsti-su-shou-ce/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>转自 <a href="http://www.codingtime.info/post/posts/leng-zhi-shi/2014_07_28_speed_up_cocoapods">CodingTime</a></p>
+
+<blockquote><p>前言</p>
+
+<p>相信大家在使用cocoapods的时候，都感到在墙内速度怨念把。今天po主我在家更新代码时执行&#8217;pod install
+居然花了2个小时，各种怒从中来，遂整理了一下cocoapods提速的各种方法，给大家参考。</p></blockquote>
+
+<h3>1.cocoapods安装提速</h3>
+
+<p>我们在使用&#8217;gem install cocoapods&#8217;来安装cocoapods时，是不是感觉都奇慢无比？都是gem官方源被墙惹的祸！将gem的默认官方镜像更换成淘宝镜像可以解决这一问题。在命令行中执行</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem sources --remove https://rubygems.org/
+</span><span class='line'>gem sources -a https://ruby.taobao.org/
+</span><span class='line'>gem sources -l</span></code></pre></td></tr></table></div></figure>
+
+
+<p>若显示</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>*** CURRENT SOURCES ***
+</span><span class='line'>
+</span><span class='line'>https://ruby.taobao.org</span></code></pre></td></tr></table></div></figure>
+
+
+<p>则淘宝源替换成功。这是再执行gem install cocoapods会发现安装速度明显变快。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>注意：
+</span><span class='line'>更换淘宝gem镜像只是提高cocoapods安装速度和更新速度，不会影响任何pod命令的速度。＝  ＝</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2. 获取specs文件提速</h3>
+
+<p>cocoapods的spec文件都放在github中，而国内访问github总有些不顺畅，导致每次更新cocoapods spec文件都时候速度都比较慢。将cocoapods的spec版本库改成国内可以提升spec文件的更新速度。</p>
+
+<p>在命令行中执行</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pod repo remove master
+</span><span class='line'>pod repo add master https://gitcafe.com/akuandev/Specs.git
+</span><span class='line'>pod repo update</span></code></pre></td></tr></table></div></figure>
+
+
+<p>默认的cocoapods master仓库会被替换成国内gitcafe仓库。</p>
+
+<h3>3. pod install提速</h3>
+
+<p>每次执行<code>pod install</code>和<code>pod update</code>的时候，cocoapods都会默认更新一次spec仓库。这是一个比较耗时的操作。在确认spec版本哭不需要更新时，给这两个命令加一个参数跳过spec版本库更新</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pod install --verbose --no-repo-update
+</span><span class='line'>pod update --verbose --no-repo-update</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以明显提高这两个命令的执行速度。</p>
+
+<h3>4. 终极提速大法</h3>
+
+<p>在将gem、cocoapods spec文件都改成国内镜像之后，剩下的还能提速的步骤就是将各个pod的源码也拖到国内了。不过将pod list里5000多个pod全部镜像下来并一一修改spec文件，这工程量完全不是我等小屌丝能够完成的。目前似乎也没有哪个牛逼大厂完成这个壮举。所以所谓的终极提速大法，就是无论干什么最终都得有个好用的梯子。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/05/ios7yi-shang-xi-tong-zhong-%2Cuitextviewshu-ru-gun-dong-cuo-wei-de-bug/">iOS7以上系统中，UITextView输入滚动错位的bug</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-05T18:20:23+08:00" pubdate data-updated="true">Dec 5<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/12/05/ios7yi-shang-xi-tong-zhong-%2Cuitextviewshu-ru-gun-dong-cuo-wei-de-bug/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/12/05/ios7yi-shang-xi-tong-zhong-%2Cuitextviewshu-ru-gun-dong-cuo-wei-de-bug/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在iOS7中，<code>UITextView</code>多了一个<code>textContainer</code>属性用来描述一些Layout。</p>
+
+<p>在用</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">UITextView</span> <span class="o">*</span><span class="n">textView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UITextView</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个方法时，并没用初始化textContainer，会导致输入中文时页面滚动出现bug。修复这个bug，用以下的方法初始化。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@implementation</span> <span class="nc">SomeTextView</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">init</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">IOS7</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">NSTextStorage</span><span class="o">*</span> <span class="n">textStorage</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSTextStorage</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSLayoutManager</span><span class="o">*</span> <span class="n">layoutManager</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSLayoutManager</span> <span class="n">new</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">textStorage</span> <span class="nl">addLayoutManager:</span><span class="n">layoutManager</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSTextContainer</span> <span class="o">*</span><span class="n">textContainer</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSTextContainer</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithSize:</span><span class="n">CGSizeMake</span><span class="p">(</span><span class="n">someWidth</span><span class="p">,</span> <span class="n">someHeight</span><span class="p">)];</span>
+</span><span class='line'>        <span class="n">textContainer</span><span class="p">.</span><span class="n">widthTracksTextView</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">textContainer</span><span class="p">.</span><span class="n">heightTracksTextView</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">layoutManager</span> <span class="nl">addTextContainer:</span><span class="n">textContainer</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithFrame:</span><span class="n">CGRectZero</span> <span class="nl">textContainer:</span><span class="n">textContainer</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="n">init</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithFrame:</span><span class="p">(</span><span class="n">CGRect</span><span class="p">)</span><span class="nv">frame</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">IOS7</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">NSTextStorage</span><span class="o">*</span> <span class="n">textStorage</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSTextStorage</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSLayoutManager</span><span class="o">*</span> <span class="n">layoutManager</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSLayoutManager</span> <span class="n">new</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">textStorage</span> <span class="nl">addLayoutManager:</span><span class="n">layoutManager</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSTextContainer</span> <span class="o">*</span><span class="n">textContainer</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSTextContainer</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithSize:</span><span class="n">CGSizeMake</span><span class="p">(</span><span class="n">frame</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">kDeviceHeight</span><span class="p">)];</span>
+</span><span class='line'>        <span class="n">textContainer</span><span class="p">.</span><span class="n">widthTracksTextView</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">textContainer</span><span class="p">.</span><span class="n">heightTracksTextView</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">layoutManager</span> <span class="nl">addTextContainer:</span><span class="n">textContainer</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithFrame:</span><span class="n">frame</span> <span class="nl">textContainer:</span><span class="n">textContainer</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithFrame:</span><span class="n">frame</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -611,102 +867,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/">Session 216 Building Adaptive Apps With UIKit</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-10T17:32:04+08:00" pubdate data-updated="true">Jun 10<span>th</span>, 2014</time>
-        
-           | <a href="/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/#disqus_thread"
-             data-disqus-identifier="http://epingwang.me/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Session 216</p>
-
-<p>Jacob Xiao</p>
-
-<p>使用UIKit 创建 Universial App</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji/">Session 202 What&#8217;s New in Cocoa Touch 笔记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-10T15:24:54+08:00" pubdate data-updated="true">Jun 10<span>th</span>, 2014</time>
-        
-           | <a href="/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji/#disqus_thread"
-             data-disqus-identifier="http://epingwang.me/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Session 202</p>
-
-<p>Luke Hiesterman</p>
-
-<p>Core idea iOS8 &ndash;> Adaptivity</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -735,6 +895,14 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/04/22/he-bing-te-ding-de-git-commitdao-ling-%5B%3F%5D-ge-fen-zhi/">合并特定的Git Commit到另一个分支</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/18/shi-yong-clang-formatzheng-li-dai-ma/">使用clang-format整理代码</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/18/uiwebviewyu-javascriptjiao-hu/">UIWebView与Javascript交互</a>
       </li>
     
@@ -744,14 +912,6 @@
     
       <li class="post">
         <a href="/blog/2015/09/28/uitabbartu-pian-qu-xiao-tintcolorhe-ju-zhong-xian-shi/">UITabBar图片取消TintColor和居中显示</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/09/23/yan-zheng-ni-de-xcode/">验证你的XCode</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/03/feng-xian-tou-zi-xie-yi-%28term-sheet%29xiang-jie/">风险投资协议（Term Sheet）详解</a>
       </li>
     
   </ul>
@@ -767,7 +927,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Eping Wang -
+  Copyright &copy; 2016 - Eping Wang -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

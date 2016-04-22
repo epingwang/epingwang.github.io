@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.me/atom.xml" rel="self"/>
   <link href="http://epingwang.me/"/>
-  <updated>2015-12-18T18:04:28+08:00</updated>
+  <updated>2016-04-22T11:31:06+08:00</updated>
   <id>http://epingwang.me/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -12,6 +12,68 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[合并特定的Git Commit到另一个分支]]></title>
+    <link href="http://epingwang.me/blog/2016/04/22/he-bing-te-ding-de-git-commitdao-ling-%5B%3F%5D-ge-fen-zhi/"/>
+    <updated>2016-04-22T11:27:18+08:00</updated>
+    <id>http://epingwang.me/blog/2016/04/22/he-bing-te-ding-de-git-commitdao-ling-[?]-ge-fen-zhi</id>
+    <content type="html"><![CDATA[<h2>合并某个分支上的单个commit</h2>
+
+<p>首先，用git log查看一下你想选择哪些commits进行合并，例如：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>dd2e86 - 946992 -9143a9 - a6fd86 - 5a6057 [master]
+</span><span class='line'>           \
+</span><span class='line'>            76cada - 62ecb3 - b886a0 [feature]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>比如，feature 分支上的commit <code>62ecb3</code> 非常重要，它含有一个bug的修改，或其他人想访问的内容。无论什么原因，你现在只需要将<code>62ecb3</code> 合并到master，而不合并feature上的其他commits，所以我们用<code>git cherry-pick</code>命令来做：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git checkout master
+</span><span class='line'>git cherry-pick 62ecb3
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这样就好啦。现在62ecb3 就被合并到master分支，并在master中添加了commit（作为一个新的commit）。<code>cherry-pick</code> 和merge比较类似，如果git不能合并代码改动（比如遇到合并冲突），git需要你自己来解决冲突并手动添加commit。</p>
+
+<h2>合并某个分支上的一系列commits</h2>
+
+<p>在一些特性情况下，合并单个commit并不够，你需要合并一系列相连的commits。这种情况下就不要选择cherry-pick了，rebase 更适合。还以上例为例，假设你需要合并feature分支的commit76cada ~62ecb3 到master分支。
+首先需要基于feature创建一个新的分支，并指明新分支的最后一个commit：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git checkout -bnewbranch 62ecb3
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后，rebase这个新分支的commit到master（&mdash;ontomaster）。76cada^ 指明你想从哪个特定的commit开始。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git rebase --ontomaster 76cada^
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>得到的结果就是feature分支的commit 76cada ~62ecb3 都被合并到了master分支。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[使用clang-format整理代码]]></title>
+    <link href="http://epingwang.me/blog/2016/01/18/shi-yong-clang-formatzheng-li-dai-ma/"/>
+    <updated>2016-01-18T16:32:15+08:00</updated>
+    <id>http://epingwang.me/blog/2016/01/18/shi-yong-clang-formatzheng-li-dai-ma</id>
+    <content type="html"><![CDATA[<blockquote><p>在多人协作的项目中，我们不能保证每个成员都贡献出高质量的代码。这些不规范的代码就有可能成为日后的一个bug点，或者给以后的开发造成不必要的麻烦。仅仅靠代码规范、Code Review来规范的话，也难免有疏漏。因此最好有一款工具来帮助我们规范代码，我们选择LLVM中的clang-format</p></blockquote>
+
+<h3>初探</h3>
+
+<p>在<a href="http://llvm.org/releases/download.html">LLVM官网</a>，下载系统对应的Clang版本</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[UIWebView与Javascript交互]]></title>
@@ -2164,7 +2226,7 @@
 
 <p>一旦你的加急审核申请通过了，你的App会在一个工作日内被处理，如果这期间因为可能出现的其它问题导致再次被reject，你只需要重新提交修改后的build或补充说明（metadata reject）就行，你的App将会一直处于加急审核队列，直到审核通过。</p>
 
-<p>苹果加急审核邮箱：<a href="&#x6d;&#x61;&#105;&#x6c;&#x74;&#111;&#58;&#65;&#x70;&#112;&#82;&#101;&#118;&#x69;&#101;&#119;&#64;&#97;&#x70;&#x70;&#112;&#x6c;&#101;&#x2e;&#x63;&#111;&#109;">&#65;&#112;&#112;&#82;&#101;&#x76;&#105;&#x65;&#119;&#x40;&#x61;&#112;&#112;&#112;&#x6c;&#101;&#46;&#99;&#x6f;&#x6d;</a></p>
+<p>苹果加急审核邮箱：<a href="&#x6d;&#x61;&#105;&#x6c;&#x74;&#111;&#58;&#x41;&#112;&#112;&#82;&#x65;&#x76;&#x69;&#x65;&#119;&#64;&#x61;&#x70;&#x70;&#x70;&#108;&#x65;&#46;&#99;&#111;&#109;">&#65;&#x70;&#x70;&#x52;&#x65;&#118;&#x69;&#101;&#119;&#64;&#97;&#x70;&#112;&#112;&#x6c;&#x65;&#x2e;&#99;&#111;&#x6d;</a></p>
 
 <p>网页提交地址：<a href="https://developer.apple.com/appstore/contact/?topic=expedite">https://developer.apple.com/appstore/contact/?topic=expedite</a></p>
 
@@ -2645,537 +2707,6 @@ H: (默认)横向约束
 </span></code></pre></td></tr></table></div></figure>
 
 
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Session 216 Building Adaptive Apps With UIKit]]></title>
-    <link href="http://epingwang.me/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/"/>
-    <updated>2014-06-10T17:32:04+08:00</updated>
-    <id>http://epingwang.me/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit</id>
-    <content type="html"><![CDATA[<p>Session 216</p>
-
-<p>Jacob Xiao</p>
-
-<p>使用UIKit 创建 Universial App</p>
-
-<!--more-->
-
-
-<h2>Summary</h2>
-
-<ul>
-<li>Adaptive Concepts</li>
-<li>View Controllers</li>
-<li>Interface Builder</li>
-</ul>
-
-
-<h3>Size Classes</h3>
-
-<p>之前区分设备方向，使用 <code>UIInterfaceOrientation</code>(iPhone) 和 <code>UIUserInterfaceIdiom</code>(iPad)</p>
-
-<p>现在用 <code>Size Classes</code> 取代</p>
-
-<p>在iPad上:</p>
-
-<ul>
-<li>Potrait: Regular Horizontal &amp; Regular Vertical</li>
-<li>Landscape: Regular Horizontal &amp; Regular Vertical</li>
-</ul>
-
-
-<p>在iPhone上:</p>
-
-<ul>
-<li>Potrait: Compact Horizontal &amp; Regular Vertical</li>
-<li>Landscape: Compact Hotizontal &amp; Compact Vertical</li>
-</ul>
-
-
-<h3>UITraitCollection</h3>
-
-<h4>成员:</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">UIUserInterfaceSizeClass</span> <span class="n">horizontalSizeClass</span><span class="p">;</span>
-</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">UIUserInterfaceSizeClass</span> <span class="n">verticalSizeClass</span><span class="p">;</span>
-</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">displayScale</span><span class="p">;</span>
-</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">UIUserInterfaceIdiom</span> <span class="n">userInterfaceIdiom</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Trait Environments</h4>
-
-<ul>
-<li>UIScreen</li>
-<li>UIWindow</li>
-<li>UIViewController</li>
-<li>UIView</li>
-<li>UIPresentationController</li>
-</ul>
-
-
-<p>所有层级共享同样的<code>UITraitCollection</code></p>
-
-<p>当<code>TraitCollection</code>发生改变时，触发</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">traitCollectionDidChange:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nv">previousTraitCollection</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>重写这个方法来响应方向变化事件</p>
-
-<h4>Trait Collections</h4>
-
-<p>可以自己创建<code>UITraitCollection</code></p>
-
-<p>可适用于横屏播放器之类的界面</p>
-
-<p>可用于UITraitCollection的比较</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">UITraitCollection</span> <span class="o">*</span><span class="n">collection</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">traitCollection</span><span class="p">;</span>
-</span><span class='line'><span class="n">UITraitCollection</span> <span class="o">*</span><span class="n">newCollection</span> <span class="o">=</span> <span class="p">[</span><span class="n">UITraitCollection</span> <span class="nl">traitCollectionWithHorizontalSizeClass:</span><span class="n">UIUserInterfaceSizeClassCompact</span><span class="p">];</span>
-</span><span class='line'><span class="p">[</span><span class="n">collection</span> <span class="nl">containsTraitsInCollection:</span><span class="n">newCollection</span><span class="p">];</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>可以合并<code>UITraitCollection</code></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nf">traitCollectionWithTraitsFromCollections:</span><span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">traitCollections</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>其中 <code>Compact</code> + <code>Regular</code> = <code>Regular</code></p>
-
-<h3>Appearance Proxy</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">+</span><span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">appearanceForTraitCollection:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nv">trait</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>Customize views for different traits</li>
-<li>UIImage 可以响应这个方法，返回different version of image</li>
-<li>UIImageAssets</li>
-</ul>
-
-
-<h3>Adaptive View Controllers</h3>
-
-<h4>Split View Controller</h4>
-
-<p>现在Split View Controller 是Universal的</p>
-
-<h4>生命周期</h4>
-
-<p>Setup开始时:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">willTransitionToTraitCollection:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nv">newCollection</span> <span class="nf">withTransitionCoordinator:</span><span class="p">(</span><span class="kt">id</span><span class="o">&lt;</span><span class="n">UIViewControllerTransitionCoordinator</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">coordinator</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在这个方法可以自定义动画，并执行completion block，其顺序在下面方法之后。</p>
-
-<p>Setup结束时:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">traitCollectionDidChange:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nv">previousTraitCollection</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Showing View Controllers</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">navigationController</span> <span class="nl">pushViewController:</span><span class="p">...];</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这个机制被废弃</p>
-
-<p>取而代之的是</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">showViewController:</span><span class="p">(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">vc</span> <span class="nf">sender:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">showDetailViewController:</span><span class="p">(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">vc</span> <span class="nf">sender:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这两个方法总是保证，无论当前ViewController被包含在<code>NavigationController</code>, <code>SplitViewController</code>, 还是没有被包含在任何ViewController中，都会有正确的表现。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Session 202 What's New in Cocoa Touch 笔记]]></title>
-    <link href="http://epingwang.me/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji/"/>
-    <updated>2014-06-10T15:24:54+08:00</updated>
-    <id>http://epingwang.me/blog/2014/06/10/session-202-whats-new-in-cocoa-touch-bi-ji</id>
-    <content type="html"><![CDATA[<p>Session 202</p>
-
-<p>Luke Hiesterman</p>
-
-<p>Core idea iOS8 &ndash;> Adaptivity</p>
-
-<!--more-->
-
-
-<h2>Adaptive Layout</h2>
-
-<p>Orientations, sizes, and margins</p>
-
-<h3>Adaptive Interface Orientation</h3>
-
-<p>Layout 不再关心设备的方向以及设备的类型，而只关心屏幕画布的尺寸</p>
-
-<p>范例: UITraitCollection
-成员属性:</p>
-
-<ul>
-<li>horizontalSizeClass</li>
-<li>displayScale</li>
-<li>userInterfaceIdiom</li>
-<li>verticalSizeClass</li>
-</ul>
-
-
-<p>UIViewController Conforms to <code>UITraitEnviroment</code>
-当屏幕尺寸变化（设备方向改变）时，会调用</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">traitCollectionDidChange:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nv">previousTraitCollection</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="c1">// 使用Layout设置CollectionView</span>
-</span><span class='line'>    <span class="n">UITraitCollection</span> <span class="o">*</span><span class="n">currentTraits</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">traitCollection</span><span class="p">;</span>
-</span><span class='line'>    <span class="n">UICollectionViewLayout</span> <span class="o">*</span><span class="n">newLayout</span> <span class="o">=</span> <span class="n">currentTraits</span><span class="p">.</span><span class="n">horizontalSizeClass</span> <span class="o">==</span> <span class="n">UIUserInterfaceSizeClassCompact</span> <span class="o">?</span> <span class="n">self</span><span class="p">.</span><span class="n">squaresLayout</span> <span class="o">:</span> <span class="n">self</span><span class="p">.</span><span class="n">rectanglesLayout</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">collectionView</span> <span class="nl">setCollectionViewLayout:</span><span class="n">newLayout</span> <span class="nl">animated:</span><span class="n">YES</span><span class="p">];</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Adaptive Margins</h3>
-
-<p>UIViewController 的属性:</p>
-
-<ul>
-<li>bottomLayoutGuide</li>
-<li>topLayoutGuide</li>
-<li>leftLayoutGuide</li>
-<li>rightLayoutGuide</li>
-</ul>
-
-
-<p>可以确定四个边界（不用计算Navigation、ToolBar的高度）</p>
-
-<p>See More: <a href="http://epingwang.github.io/blog/2014/06/10/session-216-building-adaptive-apps-with-uikit/">Building Adaptive Apps with UIKit</a></p>
-
-<h3>Adaptive View Controllers</h3>
-
-<h4>Rotation Deprecations</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">willRotateToInterfaceOrientation:</span><span class="p">(</span><span class="n">UIInterfaceOrientation</span><span class="p">)</span><span class="nv">toInterfaceOrientation</span> <span class="nf">duration:</span><span class="p">(</span><span class="n">NSTimeInterval</span><span class="p">)</span><span class="nv">duration</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">willAnimateFirstHalfOfRotationToInterfaceOrientation:</span><span class="p">(</span><span class="n">UIInterfaceOrientation</span><span class="p">)</span><span class="nv">toInterfaceOrientation</span> <span class="nf">duration:</span><span class="p">(</span><span class="n">NSTimeInterval</span><span class="p">)</span><span class="nv">duration</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didRotateFromInterfaceOrientation:</span><span class="p">(</span><span class="n">UIInterfaceOrientation</span><span class="p">)</span><span class="nv">fromInterfaceOrientation</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">shouldAutomaticallyForwardRotationMethods</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="n">UIInterfaceOrientation</span><span class="p">)</span><span class="nf">interfaceOrientation</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nf">rotatingFooterView</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nf">rotatingHeaderView</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>取而代之的新方法:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">viewWillTransitionToSize:</span><span class="p">(</span><span class="n">CGSize</span><span class="p">)</span><span class="nv">size</span> <span class="nf">withTransitionCoordinator:</span><span class="p">(</span><span class="kt">id</span> <span class="o">&lt;</span><span class="n">UIViewControllerTransitionCoordinator</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">coordinator</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">8</span><span class="n">_0</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Adaptive View Controller Hierarchies</h3>
-
-<h4>UISplitViewController</h4>
-
-<p>Primary &ndash; Secondary (TableView &ndash; Detail) 视图</p>
-
-<p>现在可以用<code>Split View Controller - Detail View Controller</code></p>
-
-<ul>
-<li>全设备支持</li>
-<li>处理 <code>primary-secondary</code> 样式的视图交互</li>
-<li>增强的可定制性</li>
-</ul>
-
-
-<p>See more: <a href="">View Controller Advancements in iOS8</a></p>
-
-<h3>Adaptive Presentations</h3>
-
-<p>适应不同设备的 <code>弹出视图(Popovers)</code>、<code>SearchBar</code>、<code>警告(Alerts)</code></p>
-
-<h4>Popovers</h4>
-
-<p>iPad上不再需要<code>UIPopOverController</code>，<code>Popover</code>以后做为UIViewController的Style使用
-在iPhone上显示为PresentViewController样式</p>
-
-<h4>Search Results</h4>
-
-<p><code>UISearchDisplayController</code> replaced by</p>
-
-<p><code>UISearchController</code> &ndash;> <code>UIViewController</code> subclass</p>
-
-<ul>
-<li><p>可以使用UIViewController的一切特性</p></li>
-<li><p>可以定制UISearchController的UI</p></li>
-</ul>
-
-
-<h4>Alerts</h4>
-
-<p><code>UIAlertController</code> replaces <code>UIAlertView</code> and <code>UIActionSheet</code></p>
-
-<p>UIAlertController 也是 UIViewController 的 subclass</p>
-
-<p>See More: <a href="">A Look Inside Presentation Controllers</a></p>
-
-<h2>Testing with the iOS Simulator</h2>
-
-<p>Simulator 可以直接调整 Size</p>
-
-<ul>
-<li>Resizeable iPhone</li>
-<li>Resizeable iPad</li>
-</ul>
-
-
-<h2>Visual Effects</h2>
-
-<p>UIVisualEffectView</p>
-
-<p>可以接收<code>UIEffect</code>，来影响View及Subview上的Layer</p>
-
-<ul>
-<li>UIBlurEffect</li>
-<li>UIVibrancyEffect</li>
-</ul>
-
-
-<h2>Image Assets</h2>
-
-<p>直接返回正确的图片</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nf">imageNamed:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span>
-</span><span class='line'>               <span class="nf">inBundle:</span><span class="p">(</span><span class="n">NSBundle</span> <span class="o">*</span><span class="p">)</span><span class="nv">bundle</span>
-</span><span class='line'><span class="nf">compatibleWithTraitCollection:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nv">traitCollection</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Condensing Bars</h2>
-
-<p>当用户滚动Scroll时，Navigation Bar 变小</p>
-
-<p>See More: <a href="">Creating Custom iOS User Interfaces</a></p>
-
-<h2>Self-sizing Table Cells</h2>
-
-<p><strong> cell的 <code>height</code> 将无需在 <code>heightForRowAtIndexPath:</code> 中实现 </strong></p>
-
-<p>cell 可以自己计算它的尺寸</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithStyle:</span><span class="p">(</span><span class="n">UITableViewCellStyle</span><span class="p">)</span><span class="nv">style</span> <span class="nf">reuseIdentifier:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">reuseIdentifier</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithStyle:</span><span class="n">style</span> <span class="nl">reuseIdentifier:</span><span class="n">reuseIdentifier</span><span class="p">];</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">contentView</span> <span class="nl">addConstraints:</span><span class="p">[</span><span class="n">NSLayoutConstraint</span>
-</span><span class='line'>                                          <span class="nl">constraintsWithVisualFormat:</span><span class="s">@&quot;V:|-myTextView-|&quot;</span>
-</span><span class='line'>                                          <span class="nl">options:</span><span class="mi">0</span>
-</span><span class='line'>                                          <span class="nl">metrics:</span><span class="nb">nil</span>
-</span><span class='line'>                                            <span class="nl">views:</span><span class="n">NSDictionaryOfVariableBindings</span><span class="p">(</span><span class="n">_myTextView</span><span class="p">)]];</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">contentView</span> <span class="nl">addConstraints:</span><span class="p">[</span><span class="n">NSLayoutConstraint</span>
-</span><span class='line'>                                          <span class="nl">constraintsWithVisualFormat:</span><span class="s">@&quot;H:|-myTextView-|&quot;</span>
-</span><span class='line'>                                          <span class="nl">options:</span><span class="mi">0</span>
-</span><span class='line'>                                          <span class="nl">metrics:</span><span class="nb">nil</span>
-</span><span class='line'>                                            <span class="nl">views:</span><span class="n">NSDictionaryOfVariableBindings</span><span class="p">(</span><span class="n">_myTextView</span><span class="p">)]];</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>See More: <a href="">What&rsquo;s new in Table and Collection Views</a></p>
-
-<h2>App Extensions</h2>
-
-<p>可以写系统增强插件，例如在<code>Photo</code>中调用我们写的<code>Filter软件</code>或者<code>Share Extention</code></p>
-
-<ul>
-<li>Photo</li>
-<li>Sharing</li>
-<li>Notification Center Widgets</li>
-<li>Action without UI</li>
-<li>Document providers (向其他应用提供内容的Extension)</li>
-<li>Custom keyboards</li>
-</ul>
-
-
-<p>See More: <a href="">Creating Extensions for iOS and OS X</a></p>
-
-<h2>Notification Updates</h2>
-
-<ul>
-<li>不需要Show UI的Notification，不再需要用户的Permission</li>
-<li>Notification可以进行用户交互</li>
-<li>可以进行基于地理位置的Notification</li>
-<li>payload size (256 bytes &ndash;> 1k)</li>
-</ul>
-
-
-<p>See More: <a href="">What&rsquo;s New in iOS Notifications</a></p>
-
-<h2>Document Picker</h2>
-
-<p>UIDocumentPickerViewController</p>
-
-<p>System UI for selection documents</p>
-
-<ul>
-<li>Local documents</li>
-<li>iCloud documents</li>
-<li>Third-party document providers</li>
-</ul>
-
-
-<p>See more: <a href="">Building a Document-based App</a></p>
-
-<h2>SDK Modernization</h2>
-
-<ul>
-<li>NS_DESIGNATED_INITIALIZER</li>
-<li>id &ndash;> instancetype</li>
-<li>Additional @properties</li>
-</ul>
-
-
-<h2>Handoff</h2>
-
-<ul>
-<li>通过Handoff用户可以在多设备之间共享操作</li>
-<li>UIKit 和 AppKit 均支持 Handoff</li>
-</ul>
-
-
-<p>See More: <a href="">Adopting Handoff on iOS and OS X</a></p>
-
-<h2>More Goodies in iOS</h2>
-
-<h2>Photos</h2>
-
-<ul>
-<li>Photo Library 的读写权限</li>
-<li>Custom CoreImage Filters</li>
-</ul>
-
-
-<p>See More: <a href="">Introducing the Photos Frameword</a></p>
-
-<h2>CloudKit</h2>
-
-<ul>
-<li>更多的API，控制iCloud上的数据</li>
-<li>创建一个 C/S App，无需搭设服务器</li>
-</ul>
-
-
-<p>See More: <a href="">Introducing CloudKit</a></p>
-
-<h2>HealthKit</h2>
-
-<p>See More: <a href="">Introducing HealthKit</a></p>
-
-<h2>HomeKit</h2>
-
-<p>See More: <a href="">Introducing HomeKit</a></p>
-
-<h2>Local Authentication</h2>
-
-<p>开放的指纹识别系统</p>
-
-<ul>
-<li>TouchID</li>
-</ul>
-
-
-<p>See More: <a href="">Keychain and Authentication with Touch ID</a></p>
-
-<h2>SceneKit</h2>
-
-<p>跨设备的3D渲染——For iOS</p>
-
-<h2>Core Location</h2>
-
-<ul>
-<li>可以获得 Indoor Location，获得精确的楼层信息</li>
-<li>更省电</li>
-<li>当使用时获得用户的授权</li>
-</ul>
 
 ]]></content>
   </entry>
