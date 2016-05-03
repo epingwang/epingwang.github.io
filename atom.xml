@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.me/atom.xml" rel="self"/>
   <link href="http://epingwang.me/"/>
-  <updated>2016-04-22T11:31:06+08:00</updated>
+  <updated>2016-05-03T16:37:07+08:00</updated>
   <id>http://epingwang.me/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -12,6 +12,141 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[如何优雅的本地化xib/storyboard]]></title>
+    <link href="http://epingwang.me/blog/2016/05/03/ru-he-you-ya-de-ben-di-hua-xib-slash-storyboard/"/>
+    <updated>2016-05-03T15:19:52+08:00</updated>
+    <id>http://epingwang.me/blog/2016/05/03/ru-he-you-ya-de-ben-di-hua-xib-slash-storyboard</id>
+    <content type="html"><![CDATA[<blockquote><p>最近需要做一个项目的国际化（本地化），项目中用到了大量的xib，但是官方指南的方法不是很好用。经过一番研究，想到一个比较优雅的方法，分享给大家。</p></blockquote>
+
+<h2>现有方法的问题</h2>
+
+<p>我们都知道，代码中的String可以用<code>NSLocalizedString()</code>，从<code>Localizable.strings</code>取得本地化的字符串。然而在xib/storyboard中，我们需要给每个xib添加strings文件。这样翻译会分散在项目各处，产生很多重复的字符串，维护起来非常麻烦。而且这样做会过度依赖系统的语言环境，难以定制一些奇怪的功能（比如某些情况，在中文环境中也显示英文）。</p>
+
+<h2>Localizable UI</h2>
+
+<p>在xib中，带默认文字、需要Localization的控件主要就是以下几个：</p>
+
+<ul>
+<li>UILabel</li>
+<li>UIButton</li>
+<li>UITextField</li>
+<li>UIBarButtonItem</li>
+<li>UISearchBar</li>
+</ul>
+
+
+<p>我们以常见的<code>UILabel</code>/<code>UIButton</code>/<code>UITextField</code>为例。</p>
+
+<h4>创建Localizable Subclass</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">LTLSLocalizableLabel</span> : <span class="nc">UILabel</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">LTLSLocalizableLabel</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">awakeFromNib</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">text</span><span class="p">.</span><span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">LTLSLocalizedString</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">text</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">text</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">LTLSLocalizableTextField</span> : <span class="nc">UITextField</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">LTLSLocalizableTextField</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">awakeFromNib</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">placeholder</span><span class="p">.</span><span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">placeholder</span> <span class="o">=</span> <span class="n">LTLSLocalizedString</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">placeholder</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">placeholder</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">LTLSLocalizableButton</span> : <span class="nc">UIButton</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">LTLSLocalizableButton</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">awakeFromNib</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">NSArray</span> <span class="o">*</span><span class="n">stateArray</span> <span class="o">=</span> <span class="err">@</span><span class="p">[</span><span class="err">@</span><span class="p">(</span><span class="n">UIControlStateNormal</span><span class="p">),</span> <span class="err">@</span><span class="p">(</span><span class="n">UIControlStateSelected</span><span class="p">),</span> <span class="err">@</span><span class="p">(</span><span class="n">UIControlStateHighlighted</span><span class="p">),</span> <span class="err">@</span><span class="p">(</span><span class="n">UIControlStateDisabled</span><span class="p">)];</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="n">NSNumber</span> <span class="o">*</span><span class="n">stateNum</span> <span class="k">in</span> <span class="n">stateArray</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">UIControlState</span> <span class="n">state</span> <span class="o">=</span> <span class="p">[</span><span class="n">stateNum</span> <span class="n">unsignedIntegerValue</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSString</span> <span class="o">*</span><span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nl">titleForState:</span><span class="n">state</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">title</span><span class="p">.</span><span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="p">[</span><span class="n">self</span> <span class="nl">setTitle:</span><span class="n">LTLSLocalizedString</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span> <span class="nl">forState:</span><span class="n">state</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后将xib中相应的控件的Class替换为LocalizableClass即可</p>
+
+<p><img class="center" src="http://epingwang.me/images/2016/05/LocalizableClass.png"></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[合并特定的Git Commit到另一个分支]]></title>
@@ -2226,7 +2361,7 @@
 
 <p>一旦你的加急审核申请通过了，你的App会在一个工作日内被处理，如果这期间因为可能出现的其它问题导致再次被reject，你只需要重新提交修改后的build或补充说明（metadata reject）就行，你的App将会一直处于加急审核队列，直到审核通过。</p>
 
-<p>苹果加急审核邮箱：<a href="&#x6d;&#x61;&#105;&#x6c;&#x74;&#111;&#58;&#x41;&#112;&#112;&#82;&#x65;&#x76;&#x69;&#x65;&#119;&#64;&#x61;&#x70;&#x70;&#x70;&#108;&#x65;&#46;&#99;&#111;&#109;">&#65;&#x70;&#x70;&#x52;&#x65;&#118;&#x69;&#101;&#119;&#64;&#97;&#x70;&#112;&#112;&#x6c;&#x65;&#x2e;&#99;&#111;&#x6d;</a></p>
+<p>苹果加急审核邮箱：<a href="&#109;&#97;&#105;&#x6c;&#x74;&#x6f;&#58;&#x41;&#112;&#112;&#82;&#101;&#x76;&#105;&#x65;&#x77;&#x40;&#97;&#x70;&#112;&#112;&#108;&#101;&#46;&#99;&#x6f;&#x6d;">&#x41;&#x70;&#112;&#82;&#x65;&#118;&#x69;&#101;&#x77;&#64;&#97;&#x70;&#112;&#112;&#x6c;&#x65;&#46;&#x63;&#111;&#x6d;</a></p>
 
 <p>网页提交地址：<a href="https://developer.apple.com/appstore/contact/?topic=expedite">https://developer.apple.com/appstore/contact/?topic=expedite</a></p>
 
@@ -2528,185 +2663,6 @@ H: (默认)横向约束
   -(void) setFrame:(CGRect)frame
  </code></p></li>
 </ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Session 214 View Controller Advancements for iOS8 笔记]]></title>
-    <link href="http://epingwang.me/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji/"/>
-    <updated>2014-06-11T15:52:27+08:00</updated>
-    <id>http://epingwang.me/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji</id>
-    <content type="html"><![CDATA[<p>Session 214</p>
-
-<p>Bruce D. Nilo</p>
-
-<h2>OverView</h2>
-
-<ul>
-<li>A brief discussion about UIKit&rsquo;s new Adaptive APIs</li>
-<li>New UISplitViewController features</li>
-<li>Some new ways to condense and hide bars</li>
-<li>Presentations and popovers</li>
-<li>New API that uses transition coordinators</li>
-<li>Coordinate spaces</li>
-</ul>
-
-
-<!--more-->
-
-
-<h2>Support for Adaptive User Interfaces</h2>
-
-<p>Universal App中，相同的页面会展示为不同的Layout</p>
-
-<p>在iOS8之前，Layout取决于</p>
-
-<ul>
-<li>设备类型      Device type</li>
-<li>设备方向      Interface Orientation</li>
-<li>Window大小  Size</li>
-</ul>
-
-
-<p>iOS8之后:</p>
-
-<ul>
-<li>Traits and trait collections</li>
-<li>Size</li>
-</ul>
-
-
-<h3>什么是 &ldquo;trait collection&rdquo;?</h3>
-
-<p>Trait collection 是一个trait的集合</p>
-
-<p>例如: 在一个竖屏的 iPhone5s 中</p>
-
-<table>
-<thead>
-<tr>
-<th>Trait </th>
-<th> Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>horizontalSizeClass </td>
-<td> Compact</td>
-</tr>
-<tr>
-<td>verticalSizeClass </td>
-<td> Regular</td>
-</tr>
-<tr>
-<td>userInterfaceIdiom </td>
-<td> Phone</td>
-</tr>
-<tr>
-<td>displayScale </td>
-<td> 2.0</td>
-</tr>
-</tbody>
-</table>
-
-
-<h3>什么是 &ldquo;size class&rdquo;?</h3>
-
-<ul>
-<li>Size class 是简单定义<code>可用空间</code>的一个 <code>trait</code></li>
-<li>可以定义在Horizontal方向和Vertical方向是Compact or Regular</li>
-</ul>
-
-
-<h3>Trait Environments</h3>
-
-<p>在iOS8中, <code>UIView</code>和<code>UIViewController</code>均 conforms <code>&lt;UITraitEnvironment&gt;</code></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@protocol</span> <span class="nc">UITraitEnvironment</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
-</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">UITraitCollection</span> <span class="o">*</span><span class="n">traitCollection</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">traitCollectionDidChange:</span><span class="p">(</span><span class="n">UITraitCollection</span> <span class="o">*</span><span class="p">)</span><span class="nv">previousTraitCollection</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>并不是每个View都有自己的TraitCollection，当获取<code>Leaf View</code>的<code>traitCollection</code>时，会沿着View的hierarchy找到最近的traitCollection</p>
-
-<h2>Split View Controller</h2>
-
-<p>UISplitViewControllers can now be used on the phone</p>
-
-<p>新增了这个方法:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">UISplitViewController</span> : <span class="nc">UIViewController</span>
-</span><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">getter</span><span class="o">=</span><span class="n">isCollapsed</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">collapsed</span>  <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">8</span><span class="n">_0</span><span class="p">);</span>
-</span><span class='line'><span class="k">@end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Expanded split view controller</h4>
-
-<p><img class="center" src="http://epingwang.me/images/2014/06/SplitViewController.jpg"></p>
-
-<h4>Collapsed split view controller</h4>
-
-<p><img class="center" src="http://epingwang.me/images/2014/06/SplitViewControllerCollapsed.jpg"></p>
-
-<h3>在ViewController中添加SplitViewcontroller，并启用Collapse</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">svc</span><span class="p">.</span><span class="n">preferredDisplayMode</span> <span class="o">=</span> <span class="n">UISplitViewControllerDisplayModeAllVisible</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>控制分栏的宽度</h3>
-
-<p>通过以下几个属性</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">preferredPrimaryColumnWidthFraction</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">8</span><span class="n">_0</span><span class="p">);</span>
-</span><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">minimumPrimaryColumnWidth</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">8</span><span class="n">_0</span><span class="p">);</span>
-</span><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">maximumPrimaryColumnWidth</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">8</span><span class="n">_0</span><span class="p">);</span>
-</span><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span><span class="n">readonly</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">primaryColumnWidth</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">8</span><span class="n">_0</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Condesing Bars</h2>
-
-<p>现在隐藏NavigationBar和ToolBar变得相当简单，只需要以下几个属性</p>
-
-<p>自动隐藏:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">condensesBarsOnSwipe</span><span class="p">;</span>
-</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">condensesBarsWhenKeyboardAppears</span><span class="p">;</span>
-</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">hidesBarsWhenVerticallyCompact</span><span class="p">;</span>
-</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">hidesBarsOnTap</span><span class="p">;</span>
-</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">UITapGestureRecognizer</span> <span class="o">*</span><span class="n">barHideGestureRecognizer</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>手动控制:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">,</span> <span class="n">getter</span> <span class="o">=</span> <span class="n">isNavigationBarCondensed</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">navigationBarCondensed</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
 
 ]]></content>
   </entry>

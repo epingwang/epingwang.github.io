@@ -9,8 +9,39 @@
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="转自 CodingTime 前言 相信大家在使用cocoapods的时候，都感到在墙内速度怨念把。今天po主我在家更新代码时执行&#8217;pod install
-居然花了2个小时，各种怒从中来，遂整理了一下cocoapods提速的各种方法，给大家参考。 1.cocoapods安装提速 &hellip;">
+  <meta name="description" content="iOS8中，可交互推送/通知可以在锁屏界面/通知中心/推送消息Banner上以按钮形式与App交互。 注册可交互推送 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +106,140 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/">iOS8中可交互通知(NotificationAction)初探</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-01-16T15:30:39+08:00" pubdate data-updated="true">Jan 16<span>th</span>, 2015</time>
+        
+           | <a href="/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>iOS8中，可交互推送/通知可以在<strong>锁屏界面/通知中心/推送消息Banner</strong>上以按钮形式与App交互。</p>
+
+<h2>注册可交互推送</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">UIMutableUserNotificationAction</span> <span class="o">*</span><span class="n">acceptAction</span> <span class="o">=</span>
+</span><span class='line'><span class="p">[[</span><span class="n">UIMutableUserNotificationAction</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 回调时按钮的ID</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s">@&quot;ACCEPT_IDENTIFIER&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 按钮title(Facebook使用了emoji)</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;Accept&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/* UIUserNotificationActivationModeBackground </span>
+</span><span class='line'><span class="cm">* APP会在后台启动</span>
+</span><span class='line'><span class="cm">* UIUserNotificationActivationModeForeground</span>
+</span><span class='line'><span class="cm">* APP会在前台启动</span>
+</span><span class='line'><span class="cm">*/</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">activationMode</span> <span class="o">=</span> <span class="n">UIUserNotificationActivationModeBackground</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// YES为红色，NO为蓝色</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">destructive</span> <span class="o">=</span> <span class="n">NO</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 是否需要解锁</span>
+</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">authenticationRequired</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="n">UIMutableUserNotificationCategory</span> <span class="o">*</span><span class="n">category</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIMutableUserNotificationCategory</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 消息的ID(区分服务器推送过来时消息的种类)</span>
+</span><span class='line'><span class="n">category</span><span class="p">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s">@&quot;INVITE_CATEGORY&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Alert形式展现的推送</span>
+</span><span class='line'><span class="p">[</span><span class="n">category</span> <span class="nl">setActions:</span><span class="err">@</span><span class="p">[</span><span class="n">acceptAction</span><span class="p">]</span> <span class="nl">forContext:</span><span class="n">UIUserNotificationActionContextDefault</span><span class="p">];</span>
+</span><span class='line'><span class="c1">// Banner/锁屏形式展现的推送</span>
+</span><span class='line'><span class="p">[</span><span class="n">category</span> <span class="nl">setActions:</span><span class="err">@</span><span class="p">[</span><span class="n">acceptAction</span><span class="p">]</span> <span class="nl">forContext:</span><span class="n">UIUserNotificationActionContextMinimal</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">UIUserNotificationSettings</span> <span class="o">*</span><span class="n">settings</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIUserNotificationSettings</span> <span class="nl">settingsForTypes:</span>
+</span><span class='line'><span class="n">UIUserNotificationTypeAlert</span> <span class="o">|</span> <span class="n">UIUserNotificationTypeBadge</span> <span class="o">|</span> <span class="n">UIUserNotificationTypeSound</span> <span class="nl">categories:</span><span class="p">[</span><span class="n">NSSet</span> <span class="nl">setWithObject:</span><span class="n">category</span><span class="p">]];</span>
+</span><span class='line'><span class="p">[[</span><span class="n">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nl">registerUserNotificationSettings:</span><span class="n">settings</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Discussion:</h4>
+
+<ul>
+<li>当Contenxt为<code>UIUserNotificationActionContextMinimal</code>时，最多展现两个按钮。</li>
+<li>当Contenxt为<code>UIUserNotificationActionContextDefault</code>时，最多展现四个按钮。</li>
+<li>当Contenxt为<code>UIUserNotificationActionContextMinimal</code>时，第一个按钮在右边，第二个按钮在左边。</li>
+<li>当Contenxt为<code>UIUserNotificationActionContextMinimal</code>时，若两个按钮的<code>destructive</code>属性都为NO，则第一个为蓝色，第二个为灰色。</li>
+<li>当Contenxt为<code>UIUserNotificationActionContextDefault</code>时，按钮顺序由上到下排列。</li>
+</ul>
+
+
+<h2>Schedule推送</h2>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -809,64 +974,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji/">Session 214 View Controller Advancements for iOS8 笔记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-11T15:52:27+08:00" pubdate data-updated="true">Jun 11<span>th</span>, 2014</time>
-        
-           | <a href="/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji/#disqus_thread"
-             data-disqus-identifier="http://epingwang.me/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Session 214</p>
-
-<p>Bruce D. Nilo</p>
-
-<h2>OverView</h2>
-
-<ul>
-<li>A brief discussion about UIKit&rsquo;s new Adaptive APIs</li>
-<li>New UISplitViewController features</li>
-<li>Some new ways to condense and hide bars</li>
-<li>Presentations and popovers</li>
-<li>New API that uses transition coordinators</li>
-<li>Coordinate spaces</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/06/11/session-214-view-controller-advancements-for-ios8-bi-ji/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -895,6 +1002,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/05/03/ru-he-you-ya-de-ben-di-hua-xib-slash-storyboard/">如何优雅的本地化xib/storyboard</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/04/22/he-bing-te-ding-de-git-commitdao-ling-%5B%3F%5D-ge-fen-zhi/">合并特定的Git Commit到另一个分支</a>
       </li>
     
@@ -908,10 +1019,6 @@
     
       <li class="post">
         <a href="/blog/2015/10/30/at-dynamicshi-yong-xiao-jie/">@dynamic使用小结</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/09/28/uitabbartu-pian-qu-xiao-tintcolorhe-ju-zhong-xian-shi/">UITabBar图片取消TintColor和居中显示</a>
       </li>
     
   </ul>

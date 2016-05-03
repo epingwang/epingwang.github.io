@@ -9,10 +9,7 @@
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="合并某个分支上的单个commit 首先，用git log查看一下你想选择哪些commits进行合并，例如： 1
-2
-3
-dd2e86 - 946992 -9143a9 - a6fd86 - 5a6057 [master] \ 76cada - 62ecb3 - b886a0 [feature] &hellip;">
+  <meta name="description" content="最近需要做一个项目的国际化（本地化），项目中用到了大量的xib，但是官方指南的方法不是很好用。经过一番研究，想到一个比较优雅的方法，分享给大家。 现有方法的问题 我们都知道，代码中的String可以用NSLocalizedString()，从Localizable.strings取得本地化的字符串 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +74,171 @@ dd2e86 - 946992 -9143a9 - a6fd86 - 5a6057 [master] \ 76cada - 62ecb3 - b886a0 [f
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/05/03/ru-he-you-ya-de-ben-di-hua-xib-slash-storyboard/">如何优雅的本地化xib/storyboard</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-05-03T15:19:52+08:00" pubdate data-updated="true">May 3<span>rd</span>, 2016</time>
+        
+           | <a href="/blog/2016/05/03/ru-he-you-ya-de-ben-di-hua-xib-slash-storyboard/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2016/05/03/ru-he-you-ya-de-ben-di-hua-xib-slash-storyboard/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote><p>最近需要做一个项目的国际化（本地化），项目中用到了大量的xib，但是官方指南的方法不是很好用。经过一番研究，想到一个比较优雅的方法，分享给大家。</p></blockquote>
+
+<h2>现有方法的问题</h2>
+
+<p>我们都知道，代码中的String可以用<code>NSLocalizedString()</code>，从<code>Localizable.strings</code>取得本地化的字符串。然而在xib/storyboard中，我们需要给每个xib添加strings文件。这样翻译会分散在项目各处，产生很多重复的字符串，维护起来非常麻烦。而且这样做会过度依赖系统的语言环境，难以定制一些奇怪的功能（比如某些情况，在中文环境中也显示英文）。</p>
+
+<h2>Localizable UI</h2>
+
+<p>在xib中，带默认文字、需要Localization的控件主要就是以下几个：</p>
+
+<ul>
+<li>UILabel</li>
+<li>UIButton</li>
+<li>UITextField</li>
+<li>UIBarButtonItem</li>
+<li>UISearchBar</li>
+</ul>
+
+
+<p>我们以常见的<code>UILabel</code>/<code>UIButton</code>/<code>UITextField</code>为例。</p>
+
+<h4>创建Localizable Subclass</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">LTLSLocalizableLabel</span> : <span class="nc">UILabel</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">LTLSLocalizableLabel</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">awakeFromNib</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">text</span><span class="p">.</span><span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">LTLSLocalizedString</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">text</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">text</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">LTLSLocalizableTextField</span> : <span class="nc">UITextField</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">LTLSLocalizableTextField</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">awakeFromNib</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">placeholder</span><span class="p">.</span><span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">placeholder</span> <span class="o">=</span> <span class="n">LTLSLocalizedString</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">placeholder</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">placeholder</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">LTLSLocalizableButton</span> : <span class="nc">UIButton</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">LTLSLocalizableButton</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">awakeFromNib</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">NSArray</span> <span class="o">*</span><span class="n">stateArray</span> <span class="o">=</span> <span class="err">@</span><span class="p">[</span><span class="err">@</span><span class="p">(</span><span class="n">UIControlStateNormal</span><span class="p">),</span> <span class="err">@</span><span class="p">(</span><span class="n">UIControlStateSelected</span><span class="p">),</span> <span class="err">@</span><span class="p">(</span><span class="n">UIControlStateHighlighted</span><span class="p">),</span> <span class="err">@</span><span class="p">(</span><span class="n">UIControlStateDisabled</span><span class="p">)];</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="n">NSNumber</span> <span class="o">*</span><span class="n">stateNum</span> <span class="k">in</span> <span class="n">stateArray</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">UIControlState</span> <span class="n">state</span> <span class="o">=</span> <span class="p">[</span><span class="n">stateNum</span> <span class="n">unsignedIntegerValue</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSString</span> <span class="o">*</span><span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nl">titleForState:</span><span class="n">state</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">title</span><span class="p">.</span><span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="p">[</span><span class="n">self</span> <span class="nl">setTitle:</span><span class="n">LTLSLocalizedString</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span> <span class="nl">forState:</span><span class="n">state</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后将xib中相应的控件的Class替换为LocalizableClass即可</p>
+
+<p><img class="center" src="/images/2016/05/LocalizableClass.png"></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -902,140 +1064,6 @@ dd2e86 - 946992 -9143a9 - a6fd86 - 5a6057 [master] \ 76cada - 62ecb3 - b886a0 [f
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/">iOS8中可交互通知(NotificationAction)初探</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-01-16T15:30:39+08:00" pubdate data-updated="true">Jan 16<span>th</span>, 2015</time>
-        
-           | <a href="/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/#disqus_thread"
-             data-disqus-identifier="http://epingwang.me/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>iOS8中，可交互推送/通知可以在<strong>锁屏界面/通知中心/推送消息Banner</strong>上以按钮形式与App交互。</p>
-
-<h2>注册可交互推送</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">UIMutableUserNotificationAction</span> <span class="o">*</span><span class="n">acceptAction</span> <span class="o">=</span>
-</span><span class='line'><span class="p">[[</span><span class="n">UIMutableUserNotificationAction</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// 回调时按钮的ID</span>
-</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s">@&quot;ACCEPT_IDENTIFIER&quot;</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// 按钮title(Facebook使用了emoji)</span>
-</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;Accept&quot;</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="cm">/* UIUserNotificationActivationModeBackground </span>
-</span><span class='line'><span class="cm">* APP会在后台启动</span>
-</span><span class='line'><span class="cm">* UIUserNotificationActivationModeForeground</span>
-</span><span class='line'><span class="cm">* APP会在前台启动</span>
-</span><span class='line'><span class="cm">*/</span>
-</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">activationMode</span> <span class="o">=</span> <span class="n">UIUserNotificationActivationModeBackground</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// YES为红色，NO为蓝色</span>
-</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">destructive</span> <span class="o">=</span> <span class="n">NO</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// 是否需要解锁</span>
-</span><span class='line'><span class="n">acceptAction</span><span class="p">.</span><span class="n">authenticationRequired</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="n">UIMutableUserNotificationCategory</span> <span class="o">*</span><span class="n">category</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIMutableUserNotificationCategory</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// 消息的ID(区分服务器推送过来时消息的种类)</span>
-</span><span class='line'><span class="n">category</span><span class="p">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s">@&quot;INVITE_CATEGORY&quot;</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// Alert形式展现的推送</span>
-</span><span class='line'><span class="p">[</span><span class="n">category</span> <span class="nl">setActions:</span><span class="err">@</span><span class="p">[</span><span class="n">acceptAction</span><span class="p">]</span> <span class="nl">forContext:</span><span class="n">UIUserNotificationActionContextDefault</span><span class="p">];</span>
-</span><span class='line'><span class="c1">// Banner/锁屏形式展现的推送</span>
-</span><span class='line'><span class="p">[</span><span class="n">category</span> <span class="nl">setActions:</span><span class="err">@</span><span class="p">[</span><span class="n">acceptAction</span><span class="p">]</span> <span class="nl">forContext:</span><span class="n">UIUserNotificationActionContextMinimal</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">UIUserNotificationSettings</span> <span class="o">*</span><span class="n">settings</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIUserNotificationSettings</span> <span class="nl">settingsForTypes:</span>
-</span><span class='line'><span class="n">UIUserNotificationTypeAlert</span> <span class="o">|</span> <span class="n">UIUserNotificationTypeBadge</span> <span class="o">|</span> <span class="n">UIUserNotificationTypeSound</span> <span class="nl">categories:</span><span class="p">[</span><span class="n">NSSet</span> <span class="nl">setWithObject:</span><span class="n">category</span><span class="p">]];</span>
-</span><span class='line'><span class="p">[[</span><span class="n">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nl">registerUserNotificationSettings:</span><span class="n">settings</span><span class="p">];</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Discussion:</h4>
-
-<ul>
-<li>当Contenxt为<code>UIUserNotificationActionContextMinimal</code>时，最多展现两个按钮。</li>
-<li>当Contenxt为<code>UIUserNotificationActionContextDefault</code>时，最多展现四个按钮。</li>
-<li>当Contenxt为<code>UIUserNotificationActionContextMinimal</code>时，第一个按钮在右边，第二个按钮在左边。</li>
-<li>当Contenxt为<code>UIUserNotificationActionContextMinimal</code>时，若两个按钮的<code>destructive</code>属性都为NO，则第一个为蓝色，第二个为灰色。</li>
-<li>当Contenxt为<code>UIUserNotificationActionContextDefault</code>时，按钮顺序由上到下排列。</li>
-</ul>
-
-
-<h2>Schedule推送</h2>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/01/16/ios8zhong-ke-jiao-hu-tong-notificationaction-chu-tan/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1062,6 +1090,10 @@ dd2e86 - 946992 -9143a9 - a6fd86 - 5a6057 [master] \ 76cada - 62ecb3 - b886a0 [f
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/05/03/ru-he-you-ya-de-ben-di-hua-xib-slash-storyboard/">如何优雅的本地化xib/storyboard</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/04/22/he-bing-te-ding-de-git-commitdao-ling-%5B%3F%5D-ge-fen-zhi/">合并特定的Git Commit到另一个分支</a>
       </li>
     
@@ -1075,10 +1107,6 @@ dd2e86 - 946992 -9143a9 - a6fd86 - 5a6057 [master] \ 76cada - 62ecb3 - b886a0 [f
     
       <li class="post">
         <a href="/blog/2015/10/30/at-dynamicshi-yong-xiao-jie/">@dynamic使用小结</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/09/28/uitabbartu-pian-qu-xiao-tintcolorhe-ju-zhong-xian-shi/">UITabBar图片取消TintColor和居中显示</a>
       </li>
     
   </ul>

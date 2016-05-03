@@ -5,32 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>@dynamic使用小结 - EpingWang's Blog</title>
+  <title>如何优雅的本地化xib/storyboard - EpingWang's Blog</title>
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="@dynamic的作用 @dynamic与@synthesize对应，写在@implementation里。意思是告诉编译器Getter和Setter方法由由开发者实现。 使用场景 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22 &hellip;">
+  <meta name="description" content="最近需要做一个项目的国际化（本地化），项目中用到了大量的xib，但是官方指南的方法不是很好用。经过一番研究，想到一个比较优雅的方法，分享给大家。 现有方法的问题 我们都知道，代码中的String可以用NSLocalizedString()，从Localizable.strings取得本地化的字符串 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -45,7 +24,7 @@
   
 
   
-  <link rel="canonical" href="http://epingwang.me/blog/2015/10/30/at-dynamicshi-yong-xiao-jie">
+  <link rel="canonical" href="http://epingwang.me/blog/2016/05/03/ru-he-you-ya-de-ben-di-hua-xib-slash-storyboard">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="EpingWang's Blog" type="application/atom+xml">
@@ -98,7 +77,7 @@
   
   <header>
     
-      <h1 class="entry-title">@dynamic使用小结</h1>
+      <h1 class="entry-title">如何优雅的本地化xib/storyboard</h1>
     
     
       <p class="meta">
@@ -114,7 +93,7 @@
   
 
 
-<time datetime="2015-10-30T16:45:33+08:00" pubdate data-updated="true">Oct 30<span>th</span>, 2015</time>
+<time datetime="2016-05-03T15:19:52+08:00" pubdate data-updated="true">May 3<span>rd</span>, 2016</time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://epingwang.me">Comments</a>
@@ -124,11 +103,90 @@
   </header>
 
 
-<div class="entry-content"><h3>@dynamic的作用</h3>
+<div class="entry-content"><blockquote><p>最近需要做一个项目的国际化（本地化），项目中用到了大量的xib，但是官方指南的方法不是很好用。经过一番研究，想到一个比较优雅的方法，分享给大家。</p></blockquote>
 
-<p>@dynamic与@synthesize对应，写在@implementation里。意思是告诉编译器Getter和Setter方法由由开发者实现。</p>
+<h2>现有方法的问题</h2>
 
-<h3>使用场景</h3>
+<p>我们都知道，代码中的String可以用<code>NSLocalizedString()</code>，从<code>Localizable.strings</code>取得本地化的字符串。然而在xib/storyboard中，我们需要给每个xib添加strings文件。这样翻译会分散在项目各处，产生很多重复的字符串，维护起来非常麻烦。而且这样做会过度依赖系统的语言环境，难以定制一些奇怪的功能（比如某些情况，在中文环境中也显示英文）。</p>
+
+<h2>Localizable UI</h2>
+
+<p>在xib中，带默认文字、需要Localization的控件主要就是以下几个：</p>
+
+<ul>
+<li>UILabel</li>
+<li>UIButton</li>
+<li>UITextField</li>
+<li>UIBarButtonItem</li>
+<li>UISearchBar</li>
+</ul>
+
+
+<p>我们以常见的<code>UILabel</code>/<code>UIButton</code>/<code>UITextField</code>为例。</p>
+
+<h4>创建Localizable Subclass</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">LTLSLocalizableLabel</span> : <span class="nc">UILabel</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">LTLSLocalizableLabel</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">awakeFromNib</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">text</span><span class="p">.</span><span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">LTLSLocalizedString</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">text</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">text</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">LTLSLocalizableTextField</span> : <span class="nc">UITextField</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">LTLSLocalizableTextField</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">awakeFromNib</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">placeholder</span><span class="p">.</span><span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">placeholder</span> <span class="o">=</span> <span class="n">LTLSLocalizedString</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">placeholder</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">placeholder</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -148,99 +206,30 @@
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">ClassA</span> : <span class="nc">NSObject</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">LTLSLocalizableButton</span> : <span class="nc">UIButton</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@end</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">@interface</span> <span class="nc">Father</span> : <span class="nc">NSObject</span>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">LTLSLocalizableButton</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">ClassA</span> <span class="o">*</span><span class="n">obj</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@interface</span> <span class="nc">ClassB</span> : <span class="nc">ClassA</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@interface</span> <span class="nc">Son</span> : <span class="nc">Father</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">ClassB</span> <span class="o">*</span><span class="n">obj</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@implementation</span> <span class="nc">Son</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// 变量obj的getter和setter方法，由父类Father实现</span>
-</span><span class='line'><span class="k">@dynamic</span> <span class="n">obj</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">awakeFromNib</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">NSArray</span> <span class="o">*</span><span class="n">stateArray</span> <span class="o">=</span> <span class="err">@</span><span class="p">[</span><span class="err">@</span><span class="p">(</span><span class="n">UIControlStateNormal</span><span class="p">),</span> <span class="err">@</span><span class="p">(</span><span class="n">UIControlStateSelected</span><span class="p">),</span> <span class="err">@</span><span class="p">(</span><span class="n">UIControlStateHighlighted</span><span class="p">),</span> <span class="err">@</span><span class="p">(</span><span class="n">UIControlStateDisabled</span><span class="p">)];</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="n">NSNumber</span> <span class="o">*</span><span class="n">stateNum</span> <span class="k">in</span> <span class="n">stateArray</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">UIControlState</span> <span class="n">state</span> <span class="o">=</span> <span class="p">[</span><span class="n">stateNum</span> <span class="n">unsignedIntegerValue</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSString</span> <span class="o">*</span><span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nl">titleForState:</span><span class="n">state</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">title</span><span class="p">.</span><span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="p">[</span><span class="n">self</span> <span class="nl">setTitle:</span><span class="n">LTLSLocalizedString</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span> <span class="nl">forState:</span><span class="n">state</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>或</p>
+<p>然后将xib中相应的控件的Class替换为LocalizableClass即可</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">ClassA</span> : <span class="nc">NSObject</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@interface</span> <span class="nc">Father</span> : <span class="nc">NSObject</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">ClassA</span> <span class="o">*</span><span class="n">obj</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@interface</span> <span class="nc">ClassB</span> : <span class="nc">ClassA</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@interface</span> <span class="nc">Son</span> : <span class="nc">Father</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">ClassB</span> <span class="o">*</span><span class="n">obj</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@implementation</span> <span class="nc">Father</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// 变量obj的getter和setter方法，必须由子类实现，否则会在运行时抛出异常（unrecognized selector）</span>
-</span><span class='line'><span class="k">@dynamic</span> <span class="n">obj</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@end</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<p><img class="center" src="/images/2016/05/LocalizableClass.png"></p>
 </div>
 
 
@@ -263,14 +252,8 @@
   
 
 
-<time datetime="2015-10-30T16:45:33+08:00" pubdate data-updated="true">Oct 30<span>th</span>, 2015</time>
+<time datetime="2016-05-03T15:19:52+08:00" pubdate data-updated="true">May 3<span>rd</span>, 2016</time>
       
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/ios/'>iOS,</a>, <a class='category' href='/blog/categories/objc/'>objc</a>
-  
-</span>
 
 
       <html xmlns:wb=“http://open.weibo.com/wb”>
@@ -319,10 +302,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2015/09/28/uitabbartu-pian-qu-xiao-tintcolorhe-ju-zhong-xian-shi/" title="Previous Post: UITabBar图片取消TintColor和居中显示">&laquo; UITabBar图片取消TintColor和居中显示</a>
+        <a class="basic-alignment left" href="/blog/2016/04/22/he-bing-te-ding-de-git-commitdao-ling-%5B%3F%5D-ge-fen-zhi/" title="Previous Post: 合并特定的Git Commit到另一个分支">&laquo; 合并特定的Git Commit到另一个分支</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2015/12/18/uiwebviewyu-javascriptjiao-hu/" title="Next Post: UIWebView与Javascript交互">UIWebView与Javascript交互 &raquo;</a>
       
     </p>
   </footer>
@@ -410,8 +391,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://epingwang.me/blog/2015/10/30/at-dynamicshi-yong-xiao-jie/';
-        var disqus_url = 'http://epingwang.me/blog/2015/10/30/at-dynamicshi-yong-xiao-jie/';
+        var disqus_identifier = 'http://epingwang.me/blog/2016/05/03/ru-he-you-ya-de-ben-di-hua-xib-slash-storyboard/';
+        var disqus_url = 'http://epingwang.me/blog/2016/05/03/ru-he-you-ya-de-ben-di-hua-xib-slash-storyboard/';
         var disqus_script = 'embed.js';
       
     (function () {
