@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.me/atom.xml" rel="self"/>
   <link href="http://epingwang.me/"/>
-  <updated>2016-05-03T16:37:07+08:00</updated>
+  <updated>2016-09-09T16:15:09+08:00</updated>
   <id>http://epingwang.me/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -12,6 +12,43 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用ffmpeg制作HTML5视频(h264/mp4, Theora/ogg, Vp8/webm)]]></title>
+    <link href="http://epingwang.me/blog/2016/09/09/shi-yong-ffmpegzhi-zuo-html5shi-pin-h264-slash-mp4-theora-slash-ogg-vp8-slash-webm/"/>
+    <updated>2016-09-09T15:53:37+08:00</updated>
+    <id>http://epingwang.me/blog/2016/09/09/shi-yong-ffmpegzhi-zuo-html5shi-pin-h264-slash-mp4-theora-slash-ogg-vp8-slash-webm</id>
+    <content type="html"><![CDATA[<p>在web页面中使用HTML5 <code>&lt;video&gt;</code>标签播放视频，可以很方便的用ffmpeg将本地视频转换为相应格式的视频。</p>
+
+<p>首先在<a href="https://ffmpeg.org/">ffmpeg官网</a>下载并编译对应系统版本的ffmpeg，然后可以使用以下命令转换视频格式。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>// 基本转换
+</span><span class='line'><span class="nv">$ </span>ffmpeg -i input.mov output.mp4
+</span><span class='line'>
+</span><span class='line'>// 通过video options 自定义输出视频的参数
+</span><span class='line'><span class="nv">$ </span>ffmpeg -i input.mov -b 1500k -vcodec libx264 -s 640x480 -vpre hq output.mp4
+</span><span class='line'><span class="nv">$ </span>ffmpeg -i input.mov -b 1500k -vcodec libvpx -s 640x480 -vpre hq output.webm
+</span><span class='line'><span class="nv">$ </span>ffmpeg -i input.mov -b 1500k -vcodec libtheora -s 640x480 -vpre hq output.mp4
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>具体参数列表和使用方法请用<code>ffmpeg -h</code>和<code>man ffmpeg</code>查看</p>
+
+<p>制作过程中发现视频音量有些太小，依然可以用ffmpeg调整音量</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>ffmpeg -i inputfile -vcodec copy -af <span class="s2">&quot;volume=10dB&quot;</span> outputfile
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[如何优雅的本地化xib/storyboard]]></title>
@@ -2361,7 +2398,7 @@
 
 <p>一旦你的加急审核申请通过了，你的App会在一个工作日内被处理，如果这期间因为可能出现的其它问题导致再次被reject，你只需要重新提交修改后的build或补充说明（metadata reject）就行，你的App将会一直处于加急审核队列，直到审核通过。</p>
 
-<p>苹果加急审核邮箱：<a href="&#109;&#97;&#105;&#x6c;&#x74;&#x6f;&#58;&#x41;&#112;&#112;&#82;&#101;&#x76;&#105;&#x65;&#x77;&#x40;&#97;&#x70;&#112;&#112;&#108;&#101;&#46;&#99;&#x6f;&#x6d;">&#x41;&#x70;&#112;&#82;&#x65;&#118;&#x69;&#101;&#x77;&#64;&#97;&#x70;&#112;&#112;&#x6c;&#x65;&#46;&#x63;&#111;&#x6d;</a></p>
+<p>苹果加急审核邮箱：<a href="&#x6d;&#x61;&#x69;&#108;&#x74;&#111;&#58;&#65;&#112;&#x70;&#82;&#x65;&#x76;&#105;&#x65;&#119;&#x40;&#97;&#112;&#x70;&#112;&#108;&#101;&#46;&#99;&#x6f;&#109;">&#x41;&#x70;&#x70;&#x52;&#101;&#118;&#105;&#101;&#119;&#64;&#x61;&#112;&#x70;&#112;&#108;&#101;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
 
 <p>网页提交地址：<a href="https://developer.apple.com/appstore/contact/?topic=expedite">https://developer.apple.com/appstore/contact/?topic=expedite</a></p>
 
@@ -2524,145 +2561,6 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[小试Auto Layout——VFL篇]]></title>
-    <link href="http://epingwang.me/blog/2014/06/13/xiao-shi-auto-layout-vflpian/"/>
-    <updated>2014-06-13T18:47:42+08:00</updated>
-    <id>http://epingwang.me/blog/2014/06/13/xiao-shi-auto-layout-vflpian</id>
-    <content type="html"><![CDATA[<h3>为什么要AutoLayout</h3>
-
-<p>从iOS6开始，移动端开始支持AutoLayout。与传统的Layout方法相比，AutoLayout不再使用Origin+Size的方式描述View的位置和大小，而是使用<code>Constraints</code>（约束）来描述。</p>
-
-<p>AutoLayout的优点:</p>
-
-<ul>
-<li>iOS设备越来越多，iPhone4/5/6、iPad、甚至以后的AppleTV、iWatch，其分辨率都是不一样的，要做分辨率适配，旧的方法已经不再适合，AutoLayout提供了一个适配不同分辨率的方式。</li>
-<li>在iOS8中，View的尺寸可以通过设备旋转、Universal适配、SplitView展开/折叠等途径不断改变，就要求subview的位置和尺寸适应parent view。</li>
-<li>将View的布局计算交给View自己，而不需要在ViewController中控制，更加符合MVC。</li>
-</ul>
-
-
-<h3>为什么要用VFL</h3>
-
-<p>VFL，即Visual Format Language，是用code编码进行AutoLayout的方式。</p>
-
-<p>VFL的优点:</p>
-
-<ul>
-<li>编写简单，工作量少，代码可读性强，方便维护。</li>
-<li>由于处理的是字符串，所以符合OC的动态特性。</li>
-<li>程序员忍受得了去IB拖积木吗？</li>
-</ul>
-
-
-<h3>VFL语法</h3>
-
-<!--more-->
-
-
-<h4>创建一个VFL约束:</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">NSLayoutConstraint</span>
-</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nf">constraintsWithVisualFormat:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">format</span> <span class="nf">options:</span><span class="p">(</span><span class="n">NSLayoutFormatOptions</span><span class="p">)</span><span class="nv">opts</span> <span class="nf">metrics:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">metrics</span> <span class="nf">views:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">views</span><span class="p">;</span>
-</span><span class='line'><span class="k">@end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>其中:</p>
-
-<ul>
-<li>@param format: VFL语句</li>
-<li>@param opts: 约束方式，见后续</li>
-<li>@param metrics: 约束中固定值的字典，Value必须是NSNumber</li>
-<li>@param views: 约束语句中用到的view的字典</li>
-<li>@return 返回一个NSArray，其中Object为<code>NSLayoutConstraint</code>类型</li>
-</ul>
-
-
-<p>其返回值用这个方法接收:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">UIView</span> <span class="nl">(UIConstraintBasedLayoutInstallingConstraints)</span>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addConstraints:</span><span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">constraints</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">6</span><span class="n">_0</span><span class="p">);</span>
-</span><span class='line'><span class="k">@end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>NSLayoutFormatOptions</h4>
-
-<p>在写VFL时，遇到一个问题，我很难描述一个View需要居中的约束。</p>
-
-<p>通过计算左右边界与SuperView边界的距离是可以实现的，但很明显背离了VFL的初衷。</p>
-
-<p>查阅文档后发现这些选项就在<code>opts</code>这个参数中，不但可以设置居中，也可以设计约束的参考位置，以及对其方式，可以用位运算选择多个方式。</p>
-
-<h4>一行VFL语句:</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">(</span><span class="o">&lt;</span><span class="n">orientation</span><span class="o">&gt;:</span><span class="p">)</span><span class="o">?</span>
-</span><span class='line'><span class="p">(</span><span class="o">&lt;</span><span class="n">superview</span><span class="o">&gt;&lt;</span><span class="n">connection</span><span class="o">&gt;</span><span class="p">)</span><span class="o">?</span>
-</span><span class='line'><span class="o">&lt;</span><span class="n">view</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&lt;</span><span class="n">connection</span><span class="o">&gt;&lt;</span><span class="n">view</span><span class="o">&gt;</span><span class="p">)</span><span class="o">*</span>
-</span><span class='line'><span class="p">(</span><span class="o">&lt;</span><span class="n">connection</span><span class="o">&gt;&lt;</span><span class="n">superview</span><span class="o">&gt;</span><span class="p">)</span><span class="o">?</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>例如:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="s">@&quot;V:|-vSpace-[_touchImageView(==avatarHeight)]-vPad-[_nameTextField(==textFieldHeight)]&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li><p>orientation:</p>
-
-<p>  <code>
-V: 纵向约束
-H: (默认)横向约束
-</code></p></li>
-<li>superview: <code>|</code></li>
-<li><p>view:</p>
-
-<p>  <code>[&lt;viewname&gt;(&lt;predicateListWithParens)?]</code></p></li>
-<li><p>connection:</p>
-
-<p>  <code>-padding-</code>，其中padding可以使matrics字典中的某一项，也可以是一个数值，如<code>-20-</code></p></li>
-<li><p>predicateListWithParens:</p>
-
-<p>  <code>(&lt;predicate&gt;(,&lt;predicate&gt;)*)</code>，一组predicate，用逗号隔开</p></li>
-<li><p>predicate:</p>
-
-<p>  <code>(&lt;relation&gt;)?(&lt;objectOfPredicate&gt;)(@&lt;priority&gt;)?</code>，例如(>=vPad@100)，意义为宽/高大于vPad（metrics字典中一项），优先级为100</p></li>
-</ul>
-
-
-<h4>注意事项:</h4>
-
-<ul>
-<li>一行VFL中，所有被约束的View一定是添加约束View的SubView</li>
-<li><p>被约束的View要设置</p>
-
-<p>  <code>
-  [someView setTranslatesAutoresizingMaskIntoConstraints:NO];]
- </code></p></li>
-<li><p>使用VFL之后，系统不再调用这个方法</p>
-
-<p>  <code>
-  -(void) setFrame:(CGRect)frame
- </code></p></li>
-</ul>
 
 ]]></content>
   </entry>

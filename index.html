@@ -9,7 +9,15 @@
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="最近需要做一个项目的国际化（本地化），项目中用到了大量的xib，但是官方指南的方法不是很好用。经过一番研究，想到一个比较优雅的方法，分享给大家。 现有方法的问题 我们都知道，代码中的String可以用NSLocalizedString()，从Localizable.strings取得本地化的字符串 &hellip;">
+  <meta name="description" content="在web页面中使用HTML5 &lt;video&gt;标签播放视频，可以很方便的用ffmpeg将本地视频转换为相应格式的视频。 首先在ffmpeg官网下载并编译对应系统版本的ffmpeg，然后可以使用以下命令转换视频格式。 1
+2
+3
+4
+5
+6
+7
+// 基本转换
+$ ffmpeg -i &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +82,73 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/09/09/shi-yong-ffmpegzhi-zuo-html5shi-pin-h264-slash-mp4-theora-slash-ogg-vp8-slash-webm/">使用ffmpeg制作HTML5视频(h264/mp4, Theora/ogg, Vp8/webm)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-09-09T15:53:37+08:00" pubdate data-updated="true">Sep 9<span>th</span>, 2016</time>
+        
+           | <a href="/blog/2016/09/09/shi-yong-ffmpegzhi-zuo-html5shi-pin-h264-slash-mp4-theora-slash-ogg-vp8-slash-webm/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2016/09/09/shi-yong-ffmpegzhi-zuo-html5shi-pin-h264-slash-mp4-theora-slash-ogg-vp8-slash-webm/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在web页面中使用HTML5 <code>&lt;video&gt;</code>标签播放视频，可以很方便的用ffmpeg将本地视频转换为相应格式的视频。</p>
+
+<p>首先在<a href="https://ffmpeg.org/">ffmpeg官网</a>下载并编译对应系统版本的ffmpeg，然后可以使用以下命令转换视频格式。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>// 基本转换
+</span><span class='line'><span class="nv">$ </span>ffmpeg -i input.mov output.mp4
+</span><span class='line'>
+</span><span class='line'>// 通过video options 自定义输出视频的参数
+</span><span class='line'><span class="nv">$ </span>ffmpeg -i input.mov -b 1500k -vcodec libx264 -s 640x480 -vpre hq output.mp4
+</span><span class='line'><span class="nv">$ </span>ffmpeg -i input.mov -b 1500k -vcodec libvpx -s 640x480 -vpre hq output.webm
+</span><span class='line'><span class="nv">$ </span>ffmpeg -i input.mov -b 1500k -vcodec libtheora -s 640x480 -vpre hq output.mp4
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>具体参数列表和使用方法请用<code>ffmpeg -h</code>和<code>man ffmpeg</code>查看</p>
+
+<p>制作过程中发现视频音量有些太小，依然可以用ffmpeg调整音量</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>ffmpeg -i inputfile -vcodec copy -af <span class="s2">&quot;volume=10dB&quot;</span> outputfile
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -968,102 +1043,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/05/04/%5B%3F%5D-xie-you-yi-si-de-wen-ti/">一些有意思的问题</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-05-04T11:02:14+08:00" pubdate data-updated="true">May 4<span>th</span>, 2015</time>
-        
-           | <a href="/blog/2015/05/04/%5B%3F%5D-xie-you-yi-si-de-wen-ti/#disqus_thread"
-             data-disqus-identifier="http://epingwang.me/blog/2015/05/04/%5B%3F%5D-xie-you-yi-si-de-wen-ti/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote><p>前几天一个朋友问了一些蛮有意思的问题，在这里总结一下</p></blockquote>
-
-<h3>@property 中 NSString 的属性为什么要用 copy</h3>
-
-<hr />
-
-<p>NSString 是 NSMutableString 的基类，在赋值时，对这两个情况要分开讨论：</p>
-
-<h4>当传入 NSString 对象时</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>2015-05-04 11:09:04.270 StringTest[540:218144] content = 0x10010e4a8
-</span><span class='line'>2015-05-04 11:09:04.271 StringTest[540:218144] self.content = 0x10010e4a8</span></code></pre></td></tr></table></div></figure>
-
-
-<p>赋值操作直接把传入的 NSString 的内存地址赋给 self.content</p>
-
-<h4>当传入 NSMutableString 对象时</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>2015-05-04 11:09:04.271 StringTest[540:218144] mutable content = 0x17406ec40
-</span><span class='line'>2015-05-04 11:09:04.271 StringTest[540:218144] self.content = 0x17403b4a0</span></code></pre></td></tr></table></div></figure>
-
-
-<p>赋值操作创建了一个新的 NSString 并赋值给 self.content</p>
-
-<h4>这样做的意义：</h4>
-
-<p>NSString 是不可变对象，用 copy 属性可以保证传入 NSMutableString 后，其引用的值始终不变。</p>
-
-<h3>ViewController 中的一些调用问题</h3>
-
-<hr />
-
-<h4>loadView 在什么时候调用</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span><span class="n">retain</span><span class="p">)</span> <span class="n">UIView</span> <span class="o">*</span><span class="n">view</span><span class="p">;</span> <span class="c1">// The getter first invokes [self loadView] if the view hasn&#39;t been set yet. Subclasses must call super if they override the setter or getter.</span>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">loadView</span><span class="p">;</span> <span class="c1">// This is where subclasses should create their custom view hierarchy if they aren&#39;t using a nib. Should never be called directly.</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这里注释解释的比较清楚，在调用<code>someViewController.view</code>时，如果<code>view == nil</code>，则首先调用<code>[self loadView]</code></p>
-
-<p>那么可以推断出，<code>[self viewDidLoad]</code>的调用是在<code>[self loadView]</code>之后。</p>
-
-<h4>viewDidLoad 可以调用几次</h4>
-
-<p>最开始想当然的认为只能调用一次。</p>
-
-<p>实际上在iOS6之前，当 Application 收到 Memory warning 之后，会将 hierarchy 中不在前台显示的 viewController.view 设为 nil，并调用<code>- (void)didReceiveMemoryWarning</code>, <code>- (void)viewWillUnload;</code>, <code>- (void)viewDidUnload</code>方法。</p>
-
-<p>在iOS6之后，默认不会卸载view，但是也可以在<code>- (void)didReceiveMemoryWarning</code>中手动卸载掉。</p>
-
-<p>当被卸载的view进入屏幕时，会重新加载，并调用<code>[self viewDidLoad]</code>。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1090,6 +1069,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/09/09/shi-yong-ffmpegzhi-zuo-html5shi-pin-h264-slash-mp4-theora-slash-ogg-vp8-slash-webm/">使用ffmpeg制作HTML5视频(h264/mp4, Theora/ogg, Vp8/webm)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/05/03/ru-he-you-ya-de-ben-di-hua-xib-slash-storyboard/">如何优雅的本地化xib/storyboard</a>
       </li>
     
@@ -1103,10 +1086,6 @@
     
       <li class="post">
         <a href="/blog/2015/12/18/uiwebviewyu-javascriptjiao-hu/">UIWebView与Javascript交互</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/10/30/at-dynamicshi-yong-xiao-jie/">@dynamic使用小结</a>
       </li>
     
   </ul>

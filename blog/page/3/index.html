@@ -9,9 +9,7 @@
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="Session 214 Bruce D. Nilo OverView A brief discussion about UIKit&rsquo;s new Adaptive APIs
-New UISplitViewController features
-Some new ways to &hellip;">
+  <meta name="description" content="为什么要AutoLayout 从iOS6开始，移动端开始支持AutoLayout。与传统的Layout方法相比，AutoLayout不再使用Origin+Size的方式描述View的位置和大小，而是使用Constraints（约束）来描述。 AutoLayout的优点: iOS设备越来越多， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +74,76 @@ Some new ways to &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/13/xiao-shi-auto-layout-vflpian/">小试Auto Layout——VFL篇</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-13T18:47:42+08:00" pubdate data-updated="true">Jun 13<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/06/13/xiao-shi-auto-layout-vflpian/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2014/06/13/xiao-shi-auto-layout-vflpian/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>为什么要AutoLayout</h3>
+
+<p>从iOS6开始，移动端开始支持AutoLayout。与传统的Layout方法相比，AutoLayout不再使用Origin+Size的方式描述View的位置和大小，而是使用<code>Constraints</code>（约束）来描述。</p>
+
+<p>AutoLayout的优点:</p>
+
+<ul>
+<li>iOS设备越来越多，iPhone4/5/6、iPad、甚至以后的AppleTV、iWatch，其分辨率都是不一样的，要做分辨率适配，旧的方法已经不再适合，AutoLayout提供了一个适配不同分辨率的方式。</li>
+<li>在iOS8中，View的尺寸可以通过设备旋转、Universal适配、SplitView展开/折叠等途径不断改变，就要求subview的位置和尺寸适应parent view。</li>
+<li>将View的布局计算交给View自己，而不需要在ViewController中控制，更加符合MVC。</li>
+</ul>
+
+
+<h3>为什么要用VFL</h3>
+
+<p>VFL，即Visual Format Language，是用code编码进行AutoLayout的方式。</p>
+
+<p>VFL的优点:</p>
+
+<ul>
+<li>编写简单，工作量少，代码可读性强，方便维护。</li>
+<li>由于处理的是字符串，所以符合OC的动态特性。</li>
+<li>程序员忍受得了去IB拖积木吗？</li>
+</ul>
+
+
+<h3>VFL语法</h3>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/13/xiao-shi-auto-layout-vflpian/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -298,6 +366,10 @@ Some new ways to &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/09/09/shi-yong-ffmpegzhi-zuo-html5shi-pin-h264-slash-mp4-theora-slash-ogg-vp8-slash-webm/">使用ffmpeg制作HTML5视频(h264/mp4, Theora/ogg, Vp8/webm)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/05/03/ru-he-you-ya-de-ben-di-hua-xib-slash-storyboard/">如何优雅的本地化xib/storyboard</a>
       </li>
     
@@ -311,10 +383,6 @@ Some new ways to &hellip;">
     
       <li class="post">
         <a href="/blog/2015/12/18/uiwebviewyu-javascriptjiao-hu/">UIWebView与Javascript交互</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/10/30/at-dynamicshi-yong-xiao-jie/">@dynamic使用小结</a>
       </li>
     
   </ul>
