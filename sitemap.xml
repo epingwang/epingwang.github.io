@@ -99,10 +99,6 @@
         <lastmod>2015-12-18T18:04:24+08:00</lastmod>
     </url>
     <url>
-        <loc>http://epingwang.me/blog/2016/01/18/shi-yong-clang-formatzheng-li-dai-ma/</loc>
-        <lastmod>2016-01-20T17:05:11+08:00</lastmod>
-    </url>
-    <url>
         <loc>
             http://epingwang.me/blog/2016/04/22/he-bing-te-ding-de-git-commitdao-ling-%5B%3F%5D-ge-fen-zhi/
         </loc>
@@ -121,12 +117,18 @@
         <lastmod>2016-09-09T16:20:11+08:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://epingwang.me/blog/2016/10/20/%5B%3F%5D-tiao-ming-ling-yan-zheng-fu-wu-qi-dui-ios-atsde-zhi-chi/
+        </loc>
+        <lastmod>2016-10-20T11:53:34+08:00</lastmod>
+    </url>
+    <url>
         <loc>http://epingwang.me/blog/archives/</loc>
-        <lastmod>2016-09-09T16:20:11+08:00</lastmod>
+        <lastmod>2016-10-20T11:53:34+08:00</lastmod>
     </url>
     <url>
         <loc>http://epingwang.me/</loc>
-        <lastmod>2016-09-09T16:20:11+08:00</lastmod>
+        <lastmod>2016-10-20T11:53:34+08:00</lastmod>
     </url>
     <url>
         <loc>http://epingwang.me/robuts_bak.txt</loc>

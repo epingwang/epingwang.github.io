@@ -9,15 +9,8 @@
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="在web页面中使用HTML5 &lt;video&gt;标签播放视频，可以很方便的用ffmpeg将本地视频转换为相应格式的视频。 首先在ffmpeg官网下载并编译对应系统版本的ffmpeg，然后可以使用以下命令转换视频格式。 1
-2
-3
-4
-5
-6
-7
-// 基本转换
-$ ffmpeg -i &hellip;">
+  <meta name="description" content="苹果在iOS10中增强了对ATS(App Transport Security)的要求。原先设置的NSAllowsArbitraryLoads可能会导致reject。因此需要服务端配置正确的SSL/TLS设置。 在命令行输入 1
+$ nscurl --ats-diagnostics https &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +75,63 @@ $ ffmpeg -i &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/10/20/%5B%3F%5D-tiao-ming-ling-yan-zheng-fu-wu-qi-dui-ios-atsde-zhi-chi/">一条命令验证服务器对iOS ATS的支持</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-10-20T11:45:41+08:00" pubdate data-updated="true">Oct 20<span>th</span>, 2016</time>
+        
+           | <a href="/blog/2016/10/20/%5B%3F%5D-tiao-ming-ling-yan-zheng-fu-wu-qi-dui-ios-atsde-zhi-chi/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2016/10/20/%5B%3F%5D-tiao-ming-ling-yan-zheng-fu-wu-qi-dui-ios-atsde-zhi-chi/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote><p>苹果在iOS10中增强了对ATS(App Transport Security)的要求。原先设置的<code>NSAllowsArbitraryLoads</code>可能会导致reject。因此需要服务端配置正确的SSL/TLS设置。</p></blockquote>
+
+<p>在命令行输入</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>nscurl --ats-diagnostics https://filename.hostname.net --verbose
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>控制台会打印出默认条件以及各种设置条件下，NSURLSession是否可以正常访问。可以根据<code>ATS Dictionary</code>调整客户端程序的设置，或者排查服务器设置。</p>
+
+<p><strong>服务端需要设置的选项：</strong></p>
+
+<ul>
+<li>加密Hash算法（SHA-256级别以上的加密）</li>
+<li>TLS版本（1.2及以上）</li>
+<li>TLS算法（需要提供Forward Secrecy）</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -402,49 +452,6 @@ $ ffmpeg -i &hellip;">
 
 
 <p>得到的结果就是feature分支的commit 76cada ~62ecb3 都被合并到了master分支。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/01/18/shi-yong-clang-formatzheng-li-dai-ma/">使用clang-format整理代码</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-01-18T16:32:15+08:00" pubdate data-updated="true">Jan 18<span>th</span>, 2016</time>
-        
-           | <a href="/blog/2016/01/18/shi-yong-clang-formatzheng-li-dai-ma/#disqus_thread"
-             data-disqus-identifier="http://epingwang.me/blog/2016/01/18/shi-yong-clang-formatzheng-li-dai-ma/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote><p>在多人协作的项目中，我们不能保证每个成员都贡献出高质量的代码。这些不规范的代码就有可能成为日后的一个bug点，或者给以后的开发造成不必要的麻烦。仅仅靠代码规范、Code Review来规范的话，也难免有疏漏。因此最好有一款工具来帮助我们规范代码，我们选择LLVM中的clang-format</p></blockquote>
-
-<h3>初探</h3>
-
-<p>在<a href="http://llvm.org/releases/download.html">LLVM官网</a>，下载系统对应的Clang版本</p>
 </div>
   
   
@@ -1084,6 +1091,10 @@ $ ffmpeg -i &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/10/20/%5B%3F%5D-tiao-ming-ling-yan-zheng-fu-wu-qi-dui-ios-atsde-zhi-chi/">一条命令验证服务器对iOS ATS的支持</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/09/09/shi-yong-ffmpegzhi-zuo-html5shi-pin-h264-slash-mp4-theora-slash-ogg-vp8-slash-webm/">使用ffmpeg制作HTML5视频(h264/mp4, Theora/ogg, Vp8/webm)</a>
       </li>
     
@@ -1093,10 +1104,6 @@ $ ffmpeg -i &hellip;">
     
       <li class="post">
         <a href="/blog/2016/04/22/he-bing-te-ding-de-git-commitdao-ling-%5B%3F%5D-ge-fen-zhi/">合并特定的Git Commit到另一个分支</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/18/shi-yong-clang-formatzheng-li-dai-ma/">使用clang-format整理代码</a>
       </li>
     
       <li class="post">

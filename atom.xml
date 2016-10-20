@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.me/atom.xml" rel="self"/>
   <link href="http://epingwang.me/"/>
-  <updated>2016-09-09T16:20:17+08:00</updated>
+  <updated>2016-10-20T11:53:53+08:00</updated>
   <id>http://epingwang.me/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -12,6 +12,33 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[一条命令验证服务器对iOS ATS的支持]]></title>
+    <link href="http://epingwang.me/blog/2016/10/20/%5B%3F%5D-tiao-ming-ling-yan-zheng-fu-wu-qi-dui-ios-atsde-zhi-chi/"/>
+    <updated>2016-10-20T11:45:41+08:00</updated>
+    <id>http://epingwang.me/blog/2016/10/20/[?]-tiao-ming-ling-yan-zheng-fu-wu-qi-dui-ios-atsde-zhi-chi</id>
+    <content type="html"><![CDATA[<blockquote><p>苹果在iOS10中增强了对ATS(App Transport Security)的要求。原先设置的<code>NSAllowsArbitraryLoads</code>可能会导致reject。因此需要服务端配置正确的SSL/TLS设置。</p></blockquote>
+
+<p>在命令行输入</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>nscurl --ats-diagnostics https://filename.hostname.net --verbose
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>控制台会打印出默认条件以及各种设置条件下，NSURLSession是否可以正常访问。可以根据<code>ATS Dictionary</code>调整客户端程序的设置，或者排查服务器设置。</p>
+
+<p><strong>服务端需要设置的选项：</strong></p>
+
+<ul>
+<li>加密Hash算法（SHA-256级别以上的加密）</li>
+<li>TLS版本（1.2及以上）</li>
+<li>TLS算法（需要提供Forward Secrecy）</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[使用ffmpeg制作HTML5视频(h264/mp4, Theora/ogg, Vp8/webm)]]></title>
@@ -246,19 +273,6 @@
 
 
 <p>得到的结果就是feature分支的commit 76cada ~62ecb3 都被合并到了master分支。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用clang-format整理代码]]></title>
-    <link href="http://epingwang.me/blog/2016/01/18/shi-yong-clang-formatzheng-li-dai-ma/"/>
-    <updated>2016-01-18T16:32:15+08:00</updated>
-    <id>http://epingwang.me/blog/2016/01/18/shi-yong-clang-formatzheng-li-dai-ma</id>
-    <content type="html"><![CDATA[<blockquote><p>在多人协作的项目中，我们不能保证每个成员都贡献出高质量的代码。这些不规范的代码就有可能成为日后的一个bug点，或者给以后的开发造成不必要的麻烦。仅仅靠代码规范、Code Review来规范的话，也难免有疏漏。因此最好有一款工具来帮助我们规范代码，我们选择LLVM中的clang-format</p></blockquote>
-
-<h3>初探</h3>
-
-<p>在<a href="http://llvm.org/releases/download.html">LLVM官网</a>，下载系统对应的Clang版本</p>
 ]]></content>
   </entry>
   
@@ -2413,7 +2427,7 @@
 
 <p>一旦你的加急审核申请通过了，你的App会在一个工作日内被处理，如果这期间因为可能出现的其它问题导致再次被reject，你只需要重新提交修改后的build或补充说明（metadata reject）就行，你的App将会一直处于加急审核队列，直到审核通过。</p>
 
-<p>苹果加急审核邮箱：<a href="&#109;&#x61;&#x69;&#108;&#x74;&#x6f;&#x3a;&#65;&#112;&#112;&#82;&#101;&#x76;&#x69;&#101;&#119;&#64;&#x61;&#x70;&#x70;&#x70;&#108;&#101;&#46;&#99;&#111;&#109;">&#x41;&#x70;&#112;&#x52;&#x65;&#x76;&#105;&#101;&#x77;&#64;&#x61;&#x70;&#112;&#112;&#108;&#x65;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
+<p>苹果加急审核邮箱：<a href="&#x6d;&#x61;&#105;&#x6c;&#116;&#x6f;&#x3a;&#x41;&#x70;&#112;&#82;&#101;&#x76;&#105;&#101;&#x77;&#64;&#97;&#112;&#112;&#x70;&#x6c;&#x65;&#46;&#99;&#111;&#109;">&#65;&#112;&#112;&#x52;&#101;&#x76;&#x69;&#x65;&#x77;&#64;&#97;&#112;&#x70;&#112;&#108;&#101;&#x2e;&#x63;&#111;&#x6d;</a></p>
 
 <p>网页提交地址：<a href="https://developer.apple.com/appstore/contact/?topic=expedite">https://developer.apple.com/appstore/contact/?topic=expedite</a></p>
 
