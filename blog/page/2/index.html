@@ -9,9 +9,7 @@
   <meta name="author" content="Eping Wang">
 
   
-  <meta name="description" content="前几天一个朋友问了一些蛮有意思的问题，在这里总结一下 @property 中 NSString 的属性为什么要用 copy NSString 是 NSMutableString 的基类，在赋值时，对这两个情况要分开讨论： 当传入 NSString 对象时 1
-2
-2015-05-04 11:09: &hellip;">
+  <meta name="description" content="很多项目使用 CocoaPods (http://cocoapods.org/) 管理项目依赖，非常方便的引入了大量的第三方开源代码。CocoaPods 项目本身也是开源的，这意味着可以很方便的通过 CocoaPods 管理私有/本地项目。 主要分为以下几步 创建一个私有 Spec Repo &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +74,69 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/05/11/ru-he-chuang-jian-cocoapodsde-si-you-spec/">如何创建Cocoapods的私有Spec</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-05-11T09:56:40+08:00" pubdate data-updated="true">May 11<span>th</span>, 2015</time>
+        
+           | <a href="/blog/2015/05/11/ru-he-chuang-jian-cocoapodsde-si-you-spec/#disqus_thread"
+             data-disqus-identifier="http://epingwang.me/blog/2015/05/11/ru-he-chuang-jian-cocoapodsde-si-you-spec/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote><p>很多项目使用 CocoaPods (<a href="">http://cocoapods.org/</a>) 管理项目依赖，非常方便的引入了大量的第三方开源代码。CocoaPods 项目本身也是开源的，这意味着可以很方便的通过 CocoaPods 管理私有/本地项目。</p></blockquote>
+
+<h3>主要分为以下几步</h3>
+
+<ol>
+<li>创建一个私有 Spec Repo</li>
+<li>创建并初始化适合 CocoaPods 管理的项目</li>
+<li>创建并发布该项目的 podspec 描述文件</li>
+<li>项目协作，Podfile编写</li>
+</ol>
+
+
+<h3>参考资料</h3>
+
+<ul>
+<li><a href="">http://guides.cocoapods.org/making/private-cocoapods.html</a></li>
+<li><a href="">http://guides.cocoapods.org/making/using-pod-lib-create.html</a>
+]</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/05/11/ru-he-chuang-jian-cocoapodsde-si-you-spec/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -908,68 +969,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/">UITextField的默认Placeholder颜色</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-07-10T14:11:44+08:00" pubdate data-updated="true">Jul 10<span>th</span>, 2014</time>
-        
-           | <a href="/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/#disqus_thread"
-             data-disqus-identifier="http://epingwang.me/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>色值为</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>R:0
-</span><span class='line'>G:0
-</span><span class='line'>B:0.0980392
-</span><span class='line'>A:0.22</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>查看方式</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSRange</span> <span class="n">range</span> <span class="o">=</span> <span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-</span><span class='line'><span class="n">NSDictionary</span> <span class="o">*</span><span class="n">dict</span> <span class="o">=</span> <span class="p">[</span><span class="n">someTextField</span><span class="p">.</span><span class="n">attributedPlaceholder</span> <span class="nl">attributesAtIndex:</span><span class="mi">0</span> <span class="nl">effectiveRange:</span><span class="o">&amp;</span><span class="n">range</span><span class="p">];</span>
-</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">dict</span> <span class="nl">objectForKey:</span><span class="n">NSForegroundColorAttributeName</span><span class="p">]);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -998,6 +997,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/03/17/man-tan-ios-framework/">漫谈iOS Framework</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/10/20/%5B%3F%5D-tiao-ming-ling-yan-zheng-fu-wu-qi-dui-ios-atsde-zhi-chi/">一条命令验证服务器对iOS ATS的支持</a>
       </li>
     
@@ -1013,10 +1016,6 @@
         <a href="/blog/2016/04/22/he-bing-te-ding-de-git-commitdao-ling-%5B%3F%5D-ge-fen-zhi/">合并特定的Git Commit到另一个分支</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/12/18/uiwebviewyu-javascriptjiao-hu/">UIWebView与Javascript交互</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -1030,7 +1029,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2016 - Eping Wang -
+  Copyright &copy; 2017 - Eping Wang -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

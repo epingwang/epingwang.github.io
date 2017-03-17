@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.me/atom.xml" rel="self"/>
   <link href="http://epingwang.me/"/>
-  <updated>2016-10-20T11:53:53+08:00</updated>
+  <updated>2017-03-17T11:30:15+08:00</updated>
   <id>http://epingwang.me/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -12,6 +12,222 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[漫谈iOS Framework]]></title>
+    <link href="http://epingwang.me/blog/2017/03/17/man-tan-ios-framework/"/>
+    <updated>2017-03-17T11:21:11+08:00</updated>
+    <id>http://epingwang.me/blog/2017/03/17/man-tan-ios-framework</id>
+    <content type="html"><![CDATA[<h3>前言</h3>
+
+<p>在iOS开发当中，无论是单个APP内，还是多个APP之间，代码的复用总是很常见的，经常需要将代码共享给项目中不同模块或者不同的项目使用。</p>
+
+<p>一种共享代码的方式是直接提供源代码。简单地提供源文件，在版本管理、依赖管理上都存在一些问题，普遍的做法是使用CocoaPods进行依赖管理。如果在共享代码时，不想公开程序实现的细节，那就需要第二种共享代码的方式，使用静态库／Framework，进行代码共享。</p>
+
+<h3>iOS Framework 构成</h3>
+
+<p>当一个iOS项目中引入了一个Framework，到底引入了什么？我们需要探究一下Framework的组成。</p>
+
+<p>Framework由三部分组成：</p>
+
+<ul>
+<li>Mach-O格式二进制文件</li>
+<li>.h头文件</li>
+<li>资源文件</li>
+</ul>
+
+
+<p>二进制文件是源文件编译后的.o文件（格式为Mach-O Object）和外部符号，通过链接器（ld）合并而成。</p>
+
+<p>.h文件顾名思义，是Framework对外公开的头文件。</p>
+
+<p>资源文件一般以bundle形式提供，bundle是一个文件夹，里面存放项目所需的所有文件资源，包括图片、音视频、本地化字符串、编译后的nib/storyboard、js脚本等。</p>
+
+<p>Framework分为静态库和动态库，iOS／Mac系统提供了很多的Framework，这些Framework都是以动态库的形式存在的。</p>
+
+<p><img class="center" src="http://epingwang.me/images/2017/03/WX20170306-153809@2x.png"></p>
+
+<p>由于App Store审核政策的原因，iOS App中添加Framework，只能添加静态库。</p>
+
+<p><img class="center" src="http://epingwang.me/images/2017/03/WX20170306-161936@2x.png"></p>
+
+<h3>iOS Framework 项目结构</h3>
+
+<p>Xcode6提供了一个制作Framework的项目模版，替我们省去了很多制作Framework项目的麻烦，在这之前，创建一个Framework的步骤就可以写一片非常长的文章，参考<a href="https://www.raywenderlich.com/65964/create-a-framework-for-ios">Ray Wenderlich</a>。</p>
+
+<p>首先，我们使用Cocoa Touch Framework模版创建一个项目。</p>
+
+<p><img class="center" src="http://epingwang.me/images/2017/03/WX20170306-164153@2x.png"></p>
+
+<p>创建完成之后，我们可以看到这个项目非常简单，只有一个.h文件和一个Info.plist文件，项目文件中有一个Framework Target。</p>
+
+<p><img class="center" src="http://epingwang.me/images/2017/03/WX20170306-170001@2x.png"></p>
+
+<p>我们可以编译一下这个Target，在Products中输出了一个FrameworkTest.framework。其中FrameworkTest是二进制文件（包含ARM或x86架构），Headers文件夹存放头文件，Info.plist存放bundleId、版本号等信息 //TODO: Modules文件夹。</p>
+
+<p><img class="center" src="http://epingwang.me/images/2017/03/WX20170306-171654@2x.png"></p>
+
+<h4>创建一个类</h4>
+
+<p>我们新建一个<code>FrameworkTestViewController</code>类，并且将FrameworkTestViewController.h的属性设置为public</p>
+
+<p><img class="center" src="http://epingwang.me/images/2017/03/WX20170306-174015@2x.png"></p>
+
+<h4>添加资源文件</h4>
+
+<p>首先，新建一个文件夹，命名为<code>FrameworkTestResources.bundle</code>。添加一张图片，并且指定Target为之前创建的Bundle。并且在FrameworkTestViewController中引用它。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">viewDidLoad</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">super</span> <span class="n">viewDidLoad</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">NSString</span><span class="o">*</span> <span class="n">bundleImageName</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nl">stringWithFormat:</span> <span class="s">@&quot;FrameworkTestResources/%@&quot;</span><span class="p">,</span> <span class="s">@&quot;somepic&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">UIImage</span> <span class="o">*</span><span class="n">image</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIImage</span> <span class="nl">imageNamed:</span><span class="n">bundleImageName</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">UIImageView</span> <span class="o">*</span><span class="n">imageView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIImageView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)];</span>
+</span><span class='line'>    <span class="n">imageView</span><span class="p">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nl">addSubview:</span><span class="n">imageView</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>添加多语言支持</h4>
+
+<p>将Project的语言设置为简体中文+英文，创建Localizable.strings并加入到FrameworkTestResources.bundle中，记得在Build Phases中的Copy Bundle Resources中取消勾选Localizable.strings（因为在bundle中已经包含）。我们可以通过Bundle读取它。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBundle</span> <span class="n">mainBundle</span><span class="p">]</span> <span class="nl">pathForResource:</span><span class="s">@&quot;FrameworkTestResources.bundle&quot;</span> <span class="nl">ofType:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSBundle</span> <span class="o">*</span><span class="n">resourceBundle</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSBundle</span> <span class="nl">bundleWithPath:</span><span class="n">path</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">resourceBundle</span> <span class="nl">localizedStringForKey:</span><span class="s">@&quot;Hello Framework&quot;</span> <span class="nl">value:</span><span class="s">@&quot;&quot;</span> <span class="nl">table:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">UILabel</span> <span class="o">*</span><span class="n">label</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UILabel</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">20</span><span class="p">)];</span>
+</span><span class='line'><span class="n">label</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nl">addSubview:</span><span class="n">label</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在壳项目中，也需要设置好多语言选项。</p>
+
+<h4>Build Settings</h4>
+
+<p>我们还要对项目做一些设置，在Build Settings中找到Mach-O Type，将其设为Static Library。</p>
+
+<h3>iOS Framework Demo壳项目</h3>
+
+<p>现在我们的Framework已经见到雏形了，但是还没有办法直观的看到代码运行的结果。我们需要一个可执行的项目来引用这个Framework。</p>
+
+<p>首先创建一个WorkSpace，将FrameworkTest项目添加进来。</p>
+
+<p><img class="center" src="http://epingwang.me/images/2017/03/WX20170307-111929@2x.png"></p>
+
+<p>然后在这个WorkSpace中，再创建一个Single View Application项目。完成后项目结构如下：</p>
+
+<p><img class="center" src="http://epingwang.me/images/2017/03/WX20170307-112638@2x.png"></p>
+
+<h4>壳项目对Framework在开发环境中的引用</h4>
+
+<p>我们发现Demo项目中还无法引入Framework的头文件。这时我们可以把WorkSpace的目录添加到Demo项目的Header Search Paths，这样我们就可以通过<code>#import &lt;FrameworkTest/FrameworkTest.h&gt;</code>来引用了。</p>
+
+<p>在Link Binary With Libraries中添加FrameworkTest.framework，将FrameworkTestResources.bundle的引用添加到Demo项目中，在Project中开启多语言，我们的壳项目设置就完成了。</p>
+
+<h4>第三方库</h4>
+
+<p>首先明确一点，Framework不应该直接把第三方库的代码编译进来，如果编译进来，会导致与集成方项目中的第三方库的符号冲突和版本冲突。我们应该以声明的方式引用第三方库。</p>
+
+<p>具体的做法（以CocoaPods管理为例）：</p>
+
+<ol>
+<li>使用CocoaPods管理Demo项目，添加第三方依赖。</li>
+<li>在Framework项目的Header Search Paths中添加第三方库头文件的路径。</li>
+<li>记录所依赖的第三方库名称及版本号。</li>
+</ol>
+
+
+<h3>iOS Framework Test</h3>
+
+<p>好的单元测试可以帮助我们在开发阶段发现bug，保证代码质量。SDK的项目规模相对较小，单元测试的效果也更加明显。在SDK项目中添加单元测试的方法与其他项目一致。</p>
+
+<h3>iOS Framework的编译过程</h3>
+
+<p>当我们在Xcode中使用CMD+B编译Framework时，实际也是调用的xcodebuild工具进行编译的。我们可以在命令行中执行<code>xcodebuild -usage</code>打印这个工具的帮助。</p>
+
+<p>我们可以编写脚本，使用xcodebuild工具进行自动化打包，生成可以对外发布的Framework。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">commandStriPhone</span> <span class="o">=</span> <span class="s">&#39;xcodebuild -target &#39;</span><span class="o">+</span><span class="n">Scheme</span><span class="o">+</span><span class="s">&#39; ONLY_ACTIVE_ARCH=NO -configuration Release -sdk iphoneos BUILD_DIR=&quot;&#39;</span> <span class="o">+</span> <span class="n">BUILD_DIR</span> <span class="o">+</span> <span class="s">&#39;&quot;&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">commsndStrSimulator</span> <span class="o">=</span> <span class="s">&#39;xcodebuild -target &#39;</span><span class="o">+</span><span class="n">Scheme</span><span class="o">+</span><span class="s">&#39; ONLY_ACTIVE_ARCH=NO -configuration Release -sdk iphonesimulator BUILD_DIR=&quot;&#39;</span><span class="o">+</span><span class="n">BUILD_DIR</span><span class="o">+</span><span class="s">&#39;&quot;&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">commandStriPhone</span><span class="p">)</span>
+</span><span class='line'><span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">commsndStrSimulator</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>编译完成之后，我们得到了两个Framework，对可执行文件执行<code>file</code>命令，我们可以看到这两个可执行文件的CPU架构：其中一个是ARM架构(armv7+arm64，在iPhone/iPad中使用)，另一个是x86架构(i386+x86_64，在模拟器中使用)。</p>
+
+<p>我们可以用<code>Lipo</code>命令，将这两个可执行文件合并成一个。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">lipoStr</span> <span class="o">=</span> <span class="s">&#39;lipo -create -output &quot;&#39;</span><span class="o">+</span><span class="n">BUILD_DIR</span><span class="o">+</span><span class="n">Scheme</span><span class="o">+</span><span class="s">&#39;&quot; &quot;&#39;</span><span class="o">+</span><span class="n">BUILD_DIR</span><span class="o">+</span><span class="s">&#39;Release-iphoneos/&#39;</span><span class="o">+</span><span class="n">Scheme</span><span class="o">+</span><span class="s">&#39;.framework/&#39;</span><span class="o">+</span><span class="n">Scheme</span><span class="o">+</span><span class="s">&#39;&quot; &quot;&#39;</span><span class="o">+</span><span class="n">BUILD_DIR</span><span class="o">+</span><span class="s">&#39;Release-iphonesimulator/&#39;</span><span class="o">+</span><span class="n">Scheme</span><span class="o">+</span><span class="s">&#39;.framework/&#39;</span><span class="o">+</span><span class="n">Scheme</span><span class="o">+</span><span class="s">&#39;&quot;&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">lipoStr</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>合并之后，可执行文件的体积明显增大了。这是否会影响到集成Framework项目的可执行文件体积呢？这点可以不用担心。在集成方项目编译时，会根据valid architectures自动选择合适的CPU架构。</p>
+
+<h3>版本控制</h3>
+
+<h4>Semver</h4>
+
+<p>遵循<a href="http://semver.org/">Semver</a>语义化版本号，以展示各版本的兼容情况。</p>
+
+<blockquote><p>版本格式：主版本号.次版本号.修订号，版本号递增规则如下：</p>
+
+<ol>
+<li><p>主版本号：当你做了不兼容的 API 修改，</p></li>
+<li><p>次版本号：当你做了向下兼容的功能性新增，</p></li>
+<li><p>修订号：当你做了向下兼容的问题修正。</p></li>
+</ol>
+
+
+<p>先行版本号及版本编译信息可以加到“主版本号.次版本号.修订号”的后面，作为延伸。</p></blockquote>
+
+<h4>Beta</h4>
+
+<p>在开发过程中，难免会有bug出现，而Framework集成方众多，bug更是难以避免，所以我们应该提供Beta版本，这个版本可能会频繁更新，稳定性较stable版本略低。集成方在测试阶段尽可能的使用beta版本，发现bug后及时进行修复，而在发布时可以使用完全兼容的、不带beta后缀的稳定版本。</p>
+
+<h3>CocoaPods</h3>
+
+<p>使用CocoaPods工具可以更方便的发布，这篇文章中就不赘述了，详情可以移步<a href="http://epingwang.me/blog/2015/05/11/ru-he-chuang-jian-cocoapodsde-si-you-spec/">如何创建Cocoapods的私有Spec</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[一条命令验证服务器对iOS ATS的支持]]></title>
@@ -2427,7 +2643,7 @@
 
 <p>一旦你的加急审核申请通过了，你的App会在一个工作日内被处理，如果这期间因为可能出现的其它问题导致再次被reject，你只需要重新提交修改后的build或补充说明（metadata reject）就行，你的App将会一直处于加急审核队列，直到审核通过。</p>
 
-<p>苹果加急审核邮箱：<a href="&#x6d;&#x61;&#105;&#x6c;&#116;&#x6f;&#x3a;&#x41;&#x70;&#112;&#82;&#101;&#x76;&#105;&#101;&#x77;&#64;&#97;&#112;&#112;&#x70;&#x6c;&#x65;&#46;&#99;&#111;&#109;">&#65;&#112;&#112;&#x52;&#101;&#x76;&#x69;&#x65;&#x77;&#64;&#97;&#112;&#x70;&#112;&#108;&#101;&#x2e;&#x63;&#111;&#x6d;</a></p>
+<p>苹果加急审核邮箱：<a href="&#109;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#x41;&#112;&#112;&#x52;&#101;&#x76;&#x69;&#101;&#x77;&#64;&#97;&#112;&#x70;&#x70;&#108;&#x65;&#46;&#x63;&#111;&#109;">&#65;&#x70;&#x70;&#x52;&#101;&#118;&#105;&#x65;&#x77;&#x40;&#97;&#x70;&#112;&#112;&#108;&#101;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
 
 <p>网页提交地址：<a href="https://developer.apple.com/appstore/contact/?topic=expedite">https://developer.apple.com/appstore/contact/?topic=expedite</a></p>
 
@@ -2558,38 +2774,6 @@
 </span><span class='line'>
 </span><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">dateString</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span> <span class="nl">stringFromDate:</span><span class="p">[</span><span class="n">NSDate</span> <span class="n">date</span><span class="p">]];</span>
 </span></code></pre></td></tr></table></div></figure>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[UITextField的默认Placeholder颜色]]></title>
-    <link href="http://epingwang.me/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se/"/>
-    <updated>2014-07-10T14:11:44+08:00</updated>
-    <id>http://epingwang.me/blog/2014/07/10/uitextfieldde-mo-ren-placeholderyan-se</id>
-    <content type="html"><![CDATA[<h3>色值为</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>R:0
-</span><span class='line'>G:0
-</span><span class='line'>B:0.0980392
-</span><span class='line'>A:0.22</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>查看方式</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSRange</span> <span class="n">range</span> <span class="o">=</span> <span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-</span><span class='line'><span class="n">NSDictionary</span> <span class="o">*</span><span class="n">dict</span> <span class="o">=</span> <span class="p">[</span><span class="n">someTextField</span><span class="p">.</span><span class="n">attributedPlaceholder</span> <span class="nl">attributesAtIndex:</span><span class="mi">0</span> <span class="nl">effectiveRange:</span><span class="o">&amp;</span><span class="n">range</span><span class="p">];</span>
-</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">dict</span> <span class="nl">objectForKey:</span><span class="n">NSForegroundColorAttributeName</span><span class="p">]);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
 
 ]]></content>
   </entry>
