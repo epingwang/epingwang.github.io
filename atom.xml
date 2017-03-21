@@ -4,7 +4,7 @@
   <title><![CDATA[EpingWang's Blog]]></title>
   <link href="http://epingwang.me/atom.xml" rel="self"/>
   <link href="http://epingwang.me/"/>
-  <updated>2017-03-17T11:30:15+08:00</updated>
+  <updated>2017-03-21T18:15:43+08:00</updated>
   <id>http://epingwang.me/</id>
   <author>
     <name><![CDATA[Eping Wang]]></name>
@@ -145,9 +145,49 @@
 
 <h4>壳项目对Framework在开发环境中的引用</h4>
 
-<p>我们发现Demo项目中还无法引入Framework的头文件。这时我们可以把WorkSpace的目录添加到Demo项目的Header Search Paths，这样我们就可以通过<code>#import &lt;FrameworkTest/FrameworkTest.h&gt;</code>来引用了。</p>
+<p>模拟Framework在实际项目中的引用，其实就是将Framework和Resource Bundle拷贝到目标项目，并加入Target中。于是我们编写了一个shell script，在Framework项目编译完成之后把生成的文件copy到Demo项目中。</p>
 
-<p>在Link Binary With Libraries中添加FrameworkTest.framework，将FrameworkTestResources.bundle的引用添加到Demo项目中，在Project中开启多语言，我们的壳项目设置就完成了。</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#! /bin/bash</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">FRAMEWORK_PATH</span><span class="o">=</span><span class="s">&quot;${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}&quot;</span>
+</span><span class='line'><span class="cp"># FRAMEWORK_PATH=&quot;hello&quot;</span>
+</span><span class='line'><span class="n">echo</span> <span class="n">$FRAMEWORK_PATH</span>
+</span><span class='line'><span class="n">cp</span> <span class="o">-</span><span class="n">r</span> <span class="n">$FRAMEWORK_PATH</span> <span class="s">&quot;${PROJECT_DIR}/../${PROJECT}Demo/&quot;</span>
+</span><span class='line'><span class="n">cp</span> <span class="o">-</span><span class="n">r</span> <span class="s">&quot;${FRAMEWORK_PATH}/${PROJECT}.bundle&quot;</span> <span class="s">&quot;${PROJECT_DIR}/../${PROJECT}Demo/&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这样就可以在每次编译时更新Demo项目中的Framework和资源文件。</p>
+
+<p>同时我们在Demo项目的Build Phases中也添加一个脚本，并放在<code>Compile Source</code>之前执行</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#! /bin/bash</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">FRAMEWORK_DIR</span><span class="o">=</span><span class="s">&quot;${PROJECT_DIR}/../${FRAMEWORK_NAME}/&quot;</span>
+</span><span class='line'><span class="k">if</span> <span class="p">[</span> <span class="o">-</span><span class="n">d</span> <span class="s">&quot;$FRAMEWORK_DIR&quot;</span> <span class="p">];</span> <span class="n">then</span>
+</span><span class='line'><span class="n">echo</span> <span class="s">&quot;Compiling Framework Project...&quot;</span>
+</span><span class='line'><span class="n">cd</span> <span class="s">&quot;${PROJECT_DIR}/../${FRAMEWORK_NAME}/&quot;</span>
+</span><span class='line'><span class="n">xcodebuild</span> <span class="o">-</span><span class="n">project</span> <span class="s">&quot;${FRAMEWORK_NAME}.xcodeproj&quot;</span> <span class="o">-</span><span class="n">target</span> <span class="n">$</span><span class="p">{</span><span class="n">FRAMEWORK_NAME</span><span class="p">}</span> <span class="o">-</span><span class="n">configuration</span> <span class="n">$</span><span class="p">{</span><span class="n">CONFIGURATION</span><span class="p">}</span> <span class="o">-</span><span class="n">sdk</span> <span class="n">$</span><span class="p">{</span><span class="n">SDK_DIR</span><span class="p">}</span>
+</span><span class='line'><span class="n">fi</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这样每次在编译Demo项目之前，都会编译一次Framework项目，并更新Framework。</p>
 
 <h4>第三方库</h4>
 
@@ -226,6 +266,28 @@
 <h3>CocoaPods</h3>
 
 <p>使用CocoaPods工具可以更方便的发布，这篇文章中就不赘述了，详情可以移步<a href="http://epingwang.me/blog/2015/05/11/ru-he-chuang-jian-cocoapodsde-si-you-spec/">如何创建Cocoapods的私有Spec</a></p>
+
+<h3>小工具</h3>
+
+<p>上面说了这么多，创建一个Framework的确是一个很繁杂的事情。所以我写了一个小工具，一键创建Framework。</p>
+
+<p><a href="https://github.com/epingwang/create-ios-framework">Github Repo</a></p>
+
+<p>只需要一行命令即可创建一个功能完备的Framework</p>
+
+<p>安装</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="err">$</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">create</span><span class="o">-</span><span class="n">ios</span><span class="o">-</span><span class="n">framework</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>使用</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="err">$</span> <span class="n">create</span><span class="o">-</span><span class="n">ios</span><span class="o">-</span><span class="n">framework</span>
+</span></code></pre></td></tr></table></div></figure>
+
 ]]></content>
   </entry>
   
@@ -2643,7 +2705,7 @@
 
 <p>一旦你的加急审核申请通过了，你的App会在一个工作日内被处理，如果这期间因为可能出现的其它问题导致再次被reject，你只需要重新提交修改后的build或补充说明（metadata reject）就行，你的App将会一直处于加急审核队列，直到审核通过。</p>
 
-<p>苹果加急审核邮箱：<a href="&#109;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#x41;&#112;&#112;&#x52;&#101;&#x76;&#x69;&#101;&#x77;&#64;&#97;&#112;&#x70;&#x70;&#108;&#x65;&#46;&#x63;&#111;&#109;">&#65;&#x70;&#x70;&#x52;&#101;&#118;&#105;&#x65;&#x77;&#x40;&#97;&#x70;&#112;&#112;&#108;&#101;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
+<p>苹果加急审核邮箱：<a href="&#x6d;&#97;&#105;&#108;&#x74;&#111;&#x3a;&#x41;&#112;&#112;&#82;&#x65;&#118;&#105;&#x65;&#119;&#64;&#x61;&#x70;&#x70;&#x70;&#x6c;&#x65;&#x2e;&#x63;&#111;&#x6d;">&#65;&#x70;&#112;&#x52;&#101;&#118;&#x69;&#101;&#x77;&#x40;&#x61;&#x70;&#x70;&#112;&#x6c;&#x65;&#46;&#x63;&#111;&#x6d;</a></p>
 
 <p>网页提交地址：<a href="https://developer.apple.com/appstore/contact/?topic=expedite">https://developer.apple.com/appstore/contact/?topic=expedite</a></p>
 
